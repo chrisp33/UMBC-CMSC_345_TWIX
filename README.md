@@ -9,7 +9,7 @@ Stephen Moore
 Chris
 Mariama
 Keith
-Michael
+Michael *check*
 Justin
 
 A repository intended for a UMBC CMSC 345 class project.
