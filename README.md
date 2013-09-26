@@ -7,7 +7,7 @@ MEMBERS:
 
 Stephen Moore
 Chris Pagan
-Mariama *check*
+Mariama Barr - Dallas *check*
 Keith
 Michael *check*
 Justin
