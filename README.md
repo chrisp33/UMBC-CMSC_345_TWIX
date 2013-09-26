@@ -6,7 +6,7 @@ TEAM TWIX
 MEMBERS:
 
 Stephen Moore
-Chris
+Chris Pagan
 Mariama
 Keith
 Michael *check*
