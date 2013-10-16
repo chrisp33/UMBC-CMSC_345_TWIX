@@ -6,7 +6,7 @@ TEAM TWIX
 MEMBERS:
 
 Stephen Moore,
-Chris Pagan,
+Chris Pagan
 Mariama Barr-Dallas,
 Keith Chang,
 Michael Tang,
