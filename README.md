@@ -10,6 +10,6 @@ Chris Pagan
 Mariama Barr-Dallas,
 Keith Chang,
 Michael Tang,
-Justin Tavares,
+Justin T Tavares,
 
 A repository intended for a UMBC CMSC 345 class project.
