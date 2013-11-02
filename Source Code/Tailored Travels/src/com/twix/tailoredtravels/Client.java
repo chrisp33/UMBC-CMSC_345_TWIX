@@ -1,3 +1,8 @@
+/**
+ * 
+ * @author Christopher Pagan
+ */
+
 package com.twix.tailoredtravels;
 
 public class Client {
