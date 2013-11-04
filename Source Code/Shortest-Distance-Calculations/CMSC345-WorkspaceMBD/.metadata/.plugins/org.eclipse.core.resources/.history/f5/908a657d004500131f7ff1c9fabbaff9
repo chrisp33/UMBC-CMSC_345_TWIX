@@ -1,0 +1,21 @@
+package shortDistance;
+
+public class Coordinate {
+
+	/**
+	 * @category Constructor
+	 * @param x
+	 * @param y
+	 */
+	public Coordinate(double x, double y){
+		
+		
+	}
+	
+	
+	public Coordinate(){}
+	
+	
+	
+	
+}

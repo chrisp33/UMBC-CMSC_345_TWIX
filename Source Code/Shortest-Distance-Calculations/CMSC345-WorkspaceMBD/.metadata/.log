@@ -1,0 +1,16 @@
+!SESSION 2013-11-03 22:13:06.933 -----------------------------------------------
+eclipse.buildId=I20120608-1400
+java.version=1.7.0_06-ea
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2013-11-03 22:15:31.729
+!MESSAGE Failed to open search index.
+
+!ENTRY org.eclipse.jdt.core 4 969 2013-11-03 22:29:39.688
+!MESSAGE DEFAULT [in Coordinate [in [Working copy] Coordinate.java [in shortDistance [in src [in Shortest-Route-Distance]]]]] does not exist
+
+!ENTRY org.eclipse.jdt.core 4 969 2013-11-03 22:29:39.690
+!MESSAGE DEFAULT_VALUWE [in Coordinate [in [Working copy] Coordinate.java [in shortDistance [in src [in Shortest-Route-Distance]]]]] does not exist

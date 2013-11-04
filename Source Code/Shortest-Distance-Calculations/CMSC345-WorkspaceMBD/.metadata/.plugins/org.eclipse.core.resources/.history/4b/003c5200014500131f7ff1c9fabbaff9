@@ -1,0 +1,41 @@
+package shortDistance;
+
+public class Coordinate {
+
+	/**
+	 * Label data member of Coordinate
+	 */
+	private String label;
+	
+	/**
+	 * Longitude 
+	 */
+	private int x;
+	
+	/**
+	 * Latitude
+	 */
+	private int y;
+	
+	/**
+	 * @category Constructor
+	 * @param label
+	 * @param x
+	 * @param y
+	 * 
+	 * This is the constructor for the Coordinate Object
+	 * which takes in the latitude and longitude (x & y respectively)
+	 *  
+	 */
+	public Coordinate(String label, double x, double y){
+		
+		
+	}
+	
+	
+	public Coordinate(){}
+	
+	
+	
+	
+}
