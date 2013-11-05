@@ -25,6 +25,7 @@ public class Client{
 	private static JButton login;
 	private static JTextField nameField;
 	private static JPasswordField passField;
+	private static Authenticator auth;
 	/**
 	 * @param args
 	 */
@@ -78,6 +79,8 @@ public class Client{
 				
 				nameField.setText(null);
 				passField.setText(null);
+				
+				auth = new Authenticator(userName, password);
 				
 				// do other stuff
 			}
