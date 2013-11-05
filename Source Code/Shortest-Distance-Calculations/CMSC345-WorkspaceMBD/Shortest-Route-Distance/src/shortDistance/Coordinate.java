@@ -60,6 +60,18 @@ public class Coordinate {
 		this.y = DEFAULT_VALUE;
 	}
 	
+	/**
+	 * @category function
+	 * @param other
+	 * @return double containing distance between 2 coordinates
+	 * 
+	 * This function calculates the distance between 2 coordinates
+	 */
+	public double distance(Coordinate other)
+	{
+		return Math.sqrt( Math.pow((other.x - this.x), 2) + Math.pow((other.y - this.y), 2) );
+	}
+	
 	
 	
 	
