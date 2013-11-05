@@ -50,9 +50,16 @@ public class Client{
 		p2.add(new JLabel("Username"));
 		nameField = new JTextField(25);
 		p2.add(nameField);
+		
 		p3.add(new JLabel("Password"));
 		passField = new JPasswordField(25);
+		//if (passField.echoCharIsSet() == false)
+		{
+			String bullet = "\u2022";
+			passField.setEchoChar(bullet.charAt(0));
+		}
 		p3.add(passField);
+		
 		p4.add(login);
 		
 		panel.add(p);
