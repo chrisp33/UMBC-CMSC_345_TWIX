@@ -82,6 +82,10 @@ public class Client{
 				
 				auth = new Authenticator(userName, password);
 				
+				// Java documentation recommends clearing password array after use
+				for (int i = 0; i < password.length; i++)
+					password[i] = ' ';
+				
 				// do other stuff
 			}
 		});
