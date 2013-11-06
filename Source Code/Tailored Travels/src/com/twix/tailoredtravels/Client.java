@@ -31,6 +31,8 @@ public class Client{
 	 */
 	public static void main(String[] args) {
 		frame = new JFrame("Tailored Travels");
+		
+		// cleanup/make better later
 		panel = new JPanel();
 		p = new JPanel();
 		p1 = new JPanel();
@@ -53,11 +55,8 @@ public class Client{
 		
 		p3.add(new JLabel("Password"));
 		passField = new JPasswordField(25);
-		//if (passField.echoCharIsSet() == false)
-		{
-			String bullet = "\u2022";
-			passField.setEchoChar(bullet.charAt(0));
-		}
+		String bullet = "\u2022";
+		passField.setEchoChar(bullet.charAt(0));
 		p3.add(passField);
 		
 		p4.add(login);
@@ -74,11 +73,15 @@ public class Client{
 		frame.setVisible(true);
 		frame.setContentPane(panel);
 		frame.pack();
-		// TODO Auto-generated method stub
-
 		
 // check login credentials here ------------------------------------------------------
 		login.addActionListener(new ActionListener(){
+			
+			/**
+			 * Overwritten method for ActionListener class. Verifies the user is
+			 * authorized to use the system.
+			 * @param e An ActionEvent is created when the user clicks the login button
+			 */
 			public void actionPerformed(ActionEvent e){
 				
 				String userName = nameField.getText();
