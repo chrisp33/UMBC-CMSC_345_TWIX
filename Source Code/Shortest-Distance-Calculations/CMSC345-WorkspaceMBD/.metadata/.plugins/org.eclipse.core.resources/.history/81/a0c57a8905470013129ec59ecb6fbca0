@@ -16,7 +16,7 @@ public class DistCalcDriver {
 	//Google Earth Data.
 	
 	/**This function calculates the shortest route
-	 * based on the given...........
+	 * based on the given
 	 * 
 	 * @return ArrayList<Coordinate>
 	 */

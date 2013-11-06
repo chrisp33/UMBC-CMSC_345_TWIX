@@ -3,5 +3,10 @@
     "coordinate": "jre:jre:zip:call:1.0.0",
     "location": "C:\\Program Files\\Java\\jre7\\lib\\rt.jar",
     "status": "RESOLVED"
+  },
+  "C:\\Users\\matt\\Documents\\GitHub\\UMBC-CMSC_345_TWIX\\Source Code\\Shortest-Distance-Calculations\\CMSC345-WorkspaceMBD\\Shortest-Route-Distance\\src": {
+    "location": "C:\\Users\\matt\\Documents\\GitHub\\UMBC-CMSC_345_TWIX\\Source Code\\Shortest-Distance-Calculations\\CMSC345-WorkspaceMBD\\Shortest-Route-Distance\\src",
+    "status": "UNRESOLVED",
+    "error": "No class path info available for \u0027C:\\Users\\matt\\Documents\\GitHub\\UMBC-CMSC_345_TWIX\\Source Code\\Shortest-Distance-Calculations\\CMSC345-WorkspaceMBD\\Shortest-Route-Distance\\src\u0027. Skipped."
   }
 }

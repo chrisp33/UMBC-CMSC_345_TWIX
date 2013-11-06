@@ -15,15 +15,6 @@ public class DistCalcDriver {
 	//Must know the arraylist <type> that will be recieved from
 	//Google Earth Data.
 	
-	/**This function calculates the shortest route
-	 * based on the given...........
-	 * 
-	 * @return ArrayList<Coordinate>
-	 */
-	public ArrayList<Coordinate> shortDistAlgorithm(){
-		
-		
-		return null;
-	}
+	public ArrayList<Coordinate> shortDistAlgorithm()
 	
 }

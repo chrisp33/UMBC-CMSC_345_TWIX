@@ -2,7 +2,7 @@ package shortDistance;
 
 /**
  * @author Mariama Barr-Dallas & Michael Tang
- *@version 1.0
+ *
  */
 public class Coordinate {
 
@@ -92,13 +92,13 @@ public class Coordinate {
 		//0 distance from B to A (SUCCESS)
 		System.out.println(destB.distance(destA));
 		
-		//distance with negative input A: -50.0 , -50.0  B: 50 , 50 (SUCCESS)
+		//positive distance with negative input A: -50.0 , -50.0  B: 50 , 50 (SUCCESS)
 		destA.setLong(-50.0);
 		destA.setLat(-50.0);
 		
 		System.out.println(destA.distance(destB));
 		
-		//distance with negative input B: -50.0 , -50.0  A: 50 , 50 (FAILED)
+		//positive distance with negative input B: -50.0 , -50.0  A: 50 , 50 (FAILED)
 		destB.setLong(-50.0);
 		destB.setLat(-50.0);
 		
