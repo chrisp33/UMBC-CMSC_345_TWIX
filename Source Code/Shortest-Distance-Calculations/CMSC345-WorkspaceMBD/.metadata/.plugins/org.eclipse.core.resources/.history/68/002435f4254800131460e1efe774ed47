@@ -113,22 +113,22 @@ public class Coordinate {
 		 * TESTING .DISTANCE()
 		 */
 		//0 distance from A to B (SUCCESS)
-		//System.out.println(destA.distance(destB));
+	//	System.out.println(destA.distance(destB));
 		
 		//0 distance from B to A (SUCCESS)
-		//System.out.println(destB.distance(destA));
+	//	System.out.println(destB.distance(destA));
 		
 		//distance with negative input A: -50.0 , -50.0  B: 50 , 50 (SUCCESS)
-		//destA.setLong(-50.0);
-		//destA.setLat(-50.0);
+	//	destA.setLong(-50.0);
+	//	destA.setLat(-50.0);
 		
-		//System.out.println(destA.distance(destB));
+		System.out.println(destA.distance(destB));
 		
-		//distance with negative input B: -50.0 , -50.0  A: 50 , 50 (SUCCESS)
-		//destB.setLong(-50.0);
-		//destB.setLat(-50.0);
+		//distance with negative input B: -50.0 , -50.0  A: 50 , 50 (FAILED)
+		destB.setLong(-50.0);
+		destB.setLat(-50.0);
 		
-		//System.out.println(destB.distance(destA));
+		System.out.println(destB.distance(destA));
 		
 	}
 }

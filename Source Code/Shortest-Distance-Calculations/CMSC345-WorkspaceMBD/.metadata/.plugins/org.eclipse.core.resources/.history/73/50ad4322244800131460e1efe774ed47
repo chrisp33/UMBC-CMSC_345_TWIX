@@ -1,17 +1,8 @@
 package shortDistance;
 
-
 /**
  * @author Mariama Barr-Dallas & Michael Tang
- * @version 1.0
- *
- *This is the Coordinate class which 
- *defines the Coordinate data structure
- *
- *Each Coordinate possesses a :
- *Label - Name of the Coordinate
- *Longitude - horizontal dimension
- *Latitude - vertical dimension
+ *@version 1.0
  */
 public class Coordinate {
 
@@ -19,11 +10,6 @@ public class Coordinate {
 	 * Default value for longitude and latitude
 	 */
 	private static final double DEFAULT_VALUE = 0;
-	
-	/**
-	 * Default value for the Coordinate Label
-	 */
-	private static final String DEFAULT_LABEL = "";
 	
 	/**
 	 * Label data member of Coordinate
@@ -36,11 +22,6 @@ public class Coordinate {
 	 * Longitude 
 	 */
 	private double x;
-	
-	/**This function sets the x (Longitude) of the coordinate
-	 * 
-	 * @param x
-	 */
 	protected void setLong(double x){this.x = x;}
 	
 	
@@ -48,11 +29,6 @@ public class Coordinate {
 	 * Latitude
 	 */
 	private double y;
-	
-	/**This function sets the y (Latitude) of the coordinate
-	 * 
-	 * @param y
-	 */
 	protected void setLat(double y){this.y = y;}
 	
 	
@@ -73,7 +49,6 @@ public class Coordinate {
 		this.y = y;
 	}
 	
-	
 	/**
 	 * This is a no-parameter constructor for the Coordinate class which sets
 	 * the longitude and latitude to DEFAULT_VALUE
@@ -81,7 +56,6 @@ public class Coordinate {
 	 */
 	public Coordinate(){
 		
-		this.label = DEFAULT_LABEL;
 		this.x = DEFAULT_VALUE;
 		this.y = DEFAULT_VALUE;
 	}
@@ -113,22 +87,21 @@ public class Coordinate {
 		 * TESTING .DISTANCE()
 		 */
 		//0 distance from A to B (SUCCESS)
-		//System.out.println(destA.distance(destB));
+		System.out.println(destA.distance(destB));
 		
 		//0 distance from B to A (SUCCESS)
-		//System.out.println(destB.distance(destA));
+		System.out.println(destB.distance(destA));
 		
 		//distance with negative input A: -50.0 , -50.0  B: 50 , 50 (SUCCESS)
-		//destA.setLong(-50.0);
-		//destA.setLat(-50.0);
+		destA.setLong(-50.0);
+		destA.setLat(-50.0);
 		
-		//System.out.println(destA.distance(destB));
+		System.out.println(destA.distance(destB));
 		
-		//distance with negative input B: -50.0 , -50.0  A: 50 , 50 (SUCCESS)
-		//destB.setLong(-50.0);
-		//destB.setLat(-50.0);
+		//distance with negative input B: -50.0 , -50.0  A: 50 , 50 (FAILED)
+		destB.setLong(-50.0);
+		destB.setLat(-50.0);
 		
-		//System.out.println(destB.distance(destA));
-		
+		System.out.println(destB.distance(destA));
 	}
 }
