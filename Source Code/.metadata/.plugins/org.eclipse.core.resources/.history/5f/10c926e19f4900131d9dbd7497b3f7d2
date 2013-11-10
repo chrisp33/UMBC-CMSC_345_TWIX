@@ -1,0 +1,16 @@
+package com.twix.tailoredtravels;
+
+/**
+ * A class used in handling all calls to 
+ * Google Earth and all KML manipulation.
+ * 
+ * @author Stephen Moore
+ *
+ */
+public class GoogleEarthManager {
+
+	public GoogleEarthManager()
+	{
+		
+	}
+}

@@ -1,0 +1,9 @@
+package com.twix.tailoredtravels;
+
+public class GoogleEarthManager {
+
+	public GoogleEarthManager()
+	{
+		
+	}
+}

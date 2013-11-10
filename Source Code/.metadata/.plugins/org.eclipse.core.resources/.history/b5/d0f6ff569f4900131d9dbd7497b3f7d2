@@ -1,0 +1,30 @@
+package com.twix.tailoredtravels;
+
+/**
+ * A class that acts as the template for KML 
+ * objects correlating to locations.
+ * 
+ * @author Stephen
+ *
+ */
+public class Waypoint {
+
+	private float wLongitude;
+	private float wLatitude;
+	
+	public Waypoint(float _lat, float _long)
+	{
+		this.wLatitude = _lat;
+		this.wLongitude = _long;
+	}
+	
+	public float getLongitude()
+	{
+		return this.wLongitude;
+	}
+	
+	public float getLatitude()
+	[]
+			
+	
+}
