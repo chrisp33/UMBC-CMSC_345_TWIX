@@ -91,11 +91,20 @@ public class Coordinate {
 	 * @param other
 	 * @return double containing distance between 2 coordinates
 	 * 
-	 * This function calculates the distance between 2 coordinates
+	 * This function calculates the distance between 2 coordinates in miles
+	 * dlon = lon2 - lon1
+	 * dlat = lat2 - lat1
+	 * a = (sin(dlat/2))^2 + cos(lat1) * cos(lat2) * (sin(dlon/2))^2
+	 * c = 2 * atan2( sqrt(a), sqrt(1-a) )
+	 * d = R * c (where R is the radius of the Earth) 
 	 */
 	public double distance(Coordinate other)
 	{
-		return Math.sqrt( Math.pow((other.x - this.x), 2) + Math.pow((other.y - this.y), 2) );
+		double dlon = Math.toRadians(other.x - this.x);
+		double dlat = Math.toRadians(other.y - this.y);
+		double a = Math.pow(Math.sin(dlat/2),2) +  Math.cos(Math.toRadians(this.y)) *  Math.cos(Math.toRadians(other.y)) *  Math.pow(Math.sin(dlon/2),2);
+		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+		return 3961 * c;
 	}
 	
 	public String toString(){
@@ -110,14 +119,14 @@ public class Coordinate {
 	 */
 	public static void main(String[] args){
 		
-		Coordinate destA = new Coordinate("Destination A",50.0,50.0);
-		Coordinate destB = new Coordinate("Destination B",50.0,50.0);
+		Coordinate destA = new Coordinate("Destination A",-77.037852,38.898556);
+		Coordinate destB = new Coordinate("Destination B",-77.043934,38.897147);
 		
 		/*
 		 * TESTING .DISTANCE()
 		 */
 		//0 distance from A to B (SUCCESS)
-		//System.out.println(destA.distance(destB));
+		System.out.println(destA.distance(destB));
 		
 		//0 distance from B to A (SUCCESS)
 		//System.out.println(destB.distance(destA));
