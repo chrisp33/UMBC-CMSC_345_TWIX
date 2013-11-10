@@ -1,0 +1,27 @@
+package com.twix.tailoredtravels;
+
+/**
+ * A class used in handling all calls to 
+ * Google Earth and all KML manipulation.
+ * 
+ * @author Stephen Moore
+ *
+ */
+public class GoogleEarthManager {
+
+	public GoogleEarthManager()
+	{
+		
+	}
+	
+	/**
+	 * Transforms a given path into a series of connected KML points.
+	 * 
+	 * @param _path The created path of Waypoints
+	 * @return the generated KML
+	 */
+	public String Path2KML(GoogleEarthPath _path)
+	{
+		return "stub";
+	}
+}

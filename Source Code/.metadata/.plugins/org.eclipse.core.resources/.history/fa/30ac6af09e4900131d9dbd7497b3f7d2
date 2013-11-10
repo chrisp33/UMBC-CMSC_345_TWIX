@@ -1,0 +1,21 @@
+package com.twix.tailoredtravels;
+
+import java.util.LinkedList;
+
+public class GoogleEarthPath {
+
+	private LinkedList<Waypoint> wPath = new LinkedList<Waypoint>();
+	
+	public GoogleEarthPath(Waypoint _start, Waypoint _end)
+	{
+		this.wPath.add(_start);
+		this.wPath.add(_end);
+	}
+	
+	public void addWaypoint(Waypoint _new)
+	{
+		Waypoint _temp = this.wPath.pollLast();
+		this.wPath.add(_new);
+		this.wPath.add(_temp);
+	}
+}

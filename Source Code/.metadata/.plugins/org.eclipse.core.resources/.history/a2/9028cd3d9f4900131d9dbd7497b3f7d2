@@ -1,0 +1,16 @@
+package com.twix.tailoredtravels;
+
+/**
+ * A class that acts as the template for KML 
+ * objects correlating to locations.
+ * 
+ * @author Stephen
+ *
+ */
+public class Waypoint {
+
+	public Waypoint()
+	{
+		
+	}
+}
