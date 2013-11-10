@@ -17,6 +17,7 @@ public class DistCalcDriver {
 	
 	/**This function calculates the shortest route
 	 * based on the given list and the start and end points
+	 * returns an arraylist of coordinates sorted for shortest distance
 	 * @param parklist	list of parks that the user wants to go to
 	 * @param start 	the coordinate the user starts at
 	 * @param end		the coordinate the user ends at
@@ -53,6 +54,22 @@ public class DistCalcDriver {
 		path.add(end);		
 		return path;
 	}
+	
+	/**
+	 * This function calculates the total distance covered by this path
+	 * @param list	A list containing the sorted path
+	 * @return double
+	 */
+	public static double totalDistance(ArrayList<Coordinate> list)
+	{
+		double dist = 0;
+		for(int i=0; i<list.size()-1; i++)
+		{
+			dist += list.get(i).distance(list.get(i+1));
+		}
+		return dist;
+	}
+	
 	public static void main(String[] args){
 		
 		Coordinate destA = new Coordinate("Destination A",282,269);
@@ -77,5 +94,6 @@ public class DistCalcDriver {
 		{
 			System.out.println(endlist.get(i));
 		}
+		System.out.print(totalDistance(endlist));
 	}
 }
