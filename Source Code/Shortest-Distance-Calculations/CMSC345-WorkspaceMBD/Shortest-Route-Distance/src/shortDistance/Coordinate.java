@@ -98,6 +98,10 @@ public class Coordinate {
 		return Math.sqrt( Math.pow((other.x - this.x), 2) + Math.pow((other.y - this.y), 2) );
 	}
 	
+	public String toString(){
+		return label;
+	}
+	
 	
 	/**This is a function to TEST the methods and attributes of the 
 	 * Coordinate class
