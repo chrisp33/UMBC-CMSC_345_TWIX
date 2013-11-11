@@ -1,0 +1,19 @@
+<infoconfig>
+	<info class="org.jawin.browser.data.LibraryNode" info="true" stylesheet="stylesheets/info/library.xsl"/>
+	
+	<!-- top level type info nodes -->
+	<info class="org.jawin.browser.data.EnumNode" info="true" stylesheet="stylesheets/info/enum.xsl"/>
+	<info class="org.jawin.browser.data.RecordNode" info="true" stylesheet="stylesheets/info/record.xsl"/>
+	<info class="org.jawin.browser.data.ModuleNode" info="true" stylesheet="stylesheets/info/module.xsl"/>
+	<info class="org.jawin.browser.data.InterfaceNode" info="true" stylesheet="stylesheets/info/interface.xsl"/>
+	<info class="org.jawin.browser.data.DispatchNode" info="true" stylesheet="stylesheets/info/dispatch.xsl"/>
+	<info class="org.jawin.browser.data.CoClassNode" info="true" stylesheet="stylesheets/info/coclass.xsl"/>
+	<info class="org.jawin.browser.data.AliasNode" info="true" stylesheet="stylesheets/info/alias.xsl"/>
+	<info class="org.jawin.browser.data.UnionNode" info="true" stylesheet="stylesheets/info/union.xsl"/>
+
+	<!-- function related nodes -->	
+	<info class="org.jawin.browser.data.Function" info="true" stylesheet="stylesheets/info/function.xsl"/>
+
+	<!-- parameter relates ndoes -->
+	
+</infoconfig>

@@ -1,0 +1,716 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<!--
+	This documentation is part of the Jawin Project:
+
+		http://jawinproject.sourceforge.net/
+
+	please consult the LICENSE at the project site before using this
+	documentation.
+
+	Id:				$Id: jawin.html,v 1.13 2005/03/23 20:38:03 arosii_moa Exp $
+	Version:		$Revision: 1.13 $
+	Author(s):		Stuart Halloway, http://www.relevancellc.com
+					Justin Gehtland, http://www.relevancellc.com
+					Morten Andersen, arosii_moa (at) users.sourceforge.net
+-->
+<head>
+	<title>Introduction to Jawin</title>
+	<meta http-equiv="Content-Language" content="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<meta http-equiv="Content-Script-Type" content="text/javascript">
+
+	<link rel="stylesheet" href="css/style.css" type="text/css">
+	<link rel="stylesheet" title="Compact fonts (default)" href="css/compact.css" type="text/css">
+	<link rel="alternate stylesheet" title="Standard fonts (accessibility)" href="css/accessibility.css" type="text/css">
+	<!-- style for print -->
+	<link rel="stylesheet" href="css/print.css" type="text/css" media="print">
+	<script src="js/menu.js" type="text/javascript"></script>
+</head>
+<body class="main">
+	<div class="navigation">
+		<p class="navigation-header" onclick="toggleNavigation()"
+			title="Click to open/close navigation" style="cursor: pointer;">
+			Jawin Documentation&nbsp;&nbsp;<span id="navigationToggle">&lt;</span>
+		</p>
+		<div style="display: block;" id="navigationList">
+			<ul class="navigation-list">
+				<li><a>Introduction</a></li>
+				<li><a href="jawintypebrowser.html" title="Getting started with the Jawin Type Browser">Generating stubs</a></li>
+				<li><a href="jawinuserguide_vtable.html" title="Userguide - Calling a VTable Based COM Interface">VTable Based COM</a></li>
+				<li><a href="jawinuserguide_dispatch.html" title="Userguide - Calling a Scriptable COM Interface">Dispatch Based COM</a></li>
+				<li><a href="jawinuserguide_dll.html" title="Userguide - Calling a DLL Entry Point">DLL Entry Points</a></li>
+				<li><a href="jawinuserguide_net.html" title="Userguide - Interoperability with .NET Classes">.NET Interoperability</a></li>
+				<li><a href="jawinarchitecture.html" title="Jawin Architecture">Architecture</a></li>
+				<li><a href="jawindeveloper.html" title="Jawin Developer Information">Developer info</a></li>
+				<li><a href="jawinrevisions.html" title="Jawin Revision History">Revision History</a></li>
+				<li><a href="jawincontributors.html" title="Jawin Contributors">Contributors</a></li>
+			</ul>
+			<p class="navigation-header"></p> <!-- the bottom line in the nav. -->
+		</div>
+		<script type="text/javascript">
+			toggleNavigation(); // to make sure the navigation will only be collapsed if javascript enabled
+		</script>
+	</div>
+
+	<h1>
+		Introduction to Jawin
+	</h1>
+
+	<h2><a name="introduction">Introduction</a></h2>
+	<p>
+		The Java/Win32 integration project (Jawin) is a free, open source
+		architecture for interoperation between Java and components exposed
+		through Microsoft's Component Object Model (COM) or through Win32
+		Dynamic Link Libraries (DLLs). The current version of Jawin is 2.0-alpha1,
+		build 2005-03-23. The most recent version of this document is located
+		at the <a href="http://jawinproject.sourceforge.net/">Jawin home</a>,
+		kindly hosted by <a href="http://sourceforge.net">SourceForge.net</a>.
+	</p>
+	<p>
+		You can use Jawin to interact with scriptable applications such as the
+		Microsoft Office suite. You can use Jawin to call scriptable logic
+		components such as Microsoft's COM-based XML parsers and tools.
+		You can also use Jawin to access Win32 API features such as the
+		Windows registry, security APIs, and the event log. You can also use
+		Jawin to make in-process interoperability with .NET code exposed as
+		COM objects. In fact, Jawin allows your Java applications to call <i>any</i> legacy COM- and
+		DLL-based code, without having to write any Java Native	Interface
+		(JNI) code. Using Jawin, you can call any component that can be
+		scripted in the Windows environment. You can also call arbitrary
+		COM components or DLL entry points.
+	</p>
+	<p>
+		Jawin includes a code generator, Jawin Type Browser, supporting
+		generation of stub code for scriptable as well as non-scriptable
+		COM components. The code generator reads one or more type libraries,
+		and automatically emits the Java stubs needed to call the component(s).
+		The Jawin Type Browser is not (yet) able to generate code for DLL entry
+		points, and not all parameter types are supported for COM components.
+	</p>
+	<p>
+		Jawin was initiated by Stuart Halloway and Justin Gehtland
+		of <a href="http://www.relevancellc.com">Relevance LLC</a>
+		and is an offspring from Stuarts book <a href="http://www.amazon.com/exec/obidos/ASIN/0201753065">
+		Component Development for the Java Platform</a> freely available as PDF from the
+		<a href="http://www.developmentor.com/us/technology/bookdownload.aspx">DevelopMentor
+		downloadable books page</a>. Stuart also previously maintained a list of
+		other <a href="http://www.relevancellc.com/halloway/JavaWin32.html">
+		Java/COM and Java/Win32 interoperability technologies and products</a>
+		(as of spring 2005, this page seems to be unavailable, but can be found
+		at the <a href="http://www.archive.org/">Internet Archive</a>).
+	</p>
+	<p>
+		This set of documentation should provide everything you need to get
+		started using Jawin. It is recommended that new users at least reads
+		this document and <a href="jawintypebrowser.html" title="Getting started with the Jawin Type Browser">Generating stubs</a>.
+		For more than the simplest usages, it is also recommended to make
+		oneself familar with the <a href="jawinarchitecture.html" title="Jawin Architecture">Jawin Architecture</a>
+		(especially the details about error handling and threading issues).
+	</p>
+	<p>		
+		If you have any questions, please subscribe and
+		post them to the <a href="http://discuss.develop.com/jawin.html">Jawin mailing list</a>.
+	</p>
+
+	<h2><a name="license">License</a></h2>
+	<p>
+		Use of Jawin is subject to the following
+		<a href="../LICENSE.txt">LICENSE</a>. Jawin includes Konstantin Boukreevs
+		<a href="http://www.codeproject.com/cpp/exception.asp">C++ Exception
+		Handling classes</a>. See <a href="../LICENSE-CPP-Exception.txt">LICENSE-CPP-Exception</a>
+		for license and copyright details. The Jawin Type Browser includes
+		software developed by the <a href="http://www.apache.org/">Apache
+		Software Foundation</a>, specifically Xerces and Xalan. See
+		<a href="../LICENSE-Apache.txt">LICENSE-Apache</a> for license
+		and copyright details.
+	</p>
+
+	<h2><a name="content">Content</a></h2>
+	<ol>
+		<li><a href="#whyJawin">Why Jawin? (JNI Is Not Enough)</a></li>
+		<li><a href="#gettingStarted">Getting started with Jawin</a>
+			<ol>
+				<li><a href="#gettingStarted_loading">Loading Jawin native code</a></li>
+				<li><a href="#gettingStarted_demos">Jawin demos</a></li>
+				<li><a href="#gettingStarted_multithreaded">Multithreaded applications</a></li>
+				<li><a href="#gettingStarted_javaSecurity">Java Security</a></li>
+			</ol>		
+		</li>
+		<li><a href="#callingScript">Calling a Scriptable COM component</a></li>
+		<li><a href="#callingStubs">Calling a COM component using generated stubs</a></li>
+		<li><a href="#callingVTable">Calling a VTable based COM component</a></li>
+		<li><a href="#callingDll">Calling a DLL Entry Point</a></li>
+		<li><a href="#callingNET">In-process interoperability with .NET</a></li>
+		<li><a href="#troubleshooting">Troubleshooting Jawin</a>
+			<ol>
+				<li><a href="#troubleshooting_diagnostic">Diagnostic Output</a></li>
+			</ol>		
+		</li>
+		<li><a href="#additionalResources">Additional Resources</a></li>
+	</ol>
+
+	<h2><a name="whyJawin">1. Why Jawin? (JNI is not enough)</a></h2>
+	<p>
+		The Java Native Interface (JNI) is a standard way to access native code
+		from the Java platform. JNI provides a set of low-level primitives that
+		can be used to marshal arguments from Java into native code, and vice
+		versa.
+	</p>
+	<p>
+		Note the choice of the word "primitive". JNI is a very low-
+		level approach to calling native code. Examine the code fragment below,
+		which shows using JNI to access the registry. Only the code in bold is
+		relevant. All the rest of the code is devoted to managing parameters and
+		resources, and is totally irrelevant to the task at hand.
+	</p>
+	<p class="codeIndent">
+		<code>JNIEXPORT jint JNICALL Java_NTRegistry_getDword<br>
+			(JNIEnv *pEnv, jclass cls, jint hive, jstring key, jstring name)<br>
+			{<br>
+			&nbsp;&nbsp;unsigned long dw = -1;<br>
+			&nbsp;&nbsp;unsigned long size;<br>
+			&nbsp;&nbsp;HKEY hkey = NULL; jchar* psName = NULL;<br>
+			&nbsp;&nbsp;jchar* psKey = NULL;<br>
+			&nbsp;&nbsp;if (!getString(pEnv, key, &amp;psKey)) goto fail;<br>
+			&nbsp;&nbsp;if (!getString(pEnv, name, &amp;psName)) goto fail;<br>
+			<b>&nbsp;&nbsp;if (ERROR_SUCCESS != ::RegOpenKeyW((HKEY)hive, psKey, &amp;hkey)) goto fail;</b><br>
+			&nbsp;&nbsp;size = sizeof(dw);<br>
+			<b>&nbsp;&nbsp;if (ERROR_SUCCESS == ::RegQueryValueExW(hkey, psName, NULL, NULL,&nbsp;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			(BYTE*) &amp;dw, &amp;size)) goto cleanup;</b><br>
+			fail:<br>
+			&nbsp;&nbsp;cls = pEnv-&gt;FindClass("java/lang/IllegalArgumentException");<br>
+			&nbsp;&nbsp;if (cls) pEnv-&gt;ThrowNew(cls, "Could not read registry key");<br>
+			cleanup:<br>
+			&nbsp;&nbsp;if (hkey) ::RegCloseKey(hkey);<br>
+			&nbsp;&nbsp;if (psKey) free (psKey);<br>
+			&nbsp;&nbsp;if (psName) free (psName);<br>
+			<b>&nbsp;&nbsp;return dw;</b><br>
+			}
+		</code>
+	</p>
+	<p>
+		This is not the intended use for JNI. JNI is best when it is used to
+		build a higher level marshalling layer that provides a transparent, or
+		near transparent, mapping between Java objects and objects on a
+		particular native platform. In order to access the very large number of
+		COM components and Win32 DLLs, several companies and open-source
+		projects have leveraged JNI to create more developer-friendly,
+		Win32-specific solutions.
+	</p>
+	<p>
+		Jawin is one such project. I built Jawin because I was dissatisfied with
+		JNI as a mechanism for interop. JNI requires that you write custom
+		native code each time you want to add a new capability. With Jawin, all
+		the native code is in Jawin.dll, and no additional native code needs to
+		be written.
+	</p>
+
+	<h2><a name="gettingStarted">2. Getting started with Jawin</a></h2>
+	<p>
+		Jawin requires JDK 1.3 or higher and can (of course) only be used on
+		Windows machines with COM-support (all versions since Windows 95 has
+		some kind of COM-support, although Windows 95 and NT 4, might require
+		installation of DCOM to get decent COM-support).
+	</p>
+	<p>
+		To use Jawin in your project(s), download the newest binary relase from
+		the <a href="http://sourceforge.net/project/showfiles.php?group_id=66397">Jawin repository</a>
+		at SourceForge.net. Unzip the release to a directory of your choice.
+		This will give you 5 folders:
+	</p>
+	<table class="main">
+		<tr><th>Folder</th><th>Content</th></tr>
+		<tr>
+			<td>bin</td>
+			<td>Containing the native Jawin code. You must make sure that 
+			this is loaded as described in the
+			<a href="#gettingStarted_loading">Loading Jawin native code</a>-section
+			below. The <code>debug</code> subfolder contains the native code
+			compiled with debug information together with debug symbols.</td>
+		</tr>
+		<tr>
+			<td>demos</td>
+			<td>Containing Jawin demos. See the <a href="#gettingStarted_demos">Jawin
+			demos</a>-section below.</td>
+		</tr>
+		<tr>
+			<td>docs</td>
+			<td>Containing an offline version of this documentation together
+			with the Javadoc for Jawin.</td>
+		</tr>
+		<tr>
+			<td>lib</td>
+			<td>Containing the jawin.jar file, which contains the core Jawin
+			classes. <b>This jar-file should be put on the classpath for your project.</b>
+			<br>Together with the core Jawin classes, some user-donated stubs are
+			included in the jawin-stubs.jar file. Not all users will need this
+			jar-file.</td>
+		</tr>
+		<tr>
+			<td>typebrowser</td>
+			<td>Containing the Jawin Type Browser, used for generating stubs
+			for Jawin. Please consult the <a href="jawintypebrowser.html">documentation</a>
+			for the Jawin Type Browser for how to launch and use this tool.
+			</td>
+		</tr>
+	</table>
+
+	<h3><a name="gettingStarted_loading">2.1. Loading Jawin native code</a></h3>
+	<p>
+		When you use Jawin to access native code, you need only load the single 
+		Jawin library. No other native code is necessary. However, Jawin itself 
+		is a standard JNI library. The first challenge in using Jawin is making 
+		sure that the Jawin library is visible to your application. You can set 
+		the standard <code>java.library.path</code> property to point to the 
+		location of jawin.dll on your system:
+	</p>
+	<p class="codeIndent">
+		<code>java -Djava.library.path=c:/jawin/bin SomeMainClass</code>
+	</p>
+	<p>
+		The <code>java.library.path</code> can be both a full path as in the
+		example, or a path relative to the working dir. Note that the 
+		working dir itself is always on the library path. The default behavior
+		of the Jawin loading code is to load a library with the name jawin.dll,
+		this can be overridden by setting the <code>org.jawin.lib</code>-property
+		(note that this must not contain the file prefix, eg. <code>.dll</code>)
+		as follows:
+	</p>
+	<p class="codeIndent">
+		<code>java -Djava.library.path=c:/jawin/bin -Dorg.jawin.lib=AnotherJawinName SomeMainClass</code>
+	</p>
+	<p>
+		Jawin also includes a special flag that you can use to specify the full 
+		path and name of the Jawin library. This form is usually used to load 
+		the debug version of the Jawin native code, like so:
+	</p>
+	<p class="codeIndent">
+		<code>java -Dorg.jawin.hardlib=c:/jawin/bin/debug/jawind.dll SomeMainClass</code>
+	</p>
+	<p>
+		The debug version of Jawin is located at bin/debug/jawind.dll in your
+		Jawin installation. The purpose of the debug build is to help troubleshoot 
+		problems inside Jawin. The debug version of Jawin contains debug symbols 
+		and may sometimes <code>ASSERT</code> before throwing a 
+		<code>COMException</code> back to Java. This is by design, so that you 
+		can jump into the debugger to see what caused the exception. You should 
+		never deploy the debug version of Jawin.
+	</p>
+	<p>
+		You can also access the Jawin library by adding it to your Windows 
+		system directory, or by running your application from the directory 
+		where the library is located. These methods may seem simpler, but they 
+		can cause configuration headaches later. The explicit command-line flags 
+		listed above are the preferred way to locate the Jawin native library.
+	</p>
+
+	<h3><a name="gettingStarted_demos">2.2. Jawin demos</a></h3>
+	<p>
+		The <code>demos</code>-folder contains demo code, showing how to
+		use Jawin. Together with this is a simple Ant file for compiling and
+		running these demos. You will need <a href="http://ant.apache.org">Ant 1.5</a>
+		or newer to use this buildfile. The following table gives an overview 
+		of the available demos:
+	</p>
+	<table class="main">
+		<tr><th>Ant target</th><th>Source file</th><th>Description</th></tr>
+		<tr>
+			<td>ppt</td>
+			<td>demos/CreatePpt</td>
+			<td>Creates a simple PowerPoint Presentation (is explained in
+			<a href="#callingScript">Calling a Scriptable COM component</a>
+			below). Requires that MS PowerPoint is installed.</td>
+		</tr>
+		<tr>
+			<td>word</td>
+			<td>demos/CreateWord</td>
+			<td>Launches Word. Requires that MS Word is installed.</td>
+		</tr>
+		<tr>
+			<td>dll-hello</td>
+			<td>demos/HelloDll</td>
+			<td>Demonstrates how to call a DLL entry point, calling the Win32
+			<code>MessageBoxW</code> method. See <a href="#callingDll">Calling
+			a DLL Entry Point</a> below for further explaination.</td>
+		</tr>
+		<tr>
+			<td>dllgeneric-hello</td>
+			<td>demos/HelloDllGeneric</td>
+			<td>Demonstrates how to call a DLL entry point using the generic
+			FuncPtr invoke method.</td>
+		</tr>
+		<tr>
+			<td>dllstub-hello</td>
+			<td>demos/HelloDllStub</td>
+			<td>The same example as <code>dll-hello</code>, except it uses
+			a strongly typed stub as explained in <a href="#callingDll">Calling
+			a DLL Entry Point</a> below.</td>
+		</tr>
+		<tr>
+			<td>registry</td>
+			<td>demos/DemoRegistry</td>
+			<td>Demonstrates accessing some of the Win32 Registry APIs.
+			Reads the Java Runtime Enviroment version from the registry,
+			and add and delete a Jawin-key to the <code>HKEY_LOCAL_MACHINE/SOFTWARE</code>
+			registry hive. Please note that this demo modifies the registry.</td>
+		</tr>
+		<tr>
+			<td>eventlog</td>
+			<td>demos/DemoEventLog</td>
+			<td>Demonstrates accessing some of the Win32 eventlog APIs.
+			Reads a number of entries from the Application eventlog and
+			adds a new entry. Please note that this demo modifies the eventlog.</td>
+		</tr>
+		<tr>
+			<td>security</td>
+			<td>demos/DemoSecurityAPIs</td>
+			<td>Demonstrates accessing some of the Win32 security APIs.
+			Reads process and user information.</td>
+		</tr>
+		<tr>
+			<td>event-handler</td>
+			<td>demos/DemoConsoleEventHandler</td>
+			<td>Demonstrates setting a Win32 console handler from Java.
+			It also demonstrates providing a Java implementation of a
+			Win32 callback function.</td>
+		</tr>
+		<tr>
+			<td>logoff-handler</td>
+			<td>demos/RunRMIRegistry</td>
+			<td>Sets a Win32 console handler like the <code>event-handler</code>-demo.
+			The console handler ignores logoff events, which could be valuable
+			for long running daemons like the RMI-registry.</td>
+		</tr>
+		<tr>
+			<td>petzold</td>
+			<td>demos/petzold/chap03/HelloJava</td>
+			<td>A Jawin port of Petzold's Hello World example. Demonstrates
+			how to create a window and process window messages (eg. it 
+			demonstrates providing a Java implementation of a Win32 callback
+			function).</td>
+		</tr>
+		<tr>
+			<td>net-hello</td>
+			<td>demos/HelloNET</td>
+			<td>A example showing how to call a .NET object exposed as a
+			COM object. To run this example you need some .NET requirements as
+			well as to make some manual steps. Please see the section on
+			<a href="#callingNET">In-process interoperability with .NET</a>.
+			</td>
+		</tr>
+	</table>
+
+	<h3><a name="gettingStarted_multithreaded">2.3. Multithreaded applications</a></h3>
+	<p>
+		If Jawin is to be used in a multithreaded environment, one unfortunately
+		has to know some of the groovy details of COM-threading. The 
+		<a href="jawinarchitecture.html#comThreading">COM Threading</a>-section
+		of the Jawin Architecture document gives the basic information about
+		how Jawin handles the COM-threading issues, and how the programmer
+		should behave in a multithreaded environment.
+	</p>
+
+	<h3><a name="gettingStarted_javaSecurity">2.4. Java Security</a></h3>
+	<p>
+		If your application is running in a JVM with a SecurityManager
+		the jawin.jar needs to be assigned the <code>loadLibrary.<b>&lt;somepath&gt;</b>/jawin.dll</code>
+		<code>java.lang.RuntimePermission</code> to make it able to load
+		the native Jawin code.
+	</p>
+	<p>
+		More permissions may be necessary, since we haven't yet met a
+		real-world-example where Jawin is used in context of a SecurityManager.
+		So we would be pleased to hear about any experience with this on the
+		Jawin mailing list.
+	</p>
+
+	<h2><a name="callingScript">3. Calling a Scriptable COM component</a></h2>
+	<p>
+		Probably the most common use of Jawin is to call a scriptable COM 
+		component. The code fragment below (this is the <code>ppt</code>-demo
+		from the <a href="#gettingStarted_demos">Jawin demos</a>-section) demonstrates using Jawin to 
+		instantiate PowerPoint and build a very simple slide show.
+	</p>
+	<p class="codeIndent">
+		<code>
+			import org.jawin.DispatchPtr;<br>
+			import org.jawin.win32.Ole32;<br>
+			&nbsp;.<br>&nbsp;.<br>
+			try {<br>
+			&nbsp;&nbsp;Ole32.CoInitialize();<br>
+			&nbsp;&nbsp;DispatchPtr app = new DispatchPtr("PowerPoint.Application");<br>
+			&nbsp;&nbsp;app.put("Visible", true);<br>
+			&nbsp;&nbsp;DispatchPtr preses = (DispatchPtr)app.get("Presentations");<br>
+			&nbsp;&nbsp;DispatchPtr pres = (DispatchPtr) preses.invoke("add", new Integer(-1));<br>
+			&nbsp;&nbsp;DispatchPtr slides = (DispatchPtr)pres.get("Slides");<br>
+			&nbsp;&nbsp;DispatchPtr slide = (DispatchPtr) slides.invoke("Add", new Integer(1), new Integer(2));<br>
+			&nbsp;&nbsp;DispatchPtr shapes = (DispatchPtr)slide.get("Shapes");<br>
+			&nbsp;&nbsp;DispatchPtr shape = (DispatchPtr) shapes.invoke("Item", new Integer(1));<br>
+			&nbsp;&nbsp;DispatchPtr frame = (DispatchPtr)shape.get("TextFrame");<br>
+			&nbsp;&nbsp;DispatchPtr range = (DispatchPtr)frame.get("TextRange");<br>
+			&nbsp;&nbsp;range.put("Text", "Use Jawin to call COM objects");<br>
+			&nbsp;&nbsp;Ole32.CoUninitialize();<br>
+			} catch (Exception e) {<br>
+			&nbsp;&nbsp;e.printStackTrace();<br>
+			}
+		</code>
+	</p>
+	<p>
+		The calls to <code>Ole32.CoInitialize</code> and 
+		<code>Ole32.CoUninitialize</code> setup and tear down the COM libraries 
+		on the current thread. You must make these calls on any thread that will 
+		be calling COM objects. The first <code>DispatchPtr</code> is created 
+		directly, using the ProgId for the COM class 
+		you want to use (the name <code>DispatchPtr</code> comes from the fact 
+		that scriptable COM components implement the <code>IDispatch</code> 
+		interface). Subsequent <code>DispatchPtr</code> instances are created by 
+		calling methods and accessors, working down the object hierarchy to 
+		finally place some text on a slide.
+	</p>
+	<p>
+		The <a href="jawinuserguide_dispatch.html">Userguide - Calling a
+		Scriptable COM Interface</a> document, elaborates on the exact rules
+		for calling a scriptable COM component from Jawin.
+	</p>
+	<p>
+		This code has one noteworthy advantage: It is simple. Code written in 
+		this style requires no compile-time knowledge of the COM component you 
+		are calling. You could attempt to <code>invoke</code>, <code>put</code>, 
+		or <code>get</code> any name you want - the Java compiler will not care.
+	</p>
+	<p>
+		This simplicity can also be seen as a disadvantage. Because it uses no 
+		type information to describe PowerPoint, the compiler will not tell you 
+		if this code represents a valid set of method calls and property 
+		accesses. Instead of always using <code>DispatchPtr</code>, it would be 
+		nice to have actual Java classes named <code>Application</code>, 
+		<code>Presentation</code>, and <code>Slide</code>, etc., with specific 
+		methods that can be verified by the Java compiler.
+	</p>
+	<p>
+		Jawin's code generation feature can create these helper classes, which 
+		are called stubs.
+	</p>
+
+	<h2><a name="callingStubs">4. Calling a COM component using generated stubs</a></h2>
+	<p>
+		The following code fragment is identical in effect to the code sample 
+		above, except it uses generated java classes as stubs for the dispatch 
+		interfaces in the type library.
+	</p>
+	<p class="codeIndent">
+		<code>
+			&lt;stub imports&gt;;<br>
+			import org.jawin.win32.Ole32;<br>
+			&nbsp;.<br>&nbsp;.<br>
+			try {<br>
+			&nbsp;&nbsp;Ole32.CoInitialize();<br>
+			&nbsp;&nbsp;_Application app = new _Application("PowerPoint.Application");<br>
+			&nbsp;&nbsp;app.put("Visible", true);<br>
+			&nbsp;&nbsp;Presentations preses = app.getPresentations();<br>
+			&nbsp;&nbsp;_Presentation pres = preses.Add(-1);<br>
+			&nbsp;&nbsp;Slides slides = pres.getSlides();<br>
+			&nbsp;&nbsp;_Slide slide = slides.Add(1,2);<br>
+			&nbsp;&nbsp;Shapes shapes = slide.getShapes();<br>
+			&nbsp;&nbsp;Shape shape = shapes.Item(new Integer(1));<br>
+			&nbsp;&nbsp;TextFrame frame = shape.getTextFrame();<br>
+			&nbsp;&nbsp;TextRange range = frame.getTextRange();<br>
+			&nbsp;&nbsp;range.setText("Jawin to call COM objects");<br>
+			&nbsp;&nbsp;Ole32.CoUninitialize();<br>
+			} catch (Exception e) {<br>
+			&nbsp;&nbsp;e.printStackTrace();<br>
+			}<br>
+		</code>
+	</p>
+	<p>
+		When using the generated stubs, you must still call 
+		<code>Ole32.CoInitialize</code> and <code>Ole32.CoUninitialize</code>
+		in order to bootstrap the COM libraries.  However, this code has the 
+		notable advantage of being strongly typed.  In addition to strongly 
+		typed references, the methods exposed by the stubs contain strongly 
+		typed parameter lists.  Using the generated stubs, you get compile-time 
+		protection against type misuse.
+	</p>
+	<p>
+		Jawin also provides a mechanism for generating a second type of file: 
+		interfaces which represent any COM enums found in the type library. 
+		These interfaces scope a list of named constants inside a namespace 
+		which matches the enum name from the library. This allows the Java 
+		developers the same ability to avoid "magic number" programming as is 
+		afforded to COM programmers using VB or C++.
+	</p>
+	<p>
+		Jawin contains a stub generator called the Jawin Type Browser, please
+		consult the <a href="jawintypebrowser.html">documentation</a> for
+		this tool for how to generate stubs for Jawin.
+	</p>
+
+	<h2><a name="callingVTable">5. Calling a VTable based COM component</a></h2>
+	<p>
+		Some COM interfaces are not scriptable (ie. they do not implement
+		the <code>IDispatch</code>-COM-interface). The Jawin Type Browser
+		are able to generate stubs for these as well (although the support
+		are not quite as good as for dispatch based COM components). The
+		type label for these vtable based COM interfaces in the Jawin Type
+		Browser	is <a href="jawintypebrowser.html#supportedTypes">Interface</a>.
+	</p>
+	<p>
+		If the Jawin Type Browser is not able to generate complete stub-code
+		for a vtable based COM interface, the guidelines in the 
+		<a href="jawinuserguide_vtable.html">Userguide - Calling a VTable Based
+		COM Interface</a> document should be followed for manually writing
+		the stub-code.	
+	</p>
+	
+	<h2><a name="callingDll">6. Calling a DLL Entry Point</a></h2>
+	<p>
+		Jawin also supports calling traditional old style DLL entry points, but
+		at this time the Jawin Type Browser does not include an automatic 
+		stub generator for DLL entry points. So if you need to need to do this
+		for a common DLL (eg. the Win32 API functions), you should check whether
+		any Java wrapping code exists in the donated-stubs library. The donated
+		library exists in the <code>lib/jawin-stubs.jar</code> and javadoc
+		for it exists in the folder <code>docs/api-donated-stubs</code>.
+	</p>
+	<p>
+		If the donated library does not contain any stubs for the requested 
+		DLL entry points, the <a href="jawinuserguide_dll.html">Userguide -
+		Calling a DLL Entry Point</a> should be consulted for information
+		about how to use Jawin to call a DLL entry point.
+	</p>
+	
+	<h2><a name="callingNET">7. In-process interoperability with .NET</a></h2>
+	<p>
+		Besides the COM and Win32 interoperability, Jawin can also be used for
+		in-process interoperability with the Microsoft .NET platform. This can be
+		accomplished because the .NET development tools makes it possible to
+		export .NET objects as COM-objects.
+	</p>
+	<p>
+		If in-process interoperability is not strictly needed, the recommended
+		(and buzzword compatible) way to communicate between .NET and Java
+		services is probably to use webservices. There should be plenty of 
+		resources around the Internet and in books, that explains webservices.
+		One starting resource could be <a href="http://www.ws-i.org/">WS-I -
+		the Web Services Interoperability Organization</a>.
+	</p>
+	<p>
+		The <a href="jawinuserguide_net.html">Userguide - Interoperability with
+		.NET Classes</a> document contains a walk through the simple
+		prof-of-concept <code>net-hello</code> demo.
+	</p>
+	
+	<h2><a name="troubleshooting">8. Troubleshooting Jawin</a></h2>
+	<p>
+		If you are getting an <code>UnsatisfiedLinkError</code> when loading 
+		Jawin, read the <a href="#gettingStarted_loading">Loading Jawin native 
+		code</a>-section. If some stubs or data types cause exceptions, you may 
+		be able to track the problem using Jawin's
+		<a href="#troubleshooting_diagnostic">Diagnostic Output</a>.
+	</p>
+	
+	<h3><a name="troubleshooting_diagnostic">8.1. Diagnostic Output</a></h3>
+	<p>
+		Jawin includes several auditing flags that can be used to emit 
+		diagnostic output, as described in the table below. The diagnostic 
+		output will be enabled if these flags are set to any value.
+	</p>
+	<table class="main">
+		<tr><th>Flag name</th><th>Diagnostic output</th></tr>
+		<tr>
+			<td><code>org.jawin.traceRefs</code></td>
+			<td>COM object reference counting</td>
+		</tr>
+		<tr>
+			<td><code>org.jawin.traceWin32</code></td>
+			<td>Win32 marshal packets</td>
+		</tr>
+		<tr>
+			<td><code>org.jawin.traceCom</code></td>
+			<td>COM marshal packets</td>
+		</tr>
+		<tr>
+			<td><code>org.jawin.traceDispatch</code></td>
+			<td>scriptable COM object marshal packets</td>
+		</tr>
+	</table>
+
+	<h2><a name="additionalResources">9. Additional Resources</a></h2>
+	<p>
+		This introduction to Jawin assumes the reader is already somewhat
+		familiar with COM, Win32, and Java. For COM platform basics see [Box98].
+		For Win32, see [Ric99]. For Java platform basics see [Hal01], especially
+		the appendix on Jawin.
+	</p>
+	<p>
+		Jawin is one of a large number of open-source and commerical products that
+		integrate Java with COM and Win32. For a list of alternatives, see
+		the <a href="http://www.relevancellc.com/halloway/JavaWin32.html">Java/Win32/COM interoperation product list</a>
+		maintained by Stuart Halloway (as of spring 2005, this page seems to be
+		unavailable, but can be found at the <a href="http://www.archive.org/">
+		Internet Archive</a>).
+	</p>
+
+	<p>
+		<a name="additionalJawinResources">Additional Jawin resources</a>
+	</p>
+	<ul>
+		<li>The SourceForge.net <a href="http://sourceforge.net/projects/jawinproject/">
+		project site</a> for Jawin.</li>
+		<li>Binary and source <a href="http://sourceforge.net/project/showfiles.php?group_id=66397">
+		releases</a>.</li>
+		<li>The <a href="http://discuss.develop.com/jawin.html">Jawin mailing list</a>
+		kindly hosted by <a href="http://www.develop.com">Develop Mentor</a>.
+		Please send comments and questions to this list.</li>
+	</ul>
+
+	<p>
+		<a name="references">Referenced books</a>
+	</p>
+	<ul>
+		<li>
+			<b>[Box98]</b> Box, Don. <i>Essential COM</i><br>
+			Addison-Wesley, Reading, MS 1998.
+		</li>
+		<li>
+			<b>[Ewa01]</b> Ewald, Tim. <i>Transactional COM+: Building 
+			Scalable Applications</i><br>Addison-Wesley, Reading, MA, 2001.
+		</li>
+		<li>
+			<b>[Hal01]</b> Halloway, Stuart. <i>Component Development for
+			the Java Platform</i><br>Addison-Wesley, Reading, MA, 2001.
+		</li>
+		<li>
+			<b>[Ric99]</b> <i>Programming Applications for Microsoft Windows, 4th Ed.</i><br>
+			Microsoft Press, Redmond, WA, 1999.
+		</li>
+	</ul>
+	
+	<hr>
+	<table class="footer" width="100%">
+		<tr>
+			<td class="footer">
+				Copyright (c) 2000-2005, <a href="http://jawinproject.sourceforge.net/">The Jawin Project</a>
+				- <a href="../LICENSE.txt">LICENSE</a>
+			</td>
+			<td class="footer" rowspan="3">
+				<a href="http://sourceforge.net">
+				<img class="sourceforge" src="img/sflogo2.png" width="125px" height="37px"
+					alt="SourceForge.net Logo" title="SourceForge.net" />
+				</a>
+			</td>
+		</tr>
+		<tr>
+			<td class="footer">This documentation was written for
+				version: <b>2.0, alpha 1</b> of Jawin.
+			</td>
+		</tr>
+		<tr>
+			<td class="footer">$Id: jawin.html,v 1.13 2005/03/23 20:38:03 arosii_moa Exp $</td>
+		</tr>
+	</table>
+</body>
+</html>

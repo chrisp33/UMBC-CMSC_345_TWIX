@@ -8,5 +8,7 @@
 			<attribute name="javadoc_location" value="file:/Users/Stephen/UMBC-CMSC_345_TWIX/Source Code/libs/apidocs/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="var" path="JAWIN_JARS/jawin-stubs.jar"/>
+	<classpathentry kind="var" path="JAWIN_JARS/jawin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
