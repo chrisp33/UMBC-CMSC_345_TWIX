@@ -1,4 +1,8 @@
 Admin
+UserName
+Password
+.
+Admin
 Chriss
 password1
 .
@@ -18,4 +22,8 @@ Hello be
 Normal
 Charlie
 Next
+.
+Normal
+Zheng
+password8
 .

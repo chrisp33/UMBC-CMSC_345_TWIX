@@ -7,12 +7,67 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.Scanner;
 
 public class ReadText {
 	LinkedList<Location> location = new LinkedList<Location>();
 	LinkedList<User> user = new LinkedList<User>();
 	private String userFile = "user.txt";
 	private String locationFile = "location.txt";
+	private int currentUser;
+	private boolean login;
+	static Scanner input = new Scanner(System.in);
+
+	/*
+	 * Constructor that starts this file reader
+	 * sets currentUser to 0 to mean no user at this time
+	 * set login to false
+	 * reads the location file and user file to have data
+	 * input: none
+	 * output: none
+	 */
+	public ReadText()
+	{
+		currentUser = 0;
+		login = false;
+		readLocation();
+		readUser();
+	}
+	/*
+	 * allows the user to log in and sets the user
+	 * input:	String: name of the person logging in
+	 * 			String: password of the person logging in
+	 * output:	true if the person is logged in
+	 * 			false if there are no one with that username / password
+	 */
+	public boolean login(String name, String password)
+	{
+
+		//loops through all the user in the file
+		for(int i = 0; i < user.size(); i++)
+		{
+			//checks the user
+			if(user.get(i).login(name, password))
+			{
+				currentUser = i;
+				login = true;
+			}
+		}
+		return false;
+	}
+	/*
+	 * log the user out
+	 */
+	public void logout()
+	{
+		currentUser = 0;
+		login = false;
+	}
+	/*
+	 * read all the location from the file
+	 * input: none
+	 * output: none
+	 */
 	public void readLocation()
 	{
 		BufferedReader br = null;
@@ -23,11 +78,16 @@ public class ReadText {
 			e.printStackTrace();
 		}
 		try {
+			/* read format is read whole line
+			 * double (latitude), double(longitude), name of the location 
+			 * readline again for description
+			 */
 			String line = br.readLine();
 			while (line != null) {
 				String description = br.readLine();
 				String string[] = line.split(" ");
 				String name = "";
+				//concatnate the string for proper use
 				for(int i = 2; i < string.length; i++)
 				{
 					if(i + 1 != string.length)
@@ -35,6 +95,7 @@ public class ReadText {
 					else
 						name = name + string[i];
 				}
+				//add the location to the file
 				location.add(new Location(Double.parseDouble(string[0]), Double.parseDouble(string[1])
 						, name, description));
 				line = br.readLine();
@@ -52,8 +113,16 @@ public class ReadText {
 			}
 		}
 	}
-	public void readText()
+	/*
+	 * read the user file
+	 * input:	none
+	 * output:	none
+	 */
+	public void readUser()
 	{
+		/*
+		 * find the file that is being written from
+		 */
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new FileReader(userFile));
@@ -62,6 +131,7 @@ public class ReadText {
 			e.printStackTrace();
 		}
 		try {
+			//read first line to check if admin
 			String line = br.readLine();			
 			while (line != null) 
 			{
@@ -70,9 +140,14 @@ public class ReadText {
 					boolean admin = false;
 					if(line.equalsIgnoreCase("Admin"))
 						admin = true;
+					//read the user
 					String userName = br.readLine();
+					//read the password
 					String password = br.readLine();
+					//get a new user
 					User newUser = new User(userName, password, admin);
+					//then the file reads the location name the user input
+					//designate "." as when the user stops selecting location location
 					while(!line.equalsIgnoreCase("."))
 					{
 						line = br.readLine();
@@ -85,82 +160,151 @@ public class ReadText {
 							}
 						}
 					}
+					//add the user to the user linked list
 					user.add(newUser);
 				}
+				//set the next line
 				line = br.readLine();
 			}
+			br.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-			try {
-				br.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
-
-	public LinkedList<User> getUser()
+	/*
+	 * get the user locations from the array and return all the locations
+	 * input:	none
+	 * output:	linked list of location the user entered
+	 */
+	public LinkedList<Location> getUserLocations()
 	{
-		return user;
+		return user.get(currentUser).getLocation();
 	}
+	/*
+	 * add user locations and then update the user file
+	 * input:	String of user name
+	 * 			String of password
+	 * 			Boolean of admin
+	 * output:	none
+	 */
 	public void addUser(String name, String password, boolean admin)
 	{
 		user.add(new User(name, password, admin));
+		printToUserFile();
 	}
-	public void addLocation(double longitude, double latitude, String name, String description)
+	/*
+	 * add new location to file and update the location file
+	 * input:	double latitude	
+	 * 			double longitude
+	 * 			string name of location
+	 * 			string description
+	 * output:	true if the user add a location
+	 *			false if the user cannot add a location
+	 */
+	public boolean addLocation(double latitude, double longitude , String name, String description)
 	{
-		location.add(new Location(longitude, latitude, name, description));
+		if(login == false || !user.get(currentUser).getAdmin())
+			return false;
+		location.add(new Location(latitude, longitude, name, description));
+		printToLocationFile();
+		return true;
 	}
-	public void addUserLocation(String UserName, String addLocation)
+	/*
+	 * add a new location to the user
+	 * input:	string of the location being added
+	 * output:	false of the user is 0
+	 * 			true if the user adds a new location properly
+	 */
+	public boolean addUserLocation(String addLocation)
 	{
-		int userIndex = 0;
+		if(login == true)
+			return false;
 		int locationIndex = 0;
-		for(int i = 0;i < user.size(); i++)
-		{
-			if(user.get(i).getName().equalsIgnoreCase(UserName))
-				userIndex = i;
-		}
+		//loops through the location to add the name
 		for(int i = 0;i < location.size(); i++)
 		{
 			if(location.get(i).getName().equalsIgnoreCase(addLocation))
 				locationIndex = i;
 		}
-		user.get(userIndex).addLocation(location.get(locationIndex));
+		user.get(currentUser).addLocation(location.get(locationIndex));
+		printToLocationFile();
+		return true;
 	}
-	public void removeUser(String name)
+	/*
+	 * remove the user from the database
+	 * input:	string of the user being removed
+	 * output:	true if user exist and removed
+	 * 			false otherwise
+	 */
+	public boolean removeUser(String name)
 	{
+
 		for(int i = 0; i < user.size(); i++)
 		{
 			String userName = user.get(i).getName();
-			if(userName.equalsIgnoreCase(name))
-				user.removeFirst();
-			if(userName.equalsIgnoreCase(name))
+			if(userName.equalsIgnoreCase(name) && (i + 1 != user.size()))
+			{
 				user.remove(i);
+				printToUserFile();
+				return true;
+			}
 			if(userName.equalsIgnoreCase(name))
+			{
 				user.removeLast();
+				printToUserFile();
+				return true;
+			}
 		}
+		return false;
 	}
-	public void removeLocation(String name)
+	/*
+	 * remove the location being called
+	 * input:	name being removed
+	 * output:	true if the location exist
+	 * 			false otherwise
+	 */
+	public boolean removeLocation(String name)
 	{
-		for(int i = 0; i < location.size(); i++)
-		{
-			if(location.get(i).getName().equalsIgnoreCase(name))
-				location.remove(i);
-		}
+		if(login == false || !user.get(currentUser).getAdmin())
+			for(int i = 0; i < location.size(); i++)
+			{
+				if(location.get(i).getName().equalsIgnoreCase(name))
+				{
+					location.remove(i);
+					printToLocationFile();
+					return true;
+				}
+			}
+		return false;
 	}
-	public void removeUserLocation(String userName, String removeLocation)
+	/*
+	 * remove the location from the user
+	 * input:	String of removeLocation
+	 * output:	true if there is a user logged in
+	 * 			false if otherwise
+	 */
+	public boolean removeUserLocation(String removeLocation)
 	{
-		for(int i = 0; i < user.size(); i++)
-		{
-			if(user.get(i).getName().equalsIgnoreCase(userName))
-				user.get(i).removeLocation(removeLocation);
-		}
+		if(login == false)
+			return false;
+		user.get(currentUser).removeLocation(removeLocation);
+		printToUserFile();
+		return true;
 	}
-	public void editLocation(double longitude, double latitude, String name, String description)
+	/*
+	 * edit the location
+	 * input:	double latitude
+	 * 			double longitude
+	 * 			String name
+	 * 			String description
+	 * output:	false if the user cannot edit the location
+	 * 			true otherwise
+	 */
+	public boolean editLocation(double latitude, double longitude, String name, String description)
 	{
+		if(!user.get(currentUser).getAdmin())
+			return false;
 		for(int i = 0; i < location.size(); i++)
 		{
 			if(name.equalsIgnoreCase(location.get(i).getName()))
@@ -171,61 +315,92 @@ public class ReadText {
 			}
 
 		}
+		return true;
 	}
+	/*
+	 * update the user file to be correct
+	 */
 	public void printToUserFile()
 	{
 		try {			 
 			FileWriter fstream = new FileWriter(userFile);
-
-			// if file doesnt exists, then create it
-
 			BufferedWriter bw = new BufferedWriter(fstream);
 			for(int i = 0; i < user.size(); i++)
 				bw.write(user.get(i).printFile());
 			bw.close();
-
-			System.out.println("Done");
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	/*
+	 * update the location file to be correct
+	 */
 	public void printToLocationFile()
 	{
 		try {			 
 			FileWriter fstream = new FileWriter(locationFile);
-
-			// if file doesnt exists, then create it
-
 			BufferedWriter bw = new BufferedWriter(fstream);
 			for(int i = 0; i < location.size(); i++)
 				bw.write(location.get(i).toString());
 			bw.close();
-
-			System.out.println("Done");
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 	}
+
 	public static void main(String[] args)
 	{
 		ReadText read = new ReadText();
-		read.readLocation();
+		String nextInput1 = input.nextLine();
+		int nextInput = Integer.parseInt(nextInput1);
+		String name = "";
+		String password = "";
+		String latitude = "";
+		String longitude = "";
+		String description = "";
+		while(nextInput != 0)
+		{
+			switch(nextInput)
+			{
+			//test login
+			case(1):
+				name = input.nextLine();
+				password = input.nextLine();
+				read.login(name, password);
+				break;
+			
+			//test add location
+			case(2):
+				latitude = input.nextLine(); 
+				longitude = input.nextLine();
+				name = input.nextLine();
+				description = input.nextLine();
+				read.addLocation(Double.parseDouble(latitude), Double.parseDouble(longitude), name, description);
+				break;
+			//test add user
+			case(3):
+				name = input.nextLine();
+				password = input.nextLine();
+				read.addUser(name, password, false);
+			}
+			nextInput1 = input.nextLine();
+			nextInput = Integer.parseInt(nextInput1);
+		}
+		//read.readLocation();
 		//		System.out.println(read);
-		read.readText();
+		//read.readUser();
 		//		System.out.println(read);
 		//read.addUser("Russ", "password2", false);
 		//test to make sure remove location works
 		//read.addUserLocation("Steven", "machu pichu");
 		//read.removeUser("Russ");
 		//read.addLocation(123.01, 97, "Adding location", "description of city");
-		read.removeLocation("Adding location");
+		//read.removeLocation("Adding location");
 		//test to make sure it prints user file properly
-		read.printToUserFile();
+		//read.printToUserFile();
 		//test to make sure it prints location file properly
-		read.printToLocationFile();
+		//read.printToLocationFile();
 	}
 }
 //Mean to test to see if readLocation works properly	

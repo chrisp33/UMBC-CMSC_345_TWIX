@@ -4,3 +4,7 @@ Description1 hjkhfda
 Description2
 234.0 12.0 machu pichu
 Description 2 rt
+963.12 746.12 Maryland
+It is our home town
+947.32 461.2 Viriginia
+It's the state south of MD
