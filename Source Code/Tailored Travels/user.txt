@@ -1,0 +1,29 @@
+Admin
+UserName
+Password
+.
+Admin
+Chriss
+password1
+.
+Normal
+Steven
+password2
+Hello be
+next lo
+machu pichu
+.
+Normal
+Mariama
+password3
+next lo
+Hello be
+.
+Normal
+Charlie
+Next
+.
+Normal
+Zheng
+password8
+.
