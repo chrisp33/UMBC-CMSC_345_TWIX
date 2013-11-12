@@ -133,9 +133,9 @@ public class Coordinate {
 		
 		//distance with negative input A: -50.0 , -50.0  B: 50 , 50 (SUCCESS)
 		destA.setLong(-50.0);
-		destA.setLat(-50.0);
+		//destA.setLat(-50.0);
 		
-		System.out.println(destA.distance(destB));
+		//System.out.println(destA.distance(destB));
 		
 		//distance with negative input B: -50.0 , -50.0  A: 50 , 50 (SUCCESS)
 		//destB.setLong(-50.0);

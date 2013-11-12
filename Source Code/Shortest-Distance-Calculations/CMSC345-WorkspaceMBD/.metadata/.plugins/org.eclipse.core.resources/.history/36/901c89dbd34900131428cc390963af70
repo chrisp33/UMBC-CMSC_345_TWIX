@@ -95,7 +95,5 @@ public class DistCalcDriver {
 			System.out.println(endlist.get(i));
 		}
 		System.out.print(totalDistance(endlist));
-		
-		
 	}
 }
