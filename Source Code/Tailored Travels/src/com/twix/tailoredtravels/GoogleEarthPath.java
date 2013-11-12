@@ -1,5 +1,7 @@
 package com.twix.tailoredtravels;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 
 /**
@@ -29,7 +31,28 @@ public class GoogleEarthPath {
 	}
 	
 	/**
-	 * Adds a new Waypoint ot the path, immediately before the end.
+	 * Initiates a new Google Earth path to be translated into KML
+	 * given a sorted ArrayList<Waypoint> as returned by DistCalcDriver
+	 * 
+	 * preconditions: sortedList is actually sorted to be a shortest path
+	 *  list of all waypoints
+	 * 
+	 * @param _start Thw beginning Waypoint
+	 * @param _end The final Waypoint
+	 */
+	public GoogleEarthPath(ArrayList<Waypoint> sortedList)
+	{
+		//Is this really the best way to handle the list
+		for(Waypoint w : sortedList)
+		{
+			wPath.add(w);
+		}
+		
+	}
+	
+	
+	/**
+	 * Adds a new Waypoint to the path, immediately before the end.
 	 * 
 	 * @param _new The Waypoint to add
 	 */
@@ -38,5 +61,26 @@ public class GoogleEarthPath {
 		Waypoint _temp = this.wPath.pollLast();
 		this.wPath.add(_new);
 		this.wPath.add(_temp);
+	}
+	
+	
+	/**
+	 * getPath returns the linkedList of waypoints for use
+	 * in creating KML file
+	 * 
+	 * @return wPath
+	 */
+	public LinkedList<Waypoint> getPath()
+	{
+		//create deep copy of wPath
+		LinkedList<Waypoint> rtnPath = new LinkedList<Waypoint>();
+		
+		for(Waypoint w : wPath)
+		{
+			rtnPath.add(w);
+		}
+		
+		return rtnPath;
+		
 	}
 }

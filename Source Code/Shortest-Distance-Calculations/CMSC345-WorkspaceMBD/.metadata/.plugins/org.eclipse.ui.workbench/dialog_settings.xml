@@ -3,13 +3,13 @@
 	<section name="org.eclipse.ui.internal.QuickAccess">
 		<item value="1200" key="dialogWidth"/>
 		<item value="625" key="dialogHeight"/>
+		<list key="orderedProviders">
+		</list>
 		<list key="orderedElements">
 		</list>
 		<list key="textArray">
 		</list>
 		<list key="textEntries">
-		</list>
-		<list key="orderedProviders">
 		</list>
 	</section>
 </section>

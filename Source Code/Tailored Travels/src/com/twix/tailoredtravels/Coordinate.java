@@ -1,17 +1,17 @@
-package shortDistance;
+package com.twix.tailoredtravels;
 
 
 /**
  * @author Mariama Barr-Dallas & Michael Tang
  * @version 1.0
  *
- *This is the Coordinate class which 
- *defines the Coordinate data structure
+ * This is the Coordinate class which 
+ * defines the Coordinate data structure
  *
- *Each Coordinate possesses a :
- *Label - Name of the Coordinate
- *Longitude - horizontal dimension
- *Latitude - vertical dimension
+ * Each Coordinate possesses a :
+ * Label - Name of the Coordinate
+ * Longitude - horizontal dimension
+ * Latitude - vertical dimension
  */
 public class Coordinate {
 
@@ -59,11 +59,11 @@ public class Coordinate {
 	/**
 	 * @category Constructor
 	 * @param label
-	 * @param x
-	 * @param y
+	 * @param x (latitude)
+	 * @param y (longitude)
 	 * 
-	 * This is the constructor for the Coordinate Object
-	 * which takes in the latitude and longitude (x & y respectively)
+	 * This is the constructor for the Coordinate Object,
+	 * takes in the latitude and longitude (x & y respectively)
 	 *  
 	 */
 	public Coordinate(String label, double x, double y){
@@ -112,10 +112,11 @@ public class Coordinate {
 	}
 	
 	
-	/**This is a function to TEST the methods and attributes of the 
+	/**
+	 * This is a function to TEST the methods and attributes of the 
 	 * Coordinate class
 	 * 
-	 * @param args
+	 * @param args (none)
 	 */
 	public static void main(String[] args){
 		
