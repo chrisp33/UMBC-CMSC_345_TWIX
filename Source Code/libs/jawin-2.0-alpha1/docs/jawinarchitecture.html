@@ -1,0 +1,544 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<!--
+	This documentation is part of the Jawin Project:
+
+		http://jawinproject.sourceforge.net/
+
+	please consult the LICENSE at the project site before using this
+	documentation.
+
+	Id:				$Id: jawinarchitecture.html,v 1.9 2005/03/23 20:38:10 arosii_moa Exp $
+	Version:		$Revision: 1.9 $
+	Author(s):		Stuart Halloway, http://www.relevancellc.com
+					Justin Gehtland, http://www.relevancellc.com
+					Morten Andersen, arosii_moa (at) users.sourceforge.net
+-->
+<head>
+	<title>Jawin Architecture</title>
+	<meta http-equiv="Content-Language" content="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<meta http-equiv="Content-Script-Type" content="text/javascript">
+
+	<link rel="stylesheet" href="css/style.css" type="text/css">
+	<link rel="stylesheet" title="Compact fonts (default)" href="css/compact.css" type="text/css">
+	<link rel="alternate stylesheet" title="Standard fonts (accessibility)" href="css/accessibility.css" type="text/css">
+	<!-- style for print -->
+	<link rel="stylesheet" href="css/print.css" type="text/css" media="print">
+	<script src="js/menu.js" type="text/javascript"></script>
+</head>
+<body class="main">
+	<div class="navigation">
+		<p class="navigation-header" onclick="toggleNavigation()"
+			title="Click to open/close navigation" style="cursor: pointer;">
+			Jawin Documentation&nbsp;&nbsp;<span id="navigationToggle">&lt;</span>
+		</p>
+		<div style="display: block;" id="navigationList">
+			<ul class="navigation-list">
+				<li><a href="jawin.html" title="Introduction to Jawin">Introduction</a></li>
+				<li><a href="jawintypebrowser.html" title="Getting started with the Jawin Type Browser">Generating stubs</a></li>
+				<li><a href="jawinuserguide_vtable.html" title="Userguide - Calling a VTable Based COM Interface">VTable Based COM</a></li>
+				<li><a href="jawinuserguide_dispatch.html" title="Userguide - Calling a Scriptable COM Interface">Dispatch Based COM</a></li>
+				<li><a href="jawinuserguide_dll.html" title="Userguide - Calling a DLL Entry Point">DLL Entry Points</a></li>
+				<li><a href="jawinuserguide_net.html" title="Userguide - Interoperability with .NET Classes">.NET Interoperability</a></li>
+				<li><a>Architecture</a></li>
+				<li><a href="jawindeveloper.html" title="Jawin Developer Information">Developer info</a></li>
+				<li><a href="jawinrevisions.html" title="Jawin Revision History">Revision History</a></li>
+				<li><a href="jawincontributors.html" title="Jawin Contributors">Contributors</a></li>
+			</ul>
+			<p class="navigation-header"></p> <!-- the bottom line in the nav. -->
+		</div>
+		<script type="text/javascript">
+			toggleNavigation(); // to make sure the navigation will only be collapsed if javascript enabled
+		</script>
+	</div>
+
+	<h1>
+		Jawin Architecture
+	</h1>
+
+	<h2><a name="introduction">Introduction</a></h2>
+	<p>
+		This document gives an overview of the Jawin Architecture. For most
+		users only the sections about <a href="#errorHandling">Error Handling</a>
+		and <a href="#comThreading">COM Threading</a> contains "need to know"
+		information.
+	</p>
+
+	<h2><a name="content">Content</a></h2>
+	<ol>
+		<li><a href="#overview">Architectural Overview</a></li>
+		<li><a href="#intrinsics">Jawin Intrinsics</a></li>
+		<li><a href="#sharedStubs">Shared Stubs</a></li>
+		<li><a href="#genericStub">Jawin Generic Stub</a></li>
+		<li><a href="#errorHandling">Error Handling</a></li>
+		<li><a href="#comThreading">COM Threading</a>
+			<ol>
+				<li><a href="#comThreading_initialize">Initializing the COM Library on each Thread</a></li>
+				<li><a href="#comThreading_apartments">Thread Local and Thread Neutral References (the Apartment <i>Nightmare</i>)</a></li>
+			</ol>
+		</li>
+	</ol>
+
+	<h2><a name="overview">1. Architectural Overview</a></h2>
+	<p>
+		One goal of any interop tool is <i>transparency</i>. Ideally,
+		a Java programmer could use a COM or Win32 component without even
+		knowing she was doing so. The component would behave just like any
+		ordinary Java class, and the presence of Win32/COM would be entirely
+		transparent to the programmer.
+	</p>
+	<p>
+		In reality, some details cannot be entirely hidden, so the next
+		best thing is to have translucent access. A translucent stub is a Java
+		class that hides <i>most</i> of the details of COM and Win32. The code
+		below shows translucent stub code for accessing the Windows registry
+		from Java. In this example. the methods have simple signatures that
+		do not cause any particular challenges for a marshalling layer.
+		As a result, the only departure from transparency is the presence
+		of <code>COMException</code>s.
+	</p>
+	<p class="codeIndent">
+		<code>public class Registry {<br>
+			&nbsp;&nbsp;public static int OpenKey(int key, String subkey) throws COMException;<br>
+			&nbsp;&nbsp;public static int CreateKey(int key, String subkey) throws COMException;<br>
+			&nbsp;&nbsp;public static void DeleteKey(int key, String subkey) throws COMException;<br>
+			&nbsp;&nbsp;public static String QueryStringValue(int key, String subkey) throws COMException;<br>
+			&nbsp;&nbsp;public static byte[] RawQueryValue(int key, String subkey) throws COMException;<br>
+			&nbsp;&nbsp;public static void CloseKey(int key) throws COMException;<br>
+			}
+		</code>
+	</p>
+	<p>
+		In order to produce stubs like the one shown above, you need three things:
+	</p>
+	<ol>
+		<li>type information that describes the entry points or interfaces to be accessed.</li>
+		<li>intrinsic functions (helper functions that marshal particular data types).</li>
+		<li>a marshalling layer that assembles calls to the intrinsic functions based on the type information.</li>
+	</ol>
+	<p>
+		Here is how Jawin does it:
+		<a name="figure1"><img class="center" src="img/jawin.png" height="388px" width="761px"
+		alt="Figure 1: Jawin overview" title="Figure 1: Jawin overview" /></a>
+		The translucent stub is generated from type information,
+		and is different for each COM interface or DLL entry point. Shared
+		stubs handle common method signatures by calling native methods with
+		correlated JNI signatures. The generic stub handles "everything else",
+		i.e. methods that have less common signatures and therefore no
+		shared stub. Both the generic stub and shared stubs use helper
+		functions called intrinsic functions to marshal particular data types.
+	</p>
+
+	<h2><a name="intrinsics">2. Jawin Intrinsics</a></h2>
+	<p>
+		Jawin intrinsic functions are the atoms of marshalling. An intrinsic
+		function knows how to convert one or more data types into a wire format,
+		or how to retrieve data types from a wire format.
+	</p>
+	<p>
+		On the Java side of Jawin, the intrinsics are located in the
+		<code>org.jawin.io</code> package and the <code>org.jawin.Variant</code> class.
+		<code>LittleEndianInputStream</code> and <code>LittleEndianOutputStream</code>
+		know how to handle Java primitives, e.g.
+	</p>
+	<p class="codeIndent">
+		<code>package org.jawin.io;<br>
+			public class LittleEndianInputStream {<br>
+			&nbsp;&nbsp;public final int readUnsignedShort() throws IOException {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;InputStream in = this.in;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;int ch2 = in.read();<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;int ch1 = in.read();<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;if ((ch1 | ch2) &lt; 0)<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw new EOFException();<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;return (ch1 &lt;&lt; 8) + (ch2 &lt;&lt; 0);<br>
+			&nbsp;&nbsp;}<br>
+			//etc.<br>
+			}
+		</code>
+	</p>
+	<p>
+		As the class names suggest, Jawin marshalling always uses little endian
+		byte order, which is the ordering expected by Win32 and COM. This
+		strategy could be called "Java makes right" since all the byte-ordering
+		work is done in Java, both during method calls and returns.
+		I chose this approach because I believe that Java code is easier to
+		write and test and equivalent COM code.
+	</p>
+	<p>
+		In addition to handling data types, intrinsic functions also handle other
+		semantic conversions. For example, there is a native intrinsic function
+		that converts Win32/COM return values into Java exceptions:
+	</p>
+	<p class="codeIndent">
+		<code>
+			#define CHECK_NONE 0<br>
+			#define CHECK_FALSE 1<br>
+			#define CHECK_HRESULT 2<br>
+			#define CHECK_W32 3<br>
+			<br>
+			inline bool checkRet(int ret, int flags) {<br>
+			&nbsp;&nbsp;switch (flags) {<br>
+			&nbsp;&nbsp;case CHECK_NONE:<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;return true;<br>
+			&nbsp;&nbsp;case CHECK_FALSE:<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;if (!ret) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JNIComException::SetLastError();<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;return true;<br>
+			&nbsp;&nbsp;case CHECK_HRESULT:<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;if (FAILED(ret)) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JNIComException::SetContextException(ret);<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;return true;<br>
+			&nbsp;&nbsp;case CHECK_W32:<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;if (ret != ERROR_SUCCESS) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JNIComException::SetContextException(ret);<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;return true;<br>
+			&nbsp;&nbsp;default:<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;JNIComException::SetContextException("Invalid code in checkRet");<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
+			&nbsp;&nbsp;}<br>
+			}
+		</code>
+	</p>
+	<p>
+		On the native side of Jawin, the intrinsic functions are spread across
+		SharedStubs.cpp, GenericStub.cpp, and Transform.cpp. At some future
+		date they may be factored into an Intrinsics.cpp.
+	</p>
+
+	<h2><a name="sharedStubs">3. Shared Stubs</a></h2>
+	<p>
+		Jawin uses shared stubs to marshal COM and Win32 methods that have
+		common signatures. For example, consider the following Win32
+		function calls:
+	</p>
+	<p class="codeIndent">
+		<code>HGDIOBJ GetStockObject(int fnObject);<br>
+			HRESULT CoInitialize(LPVOID reserved);<br>
+			BOOL UpdateWindow(HWND hwnd);<br>
+			BOOL DeregisterEventSource(HANDLE hEventLog);&nbsp;
+		</code>
+	</p>
+	<p>
+		Semantically, the argument types and return values of these methods are all
+		very different. However, all these types marshal the same, as 32-bit values.
+		Thus it is possible to implement all of these methods with a single JNI entry
+		point:
+	</p>
+	<p class="codeIndent">
+		<code>public static native int invokeI_I(int arg0, int func, int flags);</code>
+	</p>
+	<p>
+		This greatly reduces the number of entry points that must be implemented to
+		handle a given set of APIs. Instead of one entry point per method, you need only
+		one entry point per unique signature. Given this "shared stub" an
+		implementation of <code>CoInitialize</code> looks like this:
+	</p>
+	<p class="codeIndent">
+		<code>public static void CoInitialize() throws COMException {<br>
+			&nbsp;&nbsp;FuncPtr fp = new FuncPtr("OLE32.DLL", "CoInitialize");<br>
+			&nbsp;&nbsp;fp.invoke(0, ReturnFlags.CHECK_HRESULT);<br>
+			}
+		</code>
+	</p>
+	<p>
+		Jawin's shared stubs are in the Java class
+		<code>org.jawin.marshal.SharedStubs</code>.	The native
+		implementation is in the files SharedStubs.cpp and COMMarshal.cpp.
+	</p>
+	<p>
+		Of course, not all functions can be implemented with a finite number of
+		shared stubs. For methods with more exotic signatures, Jawin also provides a
+		generic stub.
+	</p>
+
+	<h2><a name="genericStub">4. Jawin Generic Stub</a></h2>
+	<p>
+		Jawin's generic stub is a true marshaller, similar to RMI or DCOM.
+		The generic stub views a function call as a sequence of events, as
+		shown in the <a href="#figure2">figure 2</a> below. Intrinsic
+		functions serialize a function into a request message, and the generic
+		stub moves this message into native space. There, another set of
+		intrinsic functions convert the serialized request into a call stack
+		and invoke the function. The entire sequence plays backwards to
+		serialize a response message with return values or exceptions and
+		ship it back to the caller.
+		<a name="figure2"><img class="center" src="img/genericstub.png" height="388px" width="753px"
+		alt="Figure 2: Jawin generic stub" title="Figure 2: Jawin generic stub" /></a>
+		The generic stub knows how to send messages back and forth from Java to
+		Win32, but it does not know the specifics of any particular method. On
+		the Java side, the translucent stub knows these details. However, there
+		is no Win32-side equivalent of the translucent stub. Sticking to the RMI
+		and CORBA naming convention, such a component would be called a
+		skeleton. Jawin does not use a skeleton because the request message
+		carries the type information with it.
+	</p>
+	<p>
+		In addition to the serialized request, the generic stub also passes an
+		<i>instruction stream</i> that describes how to deserialize the request
+		on the Win32/COM side. The instruction stream is sequence of bytecodes
+		that is processed by a simple interpreter to rebuild the call stack.
+		These are not bytecodes in the sense of a Java binary class; they are
+		Jawin specific and arbitrary.
+	</p>
+	<p>
+		The figure below shows the instruction stream that is generated when
+		marshalling a call to the Win32 API <code>MessageBoxW</code>. The
+		instruction stream begins with "0,0,0,0" for the first argument, which
+		happens to be an integer valued zero. The second argument is a string,
+		which is a little more complex. The "5,0,0,0" is the little endian
+		representation of the string length, followed by the string's contents
+		encoded as Unicode characters. The remainder of the request (not shown
+		in the figure) is generated in similar fashion.
+		<a name="figure3"><img class="center" src="img/instructionstream.png" height="235px" width="750px"
+		alt="Figure 3: Instruction stream" title="Figure 3: Instruction stream" /></a>
+		The code "IGGI" is the instruction stream that tells how to rebuild the
+		call stack. The "I" code indicates that a 32 bit value should be copied
+		directly into the stack. The "G" code indicates that the stub should
+		allocate a Unicode string, read the stream's contents into the string,
+		and then place a pointer to the string on the call stack. These
+		instruction codes are only a sample, Jawin's instruction string
+		vocabulary supports several stack transformation more complex than those
+		shown here. The instruction strings drive a state machine that is
+		implemented as a switch statement in the <code>Transform::process</code>
+		function.
+	</p>
+	<p>
+		Jawin's generic stub is primitive compared to RMI or DCOM. For example,
+		it does not understand pointer aliasing. Improvements are being made the
+		generic stub on an as-needed basis to support particular use cases.
+	</p>
+	<p>
+		(Jan 2002) I am working to document the instruction streams
+		<a href="instruction_docs.html">here</a>.
+	</p>
+
+	<h2><a name="errorHandling">5. Error Handling</a></h2>
+	<p>
+		Jawin automatically converts COM and Win32 errors into instances of <code>org.jawin.COMException</code>.
+	</p>
+	<p>
+		For COM errors, the exception will include the <code>HRESULT</code> and
+		the	error string. For example, the following fragment attempts to
+		create a non-existent COM component:
+	</p>
+	<p class="codeIndent">
+		<code>// from demos/src/demos/BadHresult.java<br>
+			try {<br>
+			&nbsp;&nbsp;Ole32.CoInitialize();<br>
+			&nbsp;&nbsp;DispatchPtr p = new DispatchPtr("new:Nonexistent.Component");<br>
+			&nbsp;&nbsp;throw new Error("Attempt to create nonexistent component should fail");<br>
+    		} catch (COMException e) {<br>
+			&nbsp;&nbsp;System.out.println("Got Expected Error: " + e);<br>
+    		}
+    	</code>
+    </p>
+	<p>
+		The preceding example will produce the following <code>COMException</code>:
+	</p>
+	<p class="codeIndent">
+		<code>&gt; ant "demo bad HRESULT"<br>
+			&gt; Got Expected Error: org.jawin.COMException: 800401e4: Invalid syntax
+		</code>
+	</p>
+	<p>
+		Often, the <code>HRESULT</code> is inadequate to diagnose an error. In
+		such situations, it is necessary to also collect any additional
+		thread-specific error information set by the object. As an example of this,
+		consider the ADO demo included with Jawin (see demos/src/jawin/ado). The
+		Ant build target <code>"ado demo"</code> passes in the data source name
+		<code>"DSN=Pubs"</code>. If this data source name does not exist, you
+		will see an error like this one:
+	</p>
+	<p class="codeIndent">
+		<code>org.jawin.COMException: 80020009:&nbsp;<br>
+			[Microsoft][ODBC Driver Manager] Data source name not found and no default<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;driver specified<br>
+			[src=Microsoft OLE DB Provider for ODBC Drivers,<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;guid={0C733A8B-2A1C-11CE-ADE5-00AA0044773D}]
+		</code>
+	</p>
+	<p>
+		Without the additional information provided by <code>SetErrorInfo</code>,
+		you would see only the <code>HRESULT</code> and the generic information
+		<code>Exception Occurred</code>.
+	</p>
+	<p>
+		For Win32 errors, the <code>COMException</code> will include the error code
+		and text reported by calling <code>GetLastError</code>.
+	</p>
+
+	<h2><a name="comThreading">6. COM Threading</a></h2>
+	<p>
+		The issues in this section <b>only</b> exists for COM, and not for
+		Win32/DLL programming.
+	</p>
+	
+	<h3><a name="comThreading_initialize">6.1. Initializing the COM Library on each Thread</a></h3>
+	<p>
+		First, COM requires that <b>all</b> threads calling a COM object must
+		initialize the COM library before making any COM calls.
+		This is done by calling:
+	</p>
+	<p class="codeIndent">
+		<code>
+			Ole32.CoInitialize();
+		</code>
+	</p>
+	<p>
+		If a thread shares or uses COM objects from other threads, the
+		COM library should be initialized as multithreaded instead of as the
+		default single threaded. This is done by passing the 
+		<code>COINIT.MULTITHREADED</code> parameter to the
+		<code>CoInitialize</code> method.
+	</p>
+	<p>
+		After a thread is finished with all COM calls, it should call:
+	</p>
+	<p class="codeIndent">
+		<code>
+			Ole32.CoUninitialize();
+		</code>
+	</p>
+	<p>
+		Microsoft MSDN documents the details of these two methods;
+		<a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/com/htm/cmf_a2c_5iyg.asp"
+		title="MSDN Platform SDK: COM - CoInitializeEx">CoInitializeEx</a> and
+		<a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/com/htm/cmf_a2c_7vqd.asp"
+		title="MSDN Platform SDK: COM - CoUninitialize">CoUninitialize</a>.
+	</p>
+	
+	<h3><a name="comThreading_apartments">6.2. Thread Local and Thread Neutral References (the Apartment <i>Nightmare</i>)</a></h3>
+	<p>
+		Unlike Java or Win32, COM provides some built-in protection for
+		components that can only be called safely from certain threads. The
+		architecture to support this is based around apartments. An
+		<i>apartment</i> is a group of running components and threads with
+		similar threading characteristics. The relationship between a COM
+		component and the apartment model is specified at deployment by setting
+		well-known values in the registry, but can also be modified at runtime
+		by implementing the <code>IMarshal</code> interface. There are a
+		confusing variety of possibilities:
+	</p>
+	<ol>
+		<li>A component can live in a single-threaded apartment (STA), which
+		means that it should always be called from the same thread.</li>
+		<li>A component can live in the multi-threaded apartment (MTA), which
+		means that it can be called from any thread in the MTA pool, but can
+		never be called from an STA thread.</li>
+		<li>Components can also choose the "Both" threading model, which
+		means that they will be belong to the apartment of the thread that
+		creates them.</li>
+		<li>Components can implement the <code>IMarshal</code> interface
+		to further customize threading behavior at runtime, adding additional
+		nuances to the apartment behavior suggested by their registry settings.
+		This feature is commonly used to create components that can visit any
+		apartment for the duration of a method call. Such components may be
+		called "agile" or be said to "aggregate the free-threaded marshaller."</li>
+		<li>In MTS and COM+, the threading model is extended to also include the
+		notion of <i>context</i>. A context is a subspace of a process that provides
+		some service at runtime, such as security checking or transaction
+		enlistment. Components may belong to the same apartment but still be
+		incompatible if they belong to different contexts.</li>
+	</ol>
+	<p>
+		If you are a Java programmer, and you think that the preceding section
+		sounds complex, bewildering, and likely to cause trouble, you are right!
+		(For the full story on apartments and context, see
+		<a href="jawin.html#additionalResources">[Ewa01]</a>.) To
+		summarize the apartment story: Apartments are complex, and if you call a
+		COM apartment from the wrong thread you may violate apartment rules and
+		cause bizarre failures far removed from the problem point in the code.
+	</p>
+	<p>
+		The Jawin architecture provides two levels of service for Java
+		programmers:
+	</p>
+	<ol>
+		<li>For Java programmers who are not experts on COM apartments, the details
+		of COM threading are hidden as much as is feasible.</li>
+		<li>For Java programmers who are expert on COM apartments, full
+		functionality should be available.</li>
+	</ol>
+	<p>
+		The Jawin architecture accomplishes these objectives by mandating the
+		following programming model:
+	</p>
+	<ol>
+		<li>When you create or otherwise gain access to a <code>COMPtr</code>,
+		<code>DispatchPtr</code>, or any subclass, you should only use that
+		pointer from the thread you are on. When you are done, you <i>must</i>
+		call the close method, which will release the underlying <code>IUnknown*</code>.
+		This approach is recommended for anyone calling COM objects from a single thread.</li>
+		<li>If you wish to use a <code>COMPtr</code>, <code>DispatchPtr</code>, or
+		subclass from more than one thread, you should call the
+		<code>createGITRef()</code>-method on the <code>COMPtr</code>. This
+		call should be made on the original thread, to create a context-neutral
+		reference in the Global Interface Table. After you do this, you can
+		use the newly created reference from <i>any</i> thread, and Jawin will
+		automatically hide the details of creating a local <code>IUnknown*</code>
+		as needed. While this approach will always work, it significantly increases
+		the overhead (by a factor 5-20) imposed by Jawin on each method call.<br>
+		Note that creating such a GIT-reference increases the native reference
+		count, so both references must be closed as usual. The original thread-local
+		reference must be closed last, and on the original thread. An example of 
+		creating such a thread-neutral reference are like:
+		<p class="codeIndent">
+			<code>
+				..<br>
+				// create a standard thread local reference<br>
+				DispatchPtr directDisp = new DispatchPtr(CLSID);<br>
+				// get the thread neutral GIT reference<br>
+				DispatchPtr gitDisp = (DispatchPtr)directDisp.createGITRef();<br>
+				// and now we are ready to use the gitDisp-reference from several threads.<br>
+				..<br>
+				..<br>
+				// finally after usage from multiple threads the two references<br>
+				// must be closed on the original thread.<br>
+				gitDisp.close();<br>
+				directDisp.close();
+			</code>
+		</p>
+		This approach is recommended for Java programmers who plan to use the
+		same COM object from multiple threads, and are not comfortable with the
+		details of COM apartments.</li>
+		<li>You can improved the performance of option 2 by calling the
+		<code>createDirectRef()</code>-method on the thread-neutral reference
+		to create a thread-local reference just before making a series of method
+		calls. This direct reference must be closed on the thread where it was
+		created. This option is recommended for Java programmers who are comfortable
+		with the details of COM apartments.</li>
+	</ol>
+
+	<hr>
+	<table class="footer" width="100%">
+		<tr>
+			<td class="footer">
+				Copyright (c) 2000-2005, <a href="http://jawinproject.sourceforge.net/">The Jawin Project</a>
+				- <a href="../LICENSE.txt">LICENSE</a>
+			</td>
+			<td class="footer" rowspan="3">
+				<a href="http://sourceforge.net">
+				<img class="sourceforge" src="img/sflogo2.png" width="125px" height="37px"
+					alt="SourceForge.net Logo" title="SourceForge.net" />
+				</a>
+			</td>
+		</tr>
+		<tr>
+			<td class="footer">This documentation was written for
+				version: <b>2.0, alpha 1</b> of Jawin.
+			</td>
+		</tr>
+		<tr>
+			<td class="footer">$Id: jawinarchitecture.html,v 1.9 2005/03/23 20:38:10 arosii_moa Exp $</td>
+		</tr>
+	</table>
+</body>
+</html>

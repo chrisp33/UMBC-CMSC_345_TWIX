@@ -1,0 +1,24 @@
+.navigation {
+	display: none;
+}
+
+.footer {
+	font-size: 90%;
+}
+
+img {
+	page-break-inside: avoid;
+}
+
+/* insert href after links - works in Mozilla, not in ie */
+a[href]:after {
+	content: " (" attr(href) ") ";
+	font-size: 90%;
+}
+
+/* no href expansion for document-local links */
+/* no href expansion in the footer */
+/* no href expansion for the sourceforge-loge on the index page */
+a[href^="#"]:after, .footer a:after, a#indexSourceforgeLogo:after {
+	content: "";
+}

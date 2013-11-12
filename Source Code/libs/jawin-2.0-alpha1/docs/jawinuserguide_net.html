@@ -1,0 +1,347 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<!--
+	This documentation is part of the Jawin Project:
+
+		http://jawinproject.sourceforge.net/
+
+	please consult the LICENSE at the project site before using this
+	documentation.
+
+	Id:				$Id: jawinuserguide_net.html,v 1.2 2004/08/01 21:34:26 arosii_moa Exp $
+	Version:		$Revision: 1.2 $
+	Author(s):		Morten Andersen, arosii_moa (at) users.sourceforge.net
+-->
+<head>
+	<title>Jawin Userguide - Interoperability with .NET Classes</title>
+	<meta http-equiv="Content-Language" content="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<meta http-equiv="Content-Script-Type" content="text/javascript">
+
+	<link rel="stylesheet" href="css/style.css" type="text/css">
+	<link rel="stylesheet" title="Compact fonts (default)" href="css/compact.css" type="text/css">
+	<link rel="alternate stylesheet" title="Standard fonts (accessibility)" href="css/accessibility.css" type="text/css">
+	<!-- style for print -->
+	<link rel="stylesheet" href="css/print.css" type="text/css" media="print">
+	<script src="js/menu.js" type="text/javascript"></script>
+</head>
+<body class="main">
+	<div class="navigation">
+		<p class="navigation-header" onclick="toggleNavigation()"
+			title="Click to open/close navigation" style="cursor: pointer;">
+			Jawin Documentation&nbsp;&nbsp;<span id="navigationToggle">&lt;</span>
+		</p>
+		<div style="display: block;" id="navigationList">
+			<ul class="navigation-list">
+				<li><a href="jawin.html" title="Introduction to Jawin">Introduction</a></li>
+				<li><a href="jawintypebrowser.html" title="Getting started with the Jawin Type Browser">Generating stubs</a></li>
+				<li><a href="jawinuserguide_vtable.html" title="Userguide - Calling a VTable Based COM Interface">VTable Based COM</a></li>
+				<li><a href="jawinuserguide_dispatch.html" title="Userguide - Calling a Scriptable COM Interface">Dispatch Based COM</a></li>
+				<li><a href="jawinuserguide_dll.html" title="Userguide - Calling a DLL Entry Point">DLL Entry Points</a></li>
+				<li><a>.NET Interoperability</a></li>
+				<li><a href="jawinarchitecture.html" title="Jawin Architecture">Architecture</a></li>
+				<li><a href="jawindeveloper.html" title="Jawin Developer Information">Developer info</a></li>
+				<li><a href="jawinrevisions.html" title="Jawin Revision History">Revision History</a></li>
+				<li><a href="jawincontributors.html" title="Jawin Contributors">Contributors</a></li>
+			</ul>
+			<p class="navigation-header"></p> <!-- the bottom line in the nav. -->
+		</div>
+		<script type="text/javascript">
+			toggleNavigation(); // to make sure the navigation will only be collapsed if javascript enabled
+		</script>
+	</div>
+
+	<h1>
+		Jawin Userguide - Interoperability with .NET Classes
+	</h1>
+
+	<h2><a name="introduction">Introduction</a></h2>
+	<p>
+		Besides the COM and Win32 interoperability, Jawin can also be used for
+		in-process interoperability with the Microsoft .NET platform. This can be
+		accomplished because the .NET development tools makes it possible to
+		export .NET objects as COM-objects.
+	</p>
+	<p>
+		If in-process interoperability is not strictly needed, the recommended
+		(and buzzword compatible) way to communicate between .NET and Java
+		services is probably to use webservices. There should be plenty of 
+		resources around the Internet and in books, that explains webservices.
+		One starting resource could be <a href="http://www.ws-i.org/">WS-I -
+		the Web Services Interoperability Organization</a>.
+	</p>
+	<p>
+		So back to in-process .NET interop - this part of the Jawin userguide
+		walks through a short demo showing the steps in calling .NET code from
+		Jawin.
+	</p>
+	
+	<h2><a name="content">Content</a></h2>
+	<ol>
+		<li><a href="#requirements">.NET Requirements</a></li>
+		<li><a href="#cscode">The C# Sample Code</a></li>
+		<li><a href="#csbuilding">Building the C# code and exporting as COM object</a></li>
+		<li><a href="#jawinstubs">Generating the Jawin stubs and calling the .NET COM object</a></li>
+		<li><a href="#additionalResources">Additional Resources</a></li>
+	</ol>
+
+	<h2><a name="requirements">1. .NET Requirements</a></h2>
+	<p>
+		This short example has been tested with the .NET Framework 1.1. Together
+		with the .NET runtime for running the example, the .NET SDK (or Visual
+		Studio .NET) is needed to compile the .NET source.
+	</p>
+	<p>
+		The Ant build file for the Jawin demos (<code>demos/build.xml</code>),
+		contains a target, <code>net-hello</code>, which builds and invokes
+		the Jawin .NET demo. To use this target, the .NET tools must be
+		in the path, this includes at least <code>csc.exe</code> for compiling
+		and <code>regasm.exe</code> for exporting the typelibrary and
+		registering the .NET code as a COM object.
+	</p>
+	<p>
+		The example uses C# as the language for the .NET objects, but it is
+		believed that any of the other languages in the .NET platform might
+		as well be used (eg. VB.NET). Please note that I am neither a .NET or C#
+		developer, so there may be issues in the C# example source that could/should
+		normally be done in another more standard way.
+	</p>
+
+	<h2><a name="cscode">2. The C# Sample Code</a></h2>
+	<p>
+		The example C#-source can be found in the <code>demos/net</code> folder
+		in the binary Jawin distribution. The example is a very simple class
+		with a writeable "caption"-property, and a method showing a popup dialog
+		with the "caption"-property as caption and a given text-string as 
+		content. The example is split into an interface and an implementation
+		class, as this will make the generated COM-objects easier to use as
+		an <code>IDispatch</code> interface. The exact type conversion rules
+		are described in this
+		<a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpguide/html/cpcontlbexptypeconversion.asp"
+		title=".NET Framework Developer's Guide - Assembly to Type Library Conversion Summary - Exported Type Conversion">MSDN
+		.NET developers article on type conversion</a>.
+	</p>
+	<p>	
+		The file <code>HelloFromNETItf.cs</code> contains the interface for the
+		.NET object, which the .NET typelibrary export tool will later
+		automatically export as a socalled dual interface (both vtable and
+		dispatch based).
+	</p>
+	<p class="codeIndent">
+		<code>
+			using System.Runtime.InteropServices; // necessary for the Guid attribute<br>
+			<br>
+			namespace Org.Jawin.NETTest {<br>
+			<br>
+			&nbsp;&nbsp;[Guid("3823a63d-5891-3b4f-A460-DB0FB847075A")]<br>
+			&nbsp;&nbsp;public interface HelloFromNETItf {<br>
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;// a writeable property named Caption<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;string Caption {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;void ShowDialog(string str);<br>
+			&nbsp;&nbsp;}<br>
+			}
+		</code>
+	</p>
+	<p>
+		The file <code>HelloFromNET.cs</code> contains the implementation class
+		for this interface. Please notice that a public no-argument constructor
+		is needed to make the class instantiable via COM.
+	</p>
+	<p class="codeIndent">
+		<code>
+			using System.Runtime.InteropServices; // necessary for the Guid and ProgId attributes<br>
+			<br>
+			namespace Org.Jawin.NETTest {<br>
+			<br>
+			&nbsp;&nbsp;[Guid("25c2f5a2-1afe-36ce-BE27-84E040F5E19A")]<br>
+			&nbsp;&nbsp;[ProgId("Jawin.HelloFromNET")] // Register the CLSID under this shortcut ProgId<br>
+			&nbsp;&nbsp;public class HelloFromNET : HelloFromNETItf {<br>
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;// Need a public default no-arg constructor for COM Interop.<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;public HelloFromNET() {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;public string Caption {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set { this.caption = value; }<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;public void ShowDialog(string str) {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.Windows.Forms.MessageBox.Show(str, caption);<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;private string caption;<br>
+			&nbsp;&nbsp;}<br>
+			}
+		</code>
+	</p>
+
+	<h2><a name="csbuilding">3. Building the C# code and exporting as COM object</a></h2>
+	<p>
+		The C# source code is compiled and linked into a DLL with the command
+	</p>
+	<p class="codeIndent">
+		<code>
+			csc /target:library /out:JawinHelloFromNET.dll *.cs
+		</code>
+	</p>
+	<p>
+		The typelibrary can then be exported from this DLL and the embedded
+		types be automatically registered as COM objects and interfaces with
+		the command
+	</p>
+	<p class="codeIndent">
+		<code>
+			regasm /tlb JawinHelloFromNET.dll
+		</code>
+	</p>
+	<p>
+		Note, that the demos Ant build file, contains a target that automates
+		these two commandlines, the <code>demos-net-compile</code> target. After
+		running this target the built files can be found in the
+		<code>demos/build/net</code> folder.
+	</p>
+	<p>
+		There is one single issue left, after registering the COM objects. That
+		is this phrase from the <code>regasm</code> documentation
+	</p>
+	<p class="codeIndent"><i>
+		After registering an assembly using Regasm.exe, you can install it in
+		the global assembly cache (GAC) so that it can be activated from any COM
+		client. If the assembly is only going to be activated by a single
+		application, you can place it in that application's directory.
+	</i></p>
+	<p>
+		Our example .NET assembly does not have a socalled <i>strong name</i>
+		and can therefore not be installed in the GAC. To run the example
+		you therefore have to place the generated <code>JawinHelloFromNET.dll</code>
+		in the <i>application's directory</i>. This does (opposite to what one
+		would expect) NOT  have to be usual <i>working directory</i> but instead
+		seems to be the directory where ones launching process, ie. java.exe is
+		placed. Unfortunately this can be several places, usually one of the
+		following: <code>%WINDIR%/system32</code>,
+		<code>%JAVA_HOME%/bin</code> or <code>%JAVA_HOME%/jre/bin</code>. To
+		find the exact location you will have to copy the DLL around until
+		the demo launches. If you haven't placed the DLL correctly you will
+		get an error like
+	</p>
+	<p class="codeIndent">
+		<code>
+			org.jawin.COMException: 80070002: File or assembly name
+			JawinHelloFromNET, or one of its dependencies, was not found.
+			[src=null,guid={00000000-0000-0000-0000-000000000000}]
+		</code>
+	</p>
+
+	<h2><a name="jawinstubs">4. Generating the Jawin stubs and calling the .NET COM object</a></h2>
+	<p>
+		The exported typelibrary, JawinHelloFromNET.tlb, is a standard
+		typelibrary that can be used as input in the
+		<a href="jawintypebrowser.html" title="Getting started with the Jawin Type Browser">Jawin Type Browser</a>.
+		As shown on the picture, the typelibrary contains one CoClass and
+		two dispatch interfaces.
+		<a name="picture1"><img class="center" src="img/netjtb.png" height="539px" width="767px"
+		alt="Picture 1: The .NET typelibrary in JTB" title="Picture 1: The .NET typelibrary in JTB"/></a>
+		As can be seen from the picture, the <code>HelloFromNETItf</code>
+		resembles the C# interface with the same name, that is it contains
+		the <code>Caption</code> and <code>ShowDialog</code> methods.
+		Opposed to this, the <code>_HelloFromNET</code> interface was generated
+		from the <code>HelloFromNET</code> class and does not publish these
+		methods directly (but they can of course be invoked with the standard
+		<code>Invoke</code>-method on this <code>IDispatch</code> interface).
+		So this is why we made the C# interface in section 2, and the reason
+		why the (hidden/internal) <code>_HelloFromNET</code> dispatch interface
+		can be ignored.
+	</p>
+	<p>
+		A slightly modified version of the code the Jawin TypeBrowser generates
+		for the <code>HelloFromNETItf</code> interface can be found in the 
+		Java class <code>demos.HelloFromNETItf</code> in the
+		<code>demos/demos/HelloFromNETItf.java</code>-file.
+	</p>
+	<p>
+		The CoClass <code>HelloFromNET</code> contains a static CLSID field
+		with the CLSID for the HelloFromNET-implementation. This can be used
+		when instantiating a <code>demos.HelloFromNETItf</code>-object, or
+		the ProgId <code>Jawin.HelloFromNET</code> can be used. Sample
+		code showing how to use the <code>HelloFromNETItf</code>-class is
+		in the <code>demos/demos/HelloNET.java</code>-file.
+	</p>
+	<p>
+		This demo can then be run with the <code>net-hello</code> target
+		in the demos Ant build file, which should hopefully generate a popup like
+		<a name="picture2"><img class="center" src="img/nethello.png" height="100px" width="126px"
+		alt="Picture 2: Hello from .NET" title="Picture 2: Hello from .NET"/></a>
+		which is actually Java code calling into the .NET code, which launches
+		the dialog.
+	</p>
+
+	<h2><a name="additionalResources">5. Additional Resources and Links</a></h2>
+	<p>
+		Additional resources and links to tools and articles
+	</p>
+	<ul>
+		<li>
+			Main page for the <a href="http://msdn.microsoft.com/netframework/">.NET
+			Framework</a>.
+		</li>
+		<li>
+			The <a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=9B3A2CA6-3647-4070-9F41-A333C6B9181D">.NET SDK
+			- Software Development Kit 1.1</a>. Contains the necessary tools
+			for compiling the C#-source and exporting the .NET binaries as COM-objects.
+		</li>
+		<li>
+			Main page for Microsoft <a href="http://msdn.microsoft.com/vstudio/">Visual Studio</a>.
+		</li>
+		<li>
+			MSDN .NET documentation for the <a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cscomp/html/vcrefcompileroptions.asp">C#
+			compiler - csc.exe</a> and the
+			<a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cptools/html/cpgrfassemblyregistrationtoolregasmexe.asp">Assembly
+			Registration Tool - regasm.exe</a>.
+		</li>
+		<li>
+			The MSDN .NET Framework Developers Guide section about
+			<a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpguide/html/cpconAdvancedCOMInterop.asp">Advanced
+			COM Interop</a>.
+		</li>
+		<li>
+			A couple of additional articles about .NET and COM that helped me
+			when writing this part of the Jawin Userguide:
+			An article from CSharpFriends.com <a href="http://www.csharpfriends.com/Articles/getArticle.aspx?articleID=113">Calling
+			.NET From COM</a>, another from C# Help <a href="http://www.csharphelp.com/archives/archive190.html">Using
+			C# Classes as COM Objects</a> and one from the C# Corner
+			<a href="http://www.c-sharpcorner.com/Code/2002/April/COMInteropP2AJ.asp">.NET
+			COM Interoperability - Part 2: Using .NET Components from COM</a>.
+		</li>
+		
+	</ul>
+
+	<hr>
+	<table class="footer" width="100%">
+		<tr>
+			<td class="footer">
+				Copyright (c) 2000-2005, <a href="http://jawinproject.sourceforge.net/">The Jawin Project</a>
+				- <a href="../LICENSE.txt">LICENSE</a>
+			</td>
+			<td class="footer" rowspan="3">
+				<a href="http://sourceforge.net">
+				<img class="sourceforge" src="img/sflogo2.png" width="125px" height="37px"
+					alt="SourceForge.net Logo" title="SourceForge.net" />
+				</a>
+			</td>
+		</tr>
+		<tr>
+			<td class="footer">This documentation was written for
+				version: <b>2.0, alpha 1</b> of Jawin.
+			</td>
+		</tr>
+		<tr>
+			<td class="footer">$Id: jawinuserguide_net.html,v 1.2 2004/08/01 21:34:26 arosii_moa Exp $</td>
+		</tr>
+	</table>
+</body>
+</html>

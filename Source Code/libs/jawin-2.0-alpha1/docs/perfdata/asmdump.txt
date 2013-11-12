@@ -1,0 +1,55 @@
+First cut at directCOM:
+
+125:  JNIEXPORT void JNICALL Java_com_develop_com_Native_directCOM_1II
+126:    (JNIEnv * pEnv, jclass, jint unknown, jint vtableIndex, jint one, jint two)
+127:  {
+100023B0   push        ebp
+100023B1   mov         ebp,esp
+100023B3   push        0FFh
+100023B5   push        offset $L71928 (1000ff80)
+100023BA   mov         eax,fs:[00000000]
+100023C0   push        eax
+100023C1   mov         dword ptr fs:[0],esp
+100023C8   sub         esp,8
+128:      try {
+129:          FTYPE2* vtable = (FTYPE2*) (*(int*)(unknown));
+130:          JNI_HR(vtable[vtableIndex]((int)unknown, one, two));
+100023CB   mov         edx,dword ptr [ebp+1Ch]
+100023CE   mov         eax,dword ptr [ebp+10h]
+100023D1   push        ebx
+100023D2   push        esi
+100023D3   mov         ecx,dword ptr [eax]
+100023D5   push        edi
+100023D6   mov         dword ptr [ebp-10h],esp
+100023D9   push        edx
+100023DA   mov         edx,dword ptr [one]
+100023DD   mov         dword ptr [ebp-4],0
+100023E4   push        edx
+100023E5   push        eax
+100023E6   mov         eax,dword ptr [vtableIndex]
+100023E9   call        dword ptr [ecx+eax*4]
+100023EC   test        eax,eax
+100023EE   jge         $L64809 (10002412)
+100023F0   push        eax
+100023F1   lea         ecx,[ebp+13h]
+100023F4   call        JNIException::JNIException (100056d0)
+100023F9   mov         cl,byte ptr [eax]
+100023FB   lea         edx,[ebp-11h]
+100023FE   push        offset __TI1?AUJNIException@@ (10011a18)
+10002403   push        edx
+10002404   mov         byte ptr [ebp-11h],cl
+10002407   call        __CxxThrowException@8 (1000b589)
+131:      }
+132:      HANDLE_JNI_EXCEPTIONS()
+1000240C   mov         eax,offset $L64809 (10002412)
+10002411   ret
+133:  }
+10002412   mov         ecx,dword ptr [ebp-0Ch]
+10002415   pop         edi
+10002416   pop         esi
+10002417   mov         dword ptr fs:[0],ecx
+1000241E   pop         ebx
+1000241F   mov         esp,ebp
+10002421   pop         ebp
+10002422   ret         18h
+

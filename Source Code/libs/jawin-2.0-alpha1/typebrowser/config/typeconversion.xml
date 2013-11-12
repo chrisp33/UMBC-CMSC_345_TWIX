@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<typeConversion>
+	<typeLibraryType id="0" string="VT_EMPTY" pointer="VT_EMPTY">
+		<javaType string="IUnknown" objectType="IUnknown" signature="" nativeString="jobject" nativeArray="jobjectArray"/>
+		<cppType string="IUnknown" direct="VTS_EMPTY" pointer="VTS_EMPTY"/>
+	</typeLibraryType>
+	<typeLibraryType id="2" string="VT_I2" pointer="VT_PI2">
+		<javaType string="short" objectType="java.lang.Short" signature="S" nativeString="jshort" nativeArray="jshortArray"/>
+		<cppType string="short" direct="VTS_I2" pointer="VTS_PI2"/>
+	</typeLibraryType>
+	<typeLibraryType id="3" string="VT_I4" pointer="VT_PI4">
+		<javaType string="int" objectType="java.lang.Integer" signature="I" nativeString="jint" nativeArray="jintArray"/>
+		<cppType string="long" direct="VTS_I4" pointer="VTS_PI4"/>
+	</typeLibraryType>
+	<typeLibraryType id="4" string="VT_R4" pointer="VT_PR4">
+		<javaType string="float" objectType="java.lang.Float" signature="F" nativeString="jfloat" nativeArray="jfloatArray"/>
+		<cppType string="float" direct="VTS_R4" pointer="VTS_PR4"/>
+	</typeLibraryType>
+	<typeLibraryType id="5" string="VT_R8" pointer="VT_PR8">
+		<javaType string="double" objectType="java.lang.Double" signature="D" nativeString="jdouble" nativeArray="jdoubleArray"/>
+		<cppType string="double" direct="VTS_R8" pointer="VTS_PR8"/>
+	</typeLibraryType>
+	<typeLibraryType id="7" string="VT_DATE" pointer="VT_PDATE">
+		<javaType string="Date" objectType="java.util.Date" signature="" nativeString="jdouble" nativeArray="jdoubleArray"/>
+		<cppType string="double" direct="VTS_DATE" pointer="VTS_PDATE"/>
+	</typeLibraryType>
+	<typeLibraryType id="8" string="VT_BSTR" pointer="VT_PBSTR">
+		<javaType string="String" objectType="java.lang.String" signature="" nativeString="jstring" nativeArray="jobjectArray"/>
+		<cppType string="CComBSTR" direct="VTS_BSTR" pointer="VTS_PBSTR"/>
+	</typeLibraryType>
+	<typeLibraryType id="9" string="VT_DISPATCH" pointer="VT_PDISPATCH">
+		<javaType string="DispatchPtr" objectType="org.jawin.DispatchPtr" signature="" nativeString="jobject" nativeArray="jobjectArray"/>
+		<cppType string="IDispatch" direct="VTS_DISPATCH" pointer="VTS_PDISPATCH"/>
+	</typeLibraryType>
+	<typeLibraryType id="11" string="VT_BOOL" pointer="VT_PBOOL">
+		<javaType string="boolean" objectType="java.lang.Boolean" signature="B" nativeString="jboolean" nativeArray="jbooleanArray"/>
+		<cppType string="bool" direct="VTS_BOOL" pointer="VTS_PBOOL"/>
+	</typeLibraryType>
+	<typeLibraryType id="12" string="VT_VARIANT" pointer="VT_PVARIANT">
+		<javaType string="Variant" objectType="org.jawin.Variant" signature="" nativeString="jobject" nativeArray="jobjectArray"/>
+		<cppType string="COleVariant" direct="VTS_VARIANT" pointer="VTS_PVARIANT"/>
+	</typeLibraryType>
+	<typeLibraryType id="13" string="VT_UNKNOWN" pointer="VT_PUNKNOWN">
+		<javaType string="IUnknown" objectType="org.jawin.IUnknown" signature="V" nativeString="jobject" nativeArray="jobjectArray"/>
+		<cppType string="IUnknown" direct="VTS_UNKNOWN" pointer="VTS_PUNKNOWN"/>
+	</typeLibraryType>
+	<typeLibraryType id="16" string="VT_I1" pointer="VT_PI1">
+		<javaType string="int" objectType="java.lang.Integer" signature="B" nativeString="jint" nativeArray="jintArray"/> 
+		<cppType string="BYTE" direct="VTS_I1" pointer="VTS_PI1"/>
+	</typeLibraryType>
+	<typeLibraryType id="17" string="VT_UI1" pointer="VT_PUI1">
+		<javaType string="int" objectType="java.lang.Integer" signature="B" nativeString="jint" nativeArray="jintArray"/> 
+		<cppType string="BYTE" direct="VTS_UI1" pointer="VTS_PUI1"/>
+	</typeLibraryType>
+	<typeLibraryType id="18" string="VT_UI2" pointer="VT_PUI2">
+		<javaType string="short" objectType="java.lang.Short" signature="S" nativeString="jshort" nativeArray="jshortArray"/>
+		<cppType string="short" direct="VTS_UI2" pointer="VTS_PUI2"/>
+	</typeLibraryType>
+	<typeLibraryType id="19" string="VT_UI4" pointer="VT_PUI4">
+		<javaType string="int" objectType="java.lang.Integer" signature="I" nativeString="jint" nativeArray="jintArray"/>
+		<cppType string="int" direct="VTS_UI4" pointer="VTS_PUI4"/>
+	</typeLibraryType>
+	<typeLibraryType id="22" string="VT_INT" pointer="VT_PINT">
+		<javaType string="int" objectType="java.lang.Integer" signature="I" nativeString="jint" nativeArray="jintArray"/>
+		<cppType string="int" direct="VTS_INT" pointer="VTS_PINT"/>
+	</typeLibraryType>
+	<typeLibraryType id="23" string="VT_UINT" pointer="VT_PUINT">
+		<javaType string="int" objectType="java.lang.Integer" signature="I" nativeString="jint" nativeArray="jintArray"/>
+		<cppType string="int" direct="VTS_UINT" pointer="VTS_PUINT"/>
+	</typeLibraryType>
+	<typeLibraryType id="24" string="VT_VOID" pointer="VT_PEMPTY">
+		<javaType string="void" objectType="java.lang.Object" signature="V" nativeString="jobject" nativeArray="jobjectArray"/>
+		<cppType string="void" direct="VTS_EMPTY" pointer="VTS_PEMPTY"/>
+	</typeLibraryType>
+	<typeLibraryType id="25" string="VT_HRESULT" pointer="VT_PHRESULT">
+		<javaType string="int" objectType="java.lang.Integer" signature="V" nativeString="jint" nativeArray="jintArray"/>
+		<cppType string="DWORD" direct="VTS_HRESULT" pointer="VTS_PHRESULT"/>
+	</typeLibraryType>
+	<typeLibraryType id="26" string="VT_PTR" pointer="VT_PPTR">
+		<javaType string="void" objectType="java.lang.Object" signature="V" nativeString="jobject" nativeArray="jobjectArray"/>
+		<cppType string="void*" direct="VTS_PTR" pointer="VTS_PPTR"/>
+	</typeLibraryType>
+	<typeLibraryType id="27" string="VT_SAFEARRAY" pointer="VT_PSAFEARRAY">
+		<javaType string="Object[]" objectType="java.lang.Object" signature="[java/lang/Object;" nativeString="jobject" nativeArray="jobjectArray"/>
+		<cppType string="SAFEARRAY*" direct="VTS_SAFEARRAY" pointer="VTS_PSAFEARRAY"/>
+	</typeLibraryType>
+	<typeLibraryType id="29" string="VT_USERDEFINED" pointer="VT_PVARIANT">
+		<javaType string="Object" objectType="java.lang.Object" signature="" nativeString="jobject" nativeArray="jobjectArray"/>
+		<cppType string="COleVariant" direct="VTS_VARIANT" pointer="VTS_PVARIANT"/>
+	</typeLibraryType>
+	<!-- typeLibraryType id="29" string="VT_USERDEFINED" pointer="VT_PI4"/>
+		<javaType string="int" objectType="java.lang.Integer" signature="I" nativeString="jint" nativeArray="jintArray"/>
+		<cppType string="long" direct="VTS_I4" pointer="VTS_PI4"/>
+	</typeLibraryType-->
+	<typeLibraryType id="31" string="VT_LPWSTR" pointer="VT_PLPWSTR">
+		<javaType string="String" objectType="java.lang.String" signature="" nativeString="jstring" nativeArray="jobjectArray"/>
+		<cppType string="LPWSTR" direct="VTS_LPWSTR" pointer="VT_PLPWSTR"/>
+	</typeLibraryType>
+
+	<typeLibraryType id="8204" string="safeArrayOfParams" pointer="VT_PsafeArrayOfParams">
+		<javaType string="Object" objectType="" signature="" nativeString="jobject" nativeArray="jobjectArray"/>
+		<cppType string="Object" direct="VTS_safeArrayOfParams" pointer="VTS_PsafeArrayOfParams"/>
+	</typeLibraryType>
+</typeConversion>

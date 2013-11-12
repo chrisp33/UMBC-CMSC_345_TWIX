@@ -18,6 +18,12 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import com.jug.earth.jawin.IApplicationGE;
+
+import org.jawin.FuncPtr;
+import org.jawin.ReturnFlags;
+import org.jawin.donated.win32.User32;
+
 public class Client{
 
 	private static JPanel panel, p, p1, p2, p3, p4;
@@ -97,6 +103,28 @@ public class Client{
 					password[i] = ' ';
 				
 				// do other stuff
+				// ... loads of code
+				 
+				// Initialise GE; this would invoke GE externally
+				IApplicationGE ge = new IApplicationGE(); 
+				 
+				/* Embed Native GE window on to a Java Swing Frame */
+				 
+				// get  GE render handle
+				int renderWindow = (Integer)ge.GetRenderHwnd();
+				// get GE main window handle
+				int mainWindow = (Integer)ge.GetMainHwnd();
+				// get the "java" frame window handle
+				// 'geFrame' is an instance of javax.swing.JFrame
+				int javaFrameWindow =   (int) com.sun.jna.Native.getWindowID(geFrame);
+				 
+				// change the parent of the render window
+				FuncPtr setParent = new FuncPtr("USER32.dll","SetParent");
+				setParent.invoke_I(renderWindow,javaFrameWindow,ReturnFlags.CHECK_FALSE);
+				 
+				 
+				// now, hide the main window handle
+				User32.showWindow(mainWindow,0); 
 			}
 		});
 	}

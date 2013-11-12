@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project basedir="." default="help" name="jawin-demos">
+<!--
+	Ant build file for compiling and launching the Jawin demos. This should
+	only be used in the binary Jawin release.
+
+	Id:				$Id: build.xml,v 1.4 2005/03/23 20:32:30 arosii_moa Exp $
+	Version:		$Revision: 1.4 $
+-->
+
+<!-- description for ant -projecthelp -->
+<description>
+Ant file for launching the Jawin demos - for detailed information, please see:
+	docs/jawin.html
+</description>
+
+	<!-- source dirs -->
+	<property name="src.dir" value="." />
+	<property name="lib.dir" value="../lib" />
+	<property name="jawin.lib" value="../bin/jawin.dll" />
+
+	<!-- build dirs -->
+	<property name="build.dir" value="build" />
+
+	<!-- javac build options -->
+	<property name="javac.debug" value="on" />
+	<property name="javac.sourceVersion" value="1.3" />
+	<property name="javac.targetVersion" value="1.3" />
+	<property name="javac.deprecationInfo" value="on" />
+
+	<!-- java demo launch options -->
+	<property name="java.fork" value="false" />
+
+	<!-- c# build options -->
+	<property name="net.csc.executable" value="csc" />
+	<property name="net.regasm.executable" value="regasm" />
+	<property name="net.target.os" value="Windows NT,Windows 2000,Windows XP" />
+	<property name="net.src.dir" value="net" />
+	<property name="net.build.dir" value="${build.dir}/net" />
+	
+
+	<!-- ******************************************************************* -->
+	<!--                            Help target                              -->
+	<!-- ******************************************************************* -->
+
+	<target name="help" >
+		<echo message="Please run 'ant -projecthelp' for info" />
+	</target>
+
+	<!-- ******************************************************************* -->
+	<!--                           Compile target                            -->
+	<!-- ******************************************************************* -->
+
+	<path id="jawin.classpath">
+		<fileset file="${lib.dir}/jawin.jar"/>
+		<fileset file="${lib.dir}/jawin-stubs.jar"/>
+	</path>
+
+	<target name="demos-compile" description="compiling the demos">
+		<mkdir dir="${build.dir}" />
+
+		<javac classpathref="jawin.classpath" destdir="${build.dir}" 
+			srcdir="${src.dir}" includes="demos/**/*"
+			debug="${javac.debug}" target="${javac.targetVersion}"
+			source="${javac.sourceVersion}"
+			deprecation="${javac.deprecationInfo}"
+		/>
+	</target>
+
+	<target name="demos-net-compile" description="compiling the .NET classes for the demos">
+		<mkdir dir="${net.build.dir}" />
+		
+		<!-- .NET compile with csc -->
+		<exec executable="${net.csc.executable}" os="${net.target.os}" dir="${net.src.dir}" failonerror="true">
+			<arg value="/target:library" />
+			<arg value="/out:../${net.build.dir}/JawinHelloFromNET.dll" />
+			<arg value="*.cs" />
+		</exec>
+
+		<!-- .NET/COM typelib export and register with regasm -->
+		<exec executable="${net.regasm.executable}" os="${net.target.os}" dir="${net.build.dir}" failonerror="true">
+			<arg value="/tlb" />
+			<arg value="JawinHelloFromNET.dll" />
+		</exec>
+		
+	</target>
+
+	<!-- ******************************************************************* -->
+	<!--                             Clean target                            -->
+	<!-- ******************************************************************* -->
+
+	<target name="clean" description="clean">
+		<delete dir="${build.dir}"/>
+	</target>
+	
+	<!-- ******************************************************************* -->
+	<!--                         Launch demo targets                         -->
+	<!-- ******************************************************************* -->
+
+	<path id="demos.classpath">
+		<path refid="jawin.classpath" />
+		<pathelement location="${build.dir}"/>
+	</path>
+
+	<target name="petzold" depends="demos-compile" description="the Petzold HelloJava demo" >
+		<java classname="demos.petzold.chap03.HelloJava" classpathref="demos.classpath" fork="${java.fork}" >
+			<sysproperty key="org.jawin.hardlib" value="${jawin.lib}" />
+		</java>
+	</target>
+
+	<target name="ppt" depends="demos-compile" description="the PowerPoint demo (requires PowerPoint)" >
+		<java classname="demos.CreatePpt" classpathref="demos.classpath" fork="${java.fork}" >
+			<sysproperty key="org.jawin.hardlib" value="${jawin.lib}" />
+		</java>
+	</target>
+
+	<target name="word" depends="demos-compile" description="the Word demo (requires Word)" >
+		<java classname="demos.CreateWord" classpathref="demos.classpath" fork="${java.fork}" >
+			<sysproperty key="org.jawin.hardlib" value="${jawin.lib}" />
+		</java>
+	</target>
+
+	<target name="event-handler" depends="demos-compile" description="the console event-handler demo" >
+		<java classname="demos.DemoConsoleEventHandler" classpathref="demos.classpath" fork="${java.fork}" >
+			<sysproperty key="org.jawin.hardlib" value="${jawin.lib}" />
+		</java>
+	</target>
+
+	<target name="logoff-handler" depends="demos-compile" description="the RMI-registry logoff handler demo" >
+		<java classname="demos.RunRMIRegistry" classpathref="demos.classpath" fork="${java.fork}" >
+			<sysproperty key="org.jawin.hardlib" value="${jawin.lib}" />
+		</java>
+	</target>
+
+	<target name="eventlog" depends="demos-compile" description="the eventlog demo (NOTE: modifies the eventlog)" >
+		<java classname="demos.DemoEventLog" classpathref="demos.classpath" fork="${java.fork}" >
+			<sysproperty key="org.jawin.hardlib" value="${jawin.lib}" />
+		</java>
+	</target>
+
+	<target name="registry" depends="demos-compile" description="the registry demo (NOTE: modifies the registry)" >
+		<java classname="demos.DemoRegistry" classpathref="demos.classpath" fork="${java.fork}" >
+			<sysproperty key="org.jawin.hardlib" value="${jawin.lib}" />
+		</java>
+	</target>
+
+	<target name="security" depends="demos-compile" description="the security-info demo" >
+		<java classname="demos.DemoSecurityAPIs" classpathref="demos.classpath" fork="${java.fork}" >
+			<sysproperty key="org.jawin.hardlib" value="${jawin.lib}" />
+		</java>
+	</target>
+
+	<target name="dll-hello" depends="demos-compile" description="the DLL hello demo" >
+		<java classname="demos.HelloDll" classpathref="demos.classpath" fork="${java.fork}" >
+			<sysproperty key="org.jawin.hardlib" value="${jawin.lib}" />
+		</java>
+	</target>
+
+	<target name="dllstub-hello" depends="demos-compile" description="the DLL stub hello demo" >
+		<java classname="demos.HelloDllStub" classpathref="demos.classpath" fork="${java.fork}" >
+			<sysproperty key="org.jawin.hardlib" value="${jawin.lib}" />
+		</java>
+	</target>
+
+	<target name="dllgeneric-hello" depends="demos-compile" description="the generic DLL hello demo" >
+		<java classname="demos.HelloDllGeneric" classpathref="demos.classpath" fork="${java.fork}" >
+			<sysproperty key="org.jawin.hardlib" value="${jawin.lib}" />
+		</java>
+	</target>
+	
+	<target name="net-hello" depends="demos-compile,demos-net-compile" description="the .NET hello demo (requires .NET 1.1)" >
+		<java classname="demos.HelloNET" classpathref="demos.classpath" fork="${java.fork}">
+			<sysproperty key="org.jawin.hardlib" value="${jawin.lib}" />
+		</java>
+	</target>
+</project>
