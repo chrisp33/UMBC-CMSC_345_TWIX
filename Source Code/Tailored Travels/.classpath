@@ -3,12 +3,10 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JAXB"/>
-	<classpathentry kind="lib" path="/Users/Stephen/UMBC-CMSC_345_TWIX/Source Code/libs/JavaAPIforKml.jar">
+	<classpathentry kind="lib" path="C:/Users/Christopher/Documents/GitHub/UMBC-CMSC_345_TWIX/Source Code/libs/JavaAPIforKml.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/Users/Stephen/UMBC-CMSC_345_TWIX/Source Code/libs/apidocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="var" path="JAWIN_JARS/jawin-stubs.jar"/>
-	<classpathentry kind="var" path="JAWIN_JARS/jawin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
