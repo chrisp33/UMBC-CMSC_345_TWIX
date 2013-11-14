@@ -3,7 +3,7 @@ package proj;
 import java.util.LinkedList;
 
 public class User {
-	private LinkedList<Location> location = new LinkedList<Location>();
+	private LinkedList<Waypoint> location = new LinkedList<Waypoint>();
 	private String name;
 	private String password;
 	private boolean admin;
@@ -24,7 +24,7 @@ public class User {
 	 * input:	none
 	 * output:	linkedlist of Location objects
 	 */
-	public LinkedList<Location> getLocation()
+	public LinkedList<Waypoint> getLocation()
 	{
 		return location;
 	}
@@ -40,7 +40,7 @@ public class User {
 	 * input:	location object of what is being added
 	 * output:	none
 	 */
-	public void addLocation(Location newLocation)
+	public void addLocation(Waypoint newLocation)
 	{
 		location.add(newLocation);
 	}
@@ -80,13 +80,6 @@ public class User {
 	public String getName()
 	{
 		return new String(name);
-	}
-	/*
-	 * return a linked list of locations
-	 */
-	public LinkedList<Location> getLocations()
-	{
-		return location;
 	}
 	public String toString()
 	{

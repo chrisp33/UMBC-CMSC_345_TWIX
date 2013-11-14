@@ -1,14 +1,13 @@
-package com.twix.tailoredtravels;
+package proj;
 
 import java.util.LinkedList;
 
 public class User {
-	private LinkedList<Location> location = new LinkedList<Location>();
+	private LinkedList<Waypoint> location = new LinkedList<Waypoint>();
 	private String name;
 	private String password;
 	private boolean admin;
-	
-	/**
+	/*
 	 * constructor for making a user
 	 * input:	String name of the person
 	 * 			String password of the person
@@ -20,36 +19,32 @@ public class User {
 		this.password = password;
 		this.admin = admin;
 	}
-	
-	/**
+	/*
 	 * return the locatin the user has selected
 	 * input:	none
 	 * output:	linkedlist of Location objects
 	 */
-	public LinkedList<Location> getLocation()
+	public LinkedList<Waypoint> getLocation()
 	{
 		return location;
 	}
-	
-	/**
+	/*
 	 * checks if the admin is true
 	 */
 	public boolean getAdmin()
 	{
 		return admin;
 	}
-	
-	/**
+	/*
 	 * add a location to the user
 	 * input:	location object of what is being added
 	 * output:	none
 	 */
-	public void addLocation(Location newLocation)
+	public void addLocation(Waypoint newLocation)
 	{
 		location.add(newLocation);
 	}
-	
-	/**
+	/*
 	 * removing a location from the user
 	 * input:	string of the location being removed
 	 * output:	none
@@ -66,8 +61,7 @@ public class User {
 				location.removeLast();
 		}
 	}
-	
-	/**
+	/*
 	 * checks if the person is log in
 	 * input:	String of the name
 	 * 			String of the password
@@ -80,23 +74,13 @@ public class User {
 			return true;
 		return false;
 	}
-	
-	/**
+	/*
 	 * return the name
 	 */
 	public String getName()
 	{
 		return new String(name);
 	}
-	
-	/**
-	 * return a linked list of locations
-	 */
-	public LinkedList<Location> getLocations()
-	{
-		return location;
-	}
-	
 	public String toString()
 	{
 		String string = "";
@@ -107,8 +91,7 @@ public class User {
 		}
 		return string;
 	}
-	
-	/**
+	/*
 	 * print the user's information to a file
 	 * input:	none
 	 * output:	string of what is being printed

@@ -42,6 +42,6 @@ public class Location {
 	}
 	public String toString()
 	{
-		return new String(longitude + " " + latitude + " " + name + "\n" + description +"\n");
+		return new String(latitude + " " + longitude + " " + name + "\n" + description +"\n");
 	}
 }

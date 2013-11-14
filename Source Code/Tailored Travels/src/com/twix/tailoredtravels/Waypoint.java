@@ -1,4 +1,4 @@
-package com.twix.tailoredtravels;
+package proj;
 
 /**
  * A class that acts as the template for KML 
@@ -12,6 +12,21 @@ public class Waypoint {
 	private String wName;
 	private String wDescription;
 	
+	public void setwName(String wName) {
+		this.wName = wName;
+	}
+
+	public void setwDescription(String wDescription) {
+		this.wDescription = wDescription;
+	}
+
+	public void setwLongitude(float wLongitude) {
+		this.wLongitude = wLongitude;
+	}
+
+	public void setwLatitude(float wLatitude) {
+		this.wLatitude = wLatitude;
+	}
 	private float wLongitude;
 	private float wLatitude;
 	
@@ -97,5 +112,9 @@ public class Waypoint {
 	{
 		return this.wName + ", " + this.wLatitude + ":" + 
 				this.wLongitude + ", " + this.wDescription;
+	}
+	public String printDatabase()
+	{
+		return new String(this.wLongitude + " " + this.wLongitude + " " + this.wName + "\n" + this.wDescription + "\n");
 	}
 }
