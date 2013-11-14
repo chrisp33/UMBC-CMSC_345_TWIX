@@ -1,6 +1,9 @@
 /**
+ * Where the program starts. Users are prompted for user names and passwords
+ * then Google Earth opens.
  * 
  * @author Christopher Pagan
+ * @version 1.0
  */
 
 package com.twix.tailoredtravels;
@@ -9,6 +12,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.LinkedList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -27,6 +32,7 @@ public class Client{
 	private static JTextField nameField;
 	private static JPasswordField passField;
 	private static Authenticator auth;
+	private static MenuPanel mainMenu;
 	/**
 	 * @param args
 	 */
@@ -91,31 +97,82 @@ public class Client{
 				nameField.setText(null);
 				passField.setText(null);
 				
-				auth = new Authenticator(userName, password);
+				ReadText reader = new ReadText();
+				reader.readUser();
+				reader.readLocation();
+				String passwd = "";
 				
+				//convert password to string
+				for (int i = 0; i < password.length; i++)
+					passwd += password[i];
+					
+				boolean validUser = reader.login(userName, passwd);
+
 				// Java documentation recommends clearing password array after use
 				for (int i = 0; i < password.length; i++)
 					password[i] = ' ';
 				
-				// do other stuff
 				boolean admin = true; //true for time being. Will verify with database
-				boolean validUser = true;
 				
 				if (!validUser)
 				{
 					JOptionPane.showMessageDialog(null, "Username and password are incorrect, please try again.", "Invalid User", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				else if (!admin)
-				{
-					
-				}
 				else
 				{
-					
+					LinkedList<Location> locations = reader.getUserLocations();
+					openGE(reader,userName, admin, locations);
 				}
 			}
 		});
+	}
+	
+	/**
+	 * Opens up the Google Earth application and displays menu options for the user
+	 * @param reader the reader that contains user and location information
+	 * @param userName the user's username
+	 * @param admin whether or not a user is an administrator
+	 * @param locations the list of waypoints
+	 */
+	public static void openGE(ReadText reader, String userName, boolean admin, LinkedList<Location> locations)
+	{
+
+		frame.dispose();
+		mainMenu = new MenuPanel(reader, userName, admin);
+		mainMenu.populateJList(locations);
+		
+		try
+		{
+			Process googleEarth = Runtime.getRuntime().exec("C:\\Program Files (x86)\\Google\\Google Earth\\client\\googleearth.exe");
+         //KML stuff here? ------------------------------------------------------------------------------------
+		}
+		catch (IOException e1) //Not sure if necessary for requirements (feature creep?)
+		{
+			//Install Google Earth or verify location of googleearth.exe
+			String[] options = {"Install", "Browse", "Exit"};
+			int option = JOptionPane.showOptionDialog(null, "Google Earth could not be found. Would you like locate or install it?", 
+					"Can't Find Google Earth", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE, null, options, options[0]);
+			if (option == 2)
+			{
+				System.exit(0);
+			}
+			else if (option == 1)
+			{
+				//open JFileChooser for googleearth.exe
+			}
+			else
+			{
+				//Install GE
+			}
+		}
+		
+		JFrame frame2 = new JFrame("Tailored Travels");
+		mainMenu.addComponents();
+		frame2.setContentPane(mainMenu);
+		frame2.setVisible(true);
+		frame2.pack();
+		frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 }

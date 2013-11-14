@@ -54,7 +54,7 @@ public class ReadText {
 				login = true;
 			}
 		}
-		return false;
+		return login;
 	}
 	
 	/**
