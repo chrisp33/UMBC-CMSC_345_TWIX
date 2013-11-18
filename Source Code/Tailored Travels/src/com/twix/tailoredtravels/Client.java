@@ -97,16 +97,16 @@ public class Client{
 				nameField.setText(null);
 				passField.setText(null);
 				
-				ReadText reader = new ReadText();
-				reader.readUser();
-				reader.readLocation();
+				DatabaseManager dbm = new DatabaseManager();
+				dbm.readUser();
+				dbm.readLocation();
 				String passwd = "";
 				
 				//convert password to string
 				for (int i = 0; i < password.length; i++)
 					passwd += password[i];
 					
-				boolean validUser = reader.login(userName, passwd);
+				boolean validUser = dbm.login(userName, passwd);
 
 				// Java documentation recommends clearing password array after use
 				for (int i = 0; i < password.length; i++)
@@ -121,8 +121,8 @@ public class Client{
 				}
 				else
 				{
-					LinkedList<Location> locations = reader.getUserLocations();
-					openGE(reader,userName, admin, locations);
+					LinkedList<Waypoint> locations = dbm.getUserLocations();
+					openGE(dbm,userName, admin, locations);
 				}
 			}
 		});
@@ -130,16 +130,16 @@ public class Client{
 	
 	/**
 	 * Opens up the Google Earth application and displays menu options for the user
-	 * @param reader the reader that contains user and location information
+	 * @param dbm the dbm that contains user and location information
 	 * @param userName the user's username
 	 * @param admin whether or not a user is an administrator
 	 * @param locations the list of waypoints
 	 */
-	public static void openGE(ReadText reader, String userName, boolean admin, LinkedList<Location> locations)
+	public static void openGE(DatabaseManager dbm, String userName, boolean admin, LinkedList<Waypoint> locations)
 	{
 
 		frame.dispose();
-		mainMenu = new MenuPanel(reader, userName, admin);
+		mainMenu = new MenuPanel(dbm, userName, admin);
 		mainMenu.populateJList(locations);
 		
 		try

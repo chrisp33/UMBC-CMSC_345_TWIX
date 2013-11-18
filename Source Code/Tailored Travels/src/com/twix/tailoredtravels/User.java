@@ -1,4 +1,4 @@
-package proj;
+package com.twix.tailoredtravels;
 
 import java.util.LinkedList;
 

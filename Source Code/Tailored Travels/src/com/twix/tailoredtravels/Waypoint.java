@@ -1,4 +1,4 @@
-package proj;
+package com.twix.tailoredtravels;
 
 /**
  * A class that acts as the template for KML 

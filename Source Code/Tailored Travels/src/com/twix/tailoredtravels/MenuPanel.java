@@ -27,7 +27,7 @@ public class MenuPanel extends JPanel {
 	private boolean isAdmin;
 	private JPanel p1, p2, p3, p4, p5;
 	
-	public MenuPanel(ReadText reader,String user, boolean admin){
+	public MenuPanel(DatabaseManager dbm,String user, boolean admin){
 		
 		isAdmin = admin;
 		
@@ -56,7 +56,7 @@ public class MenuPanel extends JPanel {
 				 */
 				public void actionPerformed(ActionEvent ae) {
 					
-					//reader.addUserLocation(addLocation)
+					//dbm.addUserLocation(addLocation)
 				}});
 			
 			removeLocation.addActionListener(new ActionListener(){
@@ -68,7 +68,7 @@ public class MenuPanel extends JPanel {
 				 */
 				public void actionPerformed(ActionEvent ae) {
 					
-					//reader.removeLocation(name);
+					//dbm.removeLocation(name);
 				}});
 			
 			/**
@@ -80,7 +80,7 @@ public class MenuPanel extends JPanel {
 				
 				public void actionPerformed(ActionEvent ae) {
 					
-					//reader.addUser(name, password, admin);
+					//dbm.addUser(name, password, admin);
 				}});
 			
 			/**
@@ -92,7 +92,7 @@ public class MenuPanel extends JPanel {
 				
 				public void actionPerformed(ActionEvent ae) {
 					
-					//reader.removeUser(name); //No need for password?
+					//dbm.removeUser(name); //No need for password?
 				}});
 
 
@@ -140,12 +140,12 @@ public class MenuPanel extends JPanel {
 	
 	/**
 	 * Finds the list of locations for the user and uses them to fill the JList
-	 * @param locations list of Locations containing waypoint information.
+	 * @param locations2 list of Locations containing waypoint information.
 	 */
-	public void populateJList(LinkedList<Location> locations)
+	public void populateJList(LinkedList<Waypoint> locations2)
 	{
 		Vector<String> locs = new Vector<String>();
-		for (Location loc : locations)
+		for (Waypoint loc : locations2)
 			locs.add(loc.getName());
 		this.locations.setListData(locs);
 	}
