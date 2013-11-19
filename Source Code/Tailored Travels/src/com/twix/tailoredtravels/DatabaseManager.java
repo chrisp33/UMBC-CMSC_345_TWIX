@@ -56,7 +56,7 @@ public class DatabaseManager {
 					userAdmin = true;
 			}
 		}
-		return false;
+		return login;
 	}
 	/*
 	 * log the user out

@@ -31,7 +31,6 @@ public class Client{
 	private static JButton login;
 	private static JTextField nameField;
 	private static JPasswordField passField;
-	private static Authenticator auth;
 	private static MenuPanel mainMenu;
 	/**
 	 * @param args

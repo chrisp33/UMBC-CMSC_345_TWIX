@@ -15,6 +15,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -26,9 +27,11 @@ public class MenuPanel extends JPanel {
 	private JScrollPane scroller;
 	private boolean isAdmin;
 	private JPanel p1, p2, p3, p4, p5;
+	private DatabaseManager dbm;
 	
 	public MenuPanel(DatabaseManager dbm,String user, boolean admin){
 		
+		this.dbm = dbm;
 		isAdmin = admin;
 		
 		p1 = new JPanel();
@@ -47,55 +50,11 @@ public class MenuPanel extends JPanel {
 			p3.add(addUser);
 			p3.add(removeUser);
 			
-			addLocation.addActionListener(new ActionListener(){
-				
-				/**
-				 * Overwritten method for ActionListener class. 
-				 * Prompts for waypoint data and adds it to the system.
-				 * @param ae An ActionEvent is created when the user clicks the "Add Location" button
-				 */
-				public void actionPerformed(ActionEvent ae) {
-					
-					//dbm.addUserLocation(addLocation)
-				}});
+			addLocation.addActionListener(new AddLocListener());
+			removeLocation.addActionListener(new RemLocListener());
+			addUser.addActionListener(new AddUserListener());
+			removeUser.addActionListener(new RemUserListener());
 			
-			removeLocation.addActionListener(new ActionListener(){
-				
-				/**
-				 * Overwritten method for ActionListener class. 
-				 * Prompts for waypoint data and removes it from the system.
-				 * @param ae An ActionEvent is created when the user clicks the "Remove Location" button
-				 */
-				public void actionPerformed(ActionEvent ae) {
-					
-					//dbm.removeLocation(name);
-				}});
-			
-			/**
-			 * Overwritten method for ActionListener class. 
-			 * Prompts for user data and adds it to the system.
-			 * @param ae An ActionEvent is created when the user clicks the "Add User" button
-			 */
-			addUser.addActionListener(new ActionListener(){
-				
-				public void actionPerformed(ActionEvent ae) {
-					
-					//dbm.addUser(name, password, admin);
-				}});
-			
-			/**
-			 * Overwritten method for ActionListener class. 
-			 * Prompts for user data and removes it from the system.
-			 * @param ae An ActionEvent is created when the user clicks the "Remove User" button
-			 */
-			removeUser.addActionListener(new ActionListener(){
-				
-				public void actionPerformed(ActionEvent ae) {
-					
-					//dbm.removeUser(name); //No need for password?
-				}});
-
-
 		}
 		
 		welcomeMsg = new JLabel("Welcome back, " + user + "!");
@@ -167,5 +126,66 @@ public class MenuPanel extends JPanel {
 		
 		add(p4);
 		add(p5);
+	}
+	
+	public class AddLocListener implements ActionListener{
+			
+			/**
+			 * Overwritten method for ActionListener class. 
+			 * Prompts for waypoint data and adds it to the system.
+			 * @param ae An ActionEvent is created when the user clicks the "Add Location" button
+			 */
+			public void actionPerformed(ActionEvent ae) {
+				
+				//dbm.addUserLocation(addLocation)
+			}
+	}
+	
+	public class RemLocListener implements ActionListener{
+		
+		/**
+		 * Overwritten method for ActionListener class. 
+		 * Prompts for waypoint data and removes it from the system.
+		 * @param ae An ActionEvent is created when the user clicks the "Remove Location" button
+		 */
+		public void actionPerformed(ActionEvent ae) {
+			
+			LinkedList<Waypoint> waypoints = dbm.getUserLocations();
+			String[] waypointNames = new String[waypoints.size()];
+			for (int i = 0; i < waypoints.size(); i++)
+			{
+				waypointNames[i] = waypoints.get(i).getName();
+			}
+			String remLoc = (String) JOptionPane.showInputDialog(null, "Which location would you like to remove?",
+					"Remove Location", JOptionPane.PLAIN_MESSAGE, null, waypointNames, waypointNames[0]);
+			System.out.println(remLoc);
+			dbm.removeLocation(remLoc);
+			}
+		}
+	
+	public class AddUserListener implements ActionListener{
+		
+		/**
+		 * Overwritten method for ActionListener class. 
+		 * Prompts for user data and adds it to the system.
+		 * @param ae An ActionEvent is created when the user clicks the "Add User" button
+		 */
+		public void actionPerformed(ActionEvent ae) {
+		
+		//dbm.addUser(name, password, admin);
+		}
+	}
+	
+	public class RemUserListener implements ActionListener{
+		
+		/**
+		 * Overwritten method for ActionListener class. 
+		 * Prompts for user data and removes it from the system.
+		 * @param ae An ActionEvent is created when the user clicks the "Remove User" button
+		 */
+		public void actionPerformed(ActionEvent ae) {
+			
+			//dbm.removeUser(name); //No need for password?
+		}
 	}
 }
