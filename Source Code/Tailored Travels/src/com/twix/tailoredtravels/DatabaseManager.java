@@ -1,23 +1,23 @@
-package com.twix.tailoredtravels;
+package database;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.LinkedList;
-import java.util.Scanner;
 
 public class DatabaseManager {
-	LinkedList<Waypoint> location = new LinkedList<Waypoint>();
-	LinkedList<User> user = new LinkedList<User>();
-	private String userFile = "user.txt";
-	private String locationFile = "location.txt";
-	private int currentUser;
-	private boolean login;
-	static Scanner input = new Scanner(System.in);
-	private boolean userAdmin;
+	private int userId;
+	private LinkedList<Waypoint> location;
+	private boolean admin;
+	private final String newDatabase = "org.apache.derby.jdbc.EmbeddedDriver";
+	private final String url = "jdbc:derby:Database;create = true";
+	private final String queryLocation = "select * from Location";
+	private final String queryUser = "select * from UserPassword";
+	//	private Connection connect = null;
+
 	/*
 	 * Constructor that starts this file reader
 	 * sets currentUser to 0 to mean no user at this time
@@ -26,13 +26,14 @@ public class DatabaseManager {
 	 * input: none
 	 * output: none
 	 */
-	public DatabaseManager()
+	public DatabaseManager() throws ClassNotFoundException, SQLException
 	{
-		currentUser = 0;
-		login = false;
-		readLocation();
-		readUser();
-		userAdmin = false;
+		Class.forName(newDatabase);
+		location = new LinkedList<Waypoint>();
+		//		connect = DriverManager.getConnection(url);
+
+		userId = 0;
+		admin = false;
 	}
 	/*
 	 * allows the user to log in and sets the user
@@ -43,17 +44,31 @@ public class DatabaseManager {
 	 */
 	public boolean login(String name, String password)
 	{
-
-		//loops through all the user in the file
-		for(int i = 0; i < user.size(); i++)
-		{
-			//checks the user
-			if(user.get(i).login(name, password))
+		Connection connect = null;
+		Statement statement = null;
+		boolean login = false;
+		try {
+			connect = DriverManager.getConnection(url);
+			statement = connect.createStatement();
+			ResultSet result = statement.executeQuery(queryUser);
+			while(result.next())
 			{
-				currentUser = i;
-				login = true;
-				if(user.get(currentUser).getAdmin() == true)
-					userAdmin = true;
+				if(result.getString(2).equalsIgnoreCase(name) && result.getString(3).equals(password))
+				{
+					userId = result.getInt(1);
+					if(result.getBoolean(4))
+						admin = true;
+					login = true;
+				}
+			}
+		} catch (SQLException e) {
+		}
+		finally
+		{
+			try {
+				statement.close();
+				connect.close();
+			} catch (SQLException e) {
 			}
 		}
 		return login;
@@ -63,127 +78,8 @@ public class DatabaseManager {
 	 */
 	public void logout()
 	{
-		currentUser = 0;
-		login = false;
-		userAdmin = false;
-	}
-	/*
-	 * read all the location from the file
-	 * input: none
-	 * output: none
-	 */
-	public void readLocation()
-	{
-		BufferedReader br = null;
-		try {
-			br = new BufferedReader(new FileReader(locationFile));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			/* read format is read whole line
-			 * double (latitude), double(longitude), name of the location 
-			 * readline again for description
-			 */
-			String line = br.readLine();
-			while (line != null) {
-				String description = br.readLine();
-				String string[] = line.split(" ");
-				String name = "";
-				//concatnate the string for proper use
-				for(int i = 2; i < string.length; i++)
-				{
-					if(i + 1 != string.length)
-						name = name + string[i] + " ";
-					else
-						name = name + string[i];
-				}
-				//add the location to the file
-				location.add(new Waypoint(name,Float.parseFloat(string[0]), Float.parseFloat(string[1])
-						, description));
-				line = br.readLine();
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-
-		} finally {
-			try {
-				br.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-	/*
-	 * read the user file
-	 * input:	none
-	 * output:	none
-	 */
-	public void readUser()
-	{
-		/*
-		 * find the file that is being written from
-		 */
-		BufferedReader br = null;
-		try {
-			br = new BufferedReader(new FileReader(userFile));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			//read first line to check if admin
-			String line = br.readLine();			
-			while (line != null) 
-			{
-				if(line.equalsIgnoreCase("Admin") || line.equalsIgnoreCase("Normal"))
-				{
-					boolean admin = false;
-					if(line.equalsIgnoreCase("Admin"))
-						admin = true;
-					//read the user
-					String userName = br.readLine();
-					//read the password
-					String password = br.readLine();
-					//get a new user
-					User newUser = new User(userName, password, admin);
-					//then the file reads the location name the user input
-					//designate "." as when the user stops selecting location location
-					while(!line.equalsIgnoreCase("."))
-					{
-						line = br.readLine();
-						for(int i = 0; i < location.size(); i ++)
-						{
-							if(line.equalsIgnoreCase(location.get(i).getName()))
-							{
-								newUser.addLocation(location.get(i));
-								break;
-							}
-						}
-					}
-					//add the user to the user linked list
-					user.add(newUser);
-				}
-				//set the next line
-				line = br.readLine();
-			}
-			br.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	/*
-	 * get the user locations from the array and return all the locations
-	 * input:	none
-	 * output:	linked list of location the user entered
-	 */
-	public LinkedList<Waypoint> getUserLocations()
-	{
-		return user.get(currentUser).getLocation();
+		userId = 0;
+		admin = false;
 	}
 	/*
 	 * add user locations and then update the user file
@@ -194,8 +90,37 @@ public class DatabaseManager {
 	 */
 	public void addUser(String name, String password, boolean admin)
 	{
-		user.add(new User(name, password, admin));
-		printToUserFile();
+		Connection connect = null;
+		Statement statement = null;
+		boolean addUser = true;
+		try {
+			connect = DriverManager.getConnection(url);
+			statement = connect.createStatement();
+			ResultSet result = statement.executeQuery(queryUser);
+			while(result.next())
+				if(result.getString(2).equals(name))
+					addUser = false;
+			if(addUser)
+			{
+				if(admin)				
+					connect.createStatement().execute("insert into UserPassword (name, password, admin) " +
+							"values ('" + name + "', '" + password+"', true)");
+				else
+					connect.createStatement().execute("insert into UserPassword (name, password, admin) " +
+							"values ('" + name + "', '" + password+"', false)");
+
+			}
+		} catch (SQLException e) {
+		} finally
+		{
+			try {
+				statement.close();
+				connect.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	/*
 	 * add new location to file and update the location file
@@ -208,11 +133,39 @@ public class DatabaseManager {
 	 */
 	public boolean addLocation(float latitude, float longitude ,String name,  String description)
 	{
-		if(login == false || !user.get(currentUser).getAdmin())
+		Connection connect = null;
+		Statement statement = null;
+		ResultSet result = null;
+		boolean locationAdded = true;
+		if(!admin)
 			return false;
-		location.add(new Waypoint(name, latitude, longitude, description));
-		printToLocationFile();
-		return true;
+		try {
+			connect = DriverManager.getConnection(url);
+			statement = connect.createStatement();
+			result = statement.executeQuery(queryLocation);
+			while(result.next())
+			{
+				if(name.equals(result.getString(2)))
+					locationAdded =  false;
+			}
+			if(locationAdded)
+			{
+				connect.createStatement().execute("insert into Location (name, latitude, longitude, description)" +
+						" values ('" + name + "', " + latitude + ", " + longitude + ", '" + description + "')");
+				connect.createStatement().execute("alter table UserPassword add column \"" + name + "\" boolean default false");
+			}
+
+		} catch (SQLException e) {
+			locationAdded = false;
+		}finally
+		{
+			try {
+				statement.close();
+				connect.close();
+			} catch (SQLException e) {
+			}
+		}
+		return locationAdded;
 	}
 	/*
 	 * add a new location to the user
@@ -222,18 +175,45 @@ public class DatabaseManager {
 	 */
 	public boolean addUserLocation(String addLocation)
 	{
-		if(login == true)
+		Connection connect = null;
+		Statement statement = null;
+		if( userId == 0)
 			return false;
-		int locationIndex = 0;
-		//loops through the location to add the name
-		for(int i = 0;i < location.size(); i++)
+		boolean added = false;
+		try {
+			connect = DriverManager.getConnection(url);
+			statement = connect.createStatement();
+			ResultSet result = statement.executeQuery(queryUser);
+			ResultSetMetaData data = result.getMetaData();
+			int columns = data.getColumnCount();
+			for(int i = 5; i <= columns; i++)
+			{
+				if(addLocation.equalsIgnoreCase(data.getColumnName(i)))
+				{
+					addLocation = data.getColumnName(i);
+					added = true;
+				}
+			}
+			addLocation = addLocation.replaceAll("'", "''");
+			if(added)
+				connect.createStatement().execute("Update UserPassword set \"" + addLocation + "\" = true " +
+						"where id = " + userId);
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			added = false;
+		}finally
 		{
-			if(location.get(i).getName().equalsIgnoreCase(addLocation))
-				locationIndex = i;
+			try {
+				statement.close();
+				connect.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		user.get(currentUser).addLocation(location.get(locationIndex));
-		printToLocationFile();
-		return true;
+		return added;
 	}
 	/*
 	 * remove the user from the database
@@ -243,24 +223,38 @@ public class DatabaseManager {
 	 */
 	public boolean removeUser(String name)
 	{
+		Connection connect = null;
+		Statement statement = null;
+		boolean removed = false;
+		try {
 
-		for(int i = 0; i < user.size(); i++)
-		{
-			String userName = user.get(i).getName();
-			if(userName.equalsIgnoreCase(name) && (i + 1 != user.size()))
+			connect = DriverManager.getConnection(url);
+			statement = connect.createStatement();
+			ResultSet result = statement.executeQuery(queryUser);
+			while(result.next())
 			{
-				user.remove(i);
-				printToUserFile();
-				return true;
+				if(name.equalsIgnoreCase(result.getString(2)))
+				{
+					name = result.getString(2);
+					removed = true;
+				}
 			}
-			if(userName.equalsIgnoreCase(name))
-			{
-				user.removeLast();
-				printToUserFile();
-				return true;
+			if(removed)
+				connect.createStatement().execute("delete from UserPassword where name = '" + name+"'");
+		} catch (SQLException e) {
+			removed = false;
+		}finally
+		{
+			try {
+				statement.close();
+				connect.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
-		return false;
+
+		return removed;
 	}
 	/*
 	 * remove the location being called
@@ -270,17 +264,46 @@ public class DatabaseManager {
 	 */
 	public boolean removeLocation(String name)
 	{
-		if(login == false || !user.get(currentUser).getAdmin())
-			for(int i = 0; i < location.size(); i++)
+		if(!admin)
+			return false;
+		Connection connect = null;
+		Statement statement = null;
+		boolean removed = false;
+		try {
+
+			connect = DriverManager.getConnection(url);
+			statement = connect.createStatement();
+			ResultSet result = statement.executeQuery(queryUser);
+			ResultSetMetaData data = result.getMetaData();
+			int columns = data.getColumnCount();
+			for(int i = 5; i <= columns; i++)
 			{
-				if(location.get(i).getName().equalsIgnoreCase(name))
-				{
-					location.remove(i);
-					printToLocationFile();
-					return true;
+				if(name.equalsIgnoreCase(data.getColumnName(i)))
+				{	
+					name = data.getColumnName(i);
+					removed = true;
 				}
 			}
-		return false;
+
+			name = name.replaceAll("\'", "\'\'");
+			if(removed){
+				connect.createStatement().execute("alter table UserPassword drop column \"" + name+ "\"");
+				connect.createStatement().execute("delete from Location where name = '" + name+ "'");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally
+		{
+			try {
+				statement.close();
+				connect.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return removed;
 	}
 	/*
 	 * remove the location from the user
@@ -290,11 +313,42 @@ public class DatabaseManager {
 	 */
 	public boolean removeUserLocation(String removeLocation)
 	{
-		if(login == false)
+		if(userId == 0)
 			return false;
-		user.get(currentUser).removeLocation(removeLocation);
-		printToUserFile();
-		return true;
+		Connection connect = null;
+		Statement statement = null;
+		boolean removed = false;
+		try {
+			connect = DriverManager.getConnection(url);
+			statement = connect.createStatement();
+			ResultSet result = statement.executeQuery(queryUser);
+			ResultSetMetaData data = result.getMetaData();
+			int columns = data.getColumnCount();
+			for(int i = 5; i <= columns; i++)
+			{
+				if(removeLocation.equalsIgnoreCase(data.getColumnName(i)))
+				{	
+					removeLocation = data.getColumnName(i);
+					removed = true;
+				}
+			}
+			if(removed)
+				connect.createStatement().execute("Update UserPassword set \"" + removeLocation + "\" = false " +
+						"where id = " + userId);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally
+		{
+			try {
+				statement.close();
+				connect.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return removed;
 	}
 	/*
 	 * edit the location
@@ -307,109 +361,182 @@ public class DatabaseManager {
 	 */
 	public boolean editLocation(float latitude, float longitude, String name, String description)
 	{
-		if(!user.get(currentUser).getAdmin())
-			return false;
-		for(int i = 0; i < location.size(); i++)
-		{
-			if(name.equalsIgnoreCase(location.get(i).getName()))
+		Connection connect = null;
+		Statement statement = null;
+		boolean editted = false;
+		try {
+			connect = DriverManager.getConnection(url);
+			statement = connect.createStatement();
+			ResultSet result = statement.executeQuery(queryUser);
+			ResultSetMetaData data = result.getMetaData();
+			int columns = data.getColumnCount();
+			for(int i = 5; i <= columns; i++)
 			{
-				location.get(i).setwDescription(description);
-				location.get(i).setwLatitude(latitude);
-				location.get(i).setwLongitude(longitude);
+				if(name.equalsIgnoreCase(data.getColumnName(i)))
+				{	
+					name = data.getColumnName(i);
+					editted = true;
+				}
 			}
-
+			description = description.replaceAll("'", "''");
+			if(editted)
+				connect.createStatement().execute("update Location set LATITUDE = " + latitude + ", " +
+						"LONGITUDE = " +longitude + ", DESCRIPTION = '" + description + "' where NAME = '" + name + "'");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}finally
+		{
+			try {
+				statement.close();
+				connect.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		return true;
+
+		return editted;
 	}
 	public boolean isUserAdmin()
 	{
-		return new Boolean(userAdmin);
+		return new Boolean(admin);
 	}
+
 	/*
-	 * update the user file to be correct
+	 * get the user locations from the array and return all the locations
+	 * input:	none
+	 * output:	linked list of location the user entered
 	 */
-	public void printToUserFile()
+	public LinkedList<Waypoint> getUserLocations()
 	{
-		try {			 
-			FileWriter fstream = new FileWriter(userFile);
-			BufferedWriter bw = new BufferedWriter(fstream);
-			for(int i = 0; i < user.size(); i++)
-				bw.write(user.get(i).printFile());
-			bw.close();
-		} catch (IOException e) {
+		if(userId == 0)
+			return null;
+		Connection connect = null;
+		Statement statement = null;
+		LinkedList<Waypoint> news = new LinkedList<Waypoint>();
+		try {
+			connect = DriverManager.getConnection(url);
+			statement = connect.createStatement();
+			ResultSet locationResult = statement.executeQuery(queryLocation);
+			while(locationResult.next())
+			{
+				Waypoint newWaypoint = new Waypoint(locationResult.getString(2), 
+						(float)locationResult.getDouble(3),
+						(float)locationResult.getDouble(4),
+						locationResult.getString(5));
+				news.add(newWaypoint);
+			}
+			ResultSet personResult = statement.executeQuery(queryUser);
+			while(personResult.next())
+			{
+				if(personResult.getInt(1) == userId)
+					break;
+			}
+			for(int i = 0; i < news.size(); i++)
+			{
+			if(personResult.getBoolean(i + 5) == true)
+				location.add(news.get(i));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally
+		{
+			try {
+				statement.close();
+				connect.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-	}
-	/*
-	 * update the location file to be correct
-	 */
-	public void printToLocationFile()
-	{
-		try {			 
-			FileWriter fstream = new FileWriter(locationFile);
-			BufferedWriter bw = new BufferedWriter(fstream);
-			for(int i = 0; i < location.size(); i++)
-				bw.write(location.get(i).toString());
-			bw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		return location;
 
 	}
-	public static void main(String[] args)
+	public static void main(String[] args) throws ClassNotFoundException, SQLException
 	{
 		DatabaseManager read = new DatabaseManager();
-		String nextInput1 = input.nextLine();
-		int nextInput = Integer.parseInt(nextInput1);
-		String name = "";
-		String password = "";
-		String latitude = "";
-		String longitude = "";
-		String description = "";
-		while(nextInput != 0)
-		{
-			switch(nextInput)
-			{
-			//test login
-			case(1):
-				name = input.nextLine();
-				password = input.nextLine();
-				read.login(name, password);
-				break;
-			
-			//test add location
-			case(2):
-				longitude = input.nextLine(); 
-				latitude = input.nextLine();
-				name = input.nextLine();
-				description = input.nextLine();
-				read.addLocation(Float.parseFloat(longitude), Float.parseFloat(latitude), name, description);
-				break;
-			//test add user
-			case(3):
-				name = input.nextLine();
-				password = input.nextLine();
-				read.addUser(name, password, false);
-			}
-			nextInput1 = input.nextLine();
-			nextInput = Integer.parseInt(nextInput1);
-		}
-		//read.readLocation();
-		//		System.out.println(read);
-		//read.readUser();
-		//		System.out.println(read);
-		//read.addUser("Russ", "password2", false);
-		//test to make sure remove location works
-		//read.addUserLocation("Steven", "machu pichu");
-		//read.removeUser("Russ");
-		//read.addLocation(123.01, 97, "Adding location", "description of city");
-		//read.removeLocation("Adding location");
-		//test to make sure it prints user file properly
-		//read.printToUserFile();
-		//test to make sure it prints location file properly
-		//read.printToLocationFile();
+		//read.addUser("Kevin", "password3", false);
+//		read.login("Keith", "password1");
+		read.login("Steven", "password5");
+//		read.addUserLocation("yellowstone");
+//		read.addUserLocation("wind cave");
+		read.addUserLocation("zion");
+		//		read.addUserLocation("acadia");
+		//		read.addUserLocation("American Samoa");
+		//		read.addUser("Steven", "password5", false);
+		//		read.addUser("Mariama", "password9", false);
+		//		read.removeUser("Steven");
+		//		read.removeUser("mariama");
+
+		//		read.addUserLocation("Big Bend");
+		//		read.addUserLocation("badlands");
+		//		read.removeUserLocation("big bend");
+		//		read.removeUserLocation("badlands");
+
+
+		//		read.addLocation((float)-90.3214, (float)41.12365, "Maryland", "This is our home town");
+		//		read.addLocation((float)634.01234, (float)42.1457, "Acadfdafdfiafd", "descriptiodaf sdfn1fadsf");
+		//		read.removeLocation("Maryland");
+		//		read.editLocation((float)93.7815, (float)-40.14521, "american samoa", "New description");
+		read.getUserLocations();
+		read.logout();
+		System.out.println("Code finished");
+
 	}
 }
+//		read.printToLocationFile();
+//		read.printToUserFile();
+//		String nextInput1 = input.nextLine();
+//		int nextInput = Integer.parseInt(nextInput1);
+//		String name = "";
+//		String password = "";
+//		String latitude = "";
+//		String longitude = "";
+//		String description = "";
+//		while(nextInput != 0)
+//		{
+//			switch(nextInput)
+//			{
+//			//test login
+//			case(1):
+//				name = input.nextLine();
+//				password = input.nextLine();
+//				read.login(name, password);
+//				break;
+//			
+//			//test add location
+//			case(2):
+//				longitude = input.nextLine(); 
+//				latitude = input.nextLine();
+//				name = input.nextLine();
+//				description = input.nextLine();
+//				read.addLocation(Float.parseFloat(longitude), Float.parseFloat(latitude), name, description);
+//				break;
+//			//test add user
+//			case(3):
+//				name = input.nextLine();
+//				password = input.nextLine();
+//				read.addUser(name, password, false);
+//			}
+//			nextInput1 = input.nextLine();
+//			nextInput = Integer.parseInt(nextInput1);
+//		}
+//read.readLocation();
+//		System.out.println(read);
+//read.readUser();
+//		System.out.println(read);
+//read.addUser("Russ", "password2", false);
+//test to make sure remove location works
+//read.addUserLocation("Steven", "machu pichu");
+//read.removeUser("Russ");
+//read.addLocation(123.01, 97, "Adding location", "description of city");
+//read.removeLocation("Adding location");
+//test to make sure it prints user file properly
+//read.printToUserFile();
+//test to make sure it prints location file properly
+//read.printToLocationFile();
 //Mean to test to see if readLocation works properly	
 //public String toString()
 //{
