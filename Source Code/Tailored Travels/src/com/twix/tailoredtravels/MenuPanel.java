@@ -18,6 +18,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 
 public class MenuPanel extends JPanel {
 
@@ -61,31 +62,13 @@ public class MenuPanel extends JPanel {
 		p1.add(welcomeMsg);
 		availMsg = new JLabel("Available Locations");
 		locations = new JList<String>();
+		locations.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scroller = new JScrollPane(locations);
 		calcRoute = new JButton("Calculate Route");
 		calcDist = new JButton("Calculate Distance");
 		
-		calcRoute.addActionListener(new ActionListener(){
-			
-			/**
-			 * Overwritten method for ActionListener class. 
-			 * Calculates the route given the waypoints the user has selected.
-			 * @param ae An ActionEvent is created when the user clicks the "Calculate Route" button
-			 */
-			public void actionPerformed(ActionEvent ae) {
-				
-			}});
-		
-		calcDist.addActionListener(new ActionListener(){
-			
-			/**
-			 * Overwritten method for ActionListener class. 
-			 * Prompts for starting and ending waypoint data and finds the distance between them.
-			 * @param ae An ActionEvent is created when the user clicks the "Calculate Distance" button
-			 */
-			public void actionPerformed(ActionEvent ae) {
-				
-			}});
+		calcRoute.addActionListener(new RouteListener());
+		calcDist.addActionListener(new DistListener());
 		
 		p4 = new JPanel();
 		p4.add(availMsg);
@@ -128,7 +111,7 @@ public class MenuPanel extends JPanel {
 		add(p5);
 	}
 	
-	public class AddLocListener implements ActionListener{
+	private class AddLocListener implements ActionListener{
 			
 			/**
 			 * Overwritten method for ActionListener class. 
@@ -141,7 +124,7 @@ public class MenuPanel extends JPanel {
 			}
 	}
 	
-	public class RemLocListener implements ActionListener{
+	private class RemLocListener implements ActionListener{
 		
 		/**
 		 * Overwritten method for ActionListener class. 
@@ -163,7 +146,7 @@ public class MenuPanel extends JPanel {
 			}
 		}
 	
-	public class AddUserListener implements ActionListener{
+	private class AddUserListener implements ActionListener{
 		
 		/**
 		 * Overwritten method for ActionListener class. 
@@ -176,7 +159,7 @@ public class MenuPanel extends JPanel {
 		}
 	}
 	
-	public class RemUserListener implements ActionListener{
+	private class RemUserListener implements ActionListener{
 		
 		/**
 		 * Overwritten method for ActionListener class. 
@@ -187,5 +170,32 @@ public class MenuPanel extends JPanel {
 			
 			//dbm.removeUser(name); //No need for password?
 		}
+	}
+	
+	private class RouteListener implements ActionListener{
+
+		
+		/**
+		 * Overwritten method for ActionListener class. 
+		 * Calculates the route given the waypoints the user has selected.
+		 * @param ae An ActionEvent is created when the user clicks the "Calculate Route" button
+		 */
+		public void actionPerformed(ActionEvent arg0) {
+			
+		}
+		
+	}
+	
+	public class DistListener implements ActionListener{
+
+		/**
+		 * Overwritten method for ActionListener class. 
+		 * Prompts for starting and ending waypoint data and finds the distance between them.
+		 * @param ae An ActionEvent is created when the user clicks the "Calculate Distance" button
+		 */
+		public void actionPerformed(ActionEvent e) {
+			
+		}
+		
 	}
 }

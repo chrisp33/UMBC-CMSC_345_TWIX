@@ -97,8 +97,6 @@ public class Client{
 				passField.setText(null);
 				
 				DatabaseManager dbm = new DatabaseManager();
-				dbm.readUser();
-				dbm.readLocation();
 				String passwd = "";
 				
 				//convert password to string
