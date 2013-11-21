@@ -13,6 +13,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.LinkedList;
 
 import javax.swing.BoxLayout;
@@ -96,7 +97,16 @@ public class Client{
 				nameField.setText(null);
 				passField.setText(null);
 				
-				DatabaseManager dbm = new DatabaseManager();
+				DatabaseManager dbm = null;
+				try {
+					dbm = new DatabaseManager();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				String passwd = "";
 				
 				//convert password to string

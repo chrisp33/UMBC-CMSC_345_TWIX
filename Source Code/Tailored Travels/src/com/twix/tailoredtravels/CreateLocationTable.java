@@ -1,4 +1,4 @@
-package database;
+package com.twix.tailoredtravels;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

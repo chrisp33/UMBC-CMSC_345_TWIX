@@ -8,5 +8,6 @@
 			<attribute name="javadoc_location" value="file:/Users/Stephen/UMBC-CMSC_345_TWIX/Source Code/libs/apidocs/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="derby.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
