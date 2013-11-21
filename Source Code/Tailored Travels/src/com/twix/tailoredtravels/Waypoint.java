@@ -4,7 +4,8 @@ package com.twix.tailoredtravels;
  * A class that acts as the template for KML 
  * objects correlating to locations.
  * 
- * @author Stephen Moore
+ * @author Stephen Moore, Justin Tavares
+ * Distance function @authors Mariama Barr-Dallas, Michael Tang
  *
  */
 public class Waypoint {
@@ -110,11 +111,11 @@ public class Waypoint {
 	 */
 	public String toString()
 	{
-		return this.wName + ", " + this.wLatitude + ":" + 
-				this.wLongitude + ", " + this.wDescription;
+		return new String(this.wLongitude + " " + this.wLongitude + " " + this.wName + "\n" + this.wDescription + "\n");
+
 	}
 	public String printDatabase()
 	{
-		return new String(this.wLongitude + " " + this.wLongitude + " " + this.wName + "\n" + this.wDescription + "\n");
+		return toString();
 	}
 }
