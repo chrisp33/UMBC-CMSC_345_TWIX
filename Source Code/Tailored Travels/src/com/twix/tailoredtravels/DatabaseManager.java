@@ -1,4 +1,4 @@
-package com.twix.tailoredtravels;
+package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,6 +23,7 @@ public class DatabaseManager {
 	 * sets currentUser to 0 to mean no user at this time
 	 * set login to false
 	 * reads the location file and user file to have data
+	 * precondition: org.apache.derby.jdbc.EmbeddedDriver must exist in eclipse plugin
 	 * input: none
 	 * output: none
 	 */
@@ -30,8 +31,6 @@ public class DatabaseManager {
 	{
 		Class.forName(newDatabase);
 		location = new LinkedList<Waypoint>();
-		//		connect = DriverManager.getConnection(url);
-
 		userId = 0;
 		admin = false;
 	}
@@ -42,34 +41,40 @@ public class DatabaseManager {
 	 * output:	true if the person is logged in
 	 * 			false if there are no one with that username / password
 	 */
-	public boolean login(String name, String password)
+	public boolean login(String name, String password) throws SQLException
 	{
 		Connection connect = null;
 		Statement statement = null;
 		boolean login = false;
-		try {
+		try{
+			//calls the driver to call the database and query the user table
 			connect = DriverManager.getConnection(url);
 			statement = connect.createStatement();
 			ResultSet result = statement.executeQuery(queryUser);
+			//while there is another item
 			while(result.next())
 			{
+				//check if the user name and password exist with name being case-insensitive
+				//and password being case sensitive
 				if(result.getString(2).equalsIgnoreCase(name) && result.getString(3).equals(password))
 				{
+					//if the user exist then get their id
 					userId = result.getInt(1);
+					//check if the person is a admin
 					if(result.getBoolean(4))
 						admin = true;
 					login = true;
 				}
 			}
-		} catch (SQLException e) {
-		}
-		finally
+		}catch(SQLException e)
 		{
-			try {
+			e.printStackTrace();
+		}finally{
+			//cleans up the connection resources
+			if(statement != null)
 				statement.close();
+			if(statement != null)
 				connect.close();
-			} catch (SQLException e) {
-			}
 		}
 		return login;
 	}
@@ -82,44 +87,52 @@ public class DatabaseManager {
 		admin = false;
 	}
 	/*
-	 * add user locations and then update the user file
+	 * add user locations and then update the user table
+	 * precondition: name, password, admin is not null
 	 * input:	String of user name
 	 * 			String of password
 	 * 			Boolean of admin
 	 * output:	none
 	 */
-	public void addUser(String name, String password, boolean admin)
+	public void addUser(String name, String password, boolean admin) throws SQLException
 	{
 		Connection connect = null;
 		Statement statement = null;
 		boolean addUser = true;
 		try {
+			//calls the driver to call the database and query the user table
 			connect = DriverManager.getConnection(url);
 			statement = connect.createStatement();
 			ResultSet result = statement.executeQuery(queryUser);
+			//check if the user already exist
 			while(result.next())
 				if(result.getString(2).equals(name))
+					//if the user exist then addUser is false
 					addUser = false;
+			//if user is unique then add the user
 			if(addUser)
 			{
+				//if the new person added is admin then give them admin privileges
 				if(admin)				
+					//add a admin to the user table
 					connect.createStatement().execute("insert into UserPassword (name, password, admin) " +
 							"values ('" + name + "', '" + password+"', true)");
+				//else make a new person a regular person
 				else
+					//add a regular person to the user table
 					connect.createStatement().execute("insert into UserPassword (name, password, admin) " +
 							"values ('" + name + "', '" + password+"', false)");
 
 			}
 		} catch (SQLException e) {
+			e.printStackTrace();
 		} finally
 		{
-			try {
+			//cleans up the connection resources
+			if(statement != null)
 				statement.close();
+			if(connect != null)
 				connect.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 	/*
@@ -131,7 +144,7 @@ public class DatabaseManager {
 	 * output:	true if the user add a location
 	 *			false if the user cannot add a location
 	 */
-	public boolean addLocation(float latitude, float longitude ,String name,  String description)
+	public boolean addLocation(float latitude, float longitude ,String name,  String description) throws SQLException
 	{
 		Connection connect = null;
 		Statement statement = null;
@@ -140,14 +153,18 @@ public class DatabaseManager {
 		if(!admin)
 			return false;
 		try {
+			//calls the driver to call the database and query the location table
 			connect = DriverManager.getConnection(url);
 			statement = connect.createStatement();
 			result = statement.executeQuery(queryLocation);
+			//while there is a another location
 			while(result.next())
 			{
+				//if the location already exist then don't add the location
 				if(name.equals(result.getString(2)))
 					locationAdded =  false;
 			}
+			//if the location added is true then add a new location to location table and column to user table
 			if(locationAdded)
 			{
 				connect.createStatement().execute("insert into Location (name, latitude, longitude, description)" +
@@ -156,14 +173,14 @@ public class DatabaseManager {
 			}
 
 		} catch (SQLException e) {
-			locationAdded = false;
-		}finally
+			e.printStackTrace();
+		} finally
 		{
-			try {
+			//cleans up the connection resources
+			if(statement != null)
 				statement.close();
+			if(connect != null)
 				connect.close();
-			} catch (SQLException e) {
-			}
 		}
 		return locationAdded;
 	}
@@ -173,7 +190,7 @@ public class DatabaseManager {
 	 * output:	false of the user is 0
 	 * 			true if the user adds a new location properly
 	 */
-	public boolean addUserLocation(String addLocation)
+	public boolean addUserLocation(String addLocation) throws SQLException
 	{
 		Connection connect = null;
 		Statement statement = null;
@@ -181,6 +198,7 @@ public class DatabaseManager {
 			return false;
 		boolean added = false;
 		try {
+			//calls the driver to call the database and query the user table
 			connect = DriverManager.getConnection(url);
 			statement = connect.createStatement();
 			ResultSet result = statement.executeQuery(queryUser);
@@ -203,15 +221,13 @@ public class DatabaseManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			added = false;
-		}finally
+		} finally
 		{
-			try {
+			//cleans up the connection resources
+			if(statement != null)
 				statement.close();
+			if(connect != null)
 				connect.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 		return added;
 	}
@@ -221,37 +237,40 @@ public class DatabaseManager {
 	 * output:	true if user exist and removed
 	 * 			false otherwise
 	 */
-	public boolean removeUser(String name)
+	public boolean removeUser(String name) throws SQLException
 	{
 		Connection connect = null;
 		Statement statement = null;
 		boolean removed = false;
 		try {
 
+			//calls the driver to call the database and query the user table
 			connect = DriverManager.getConnection(url);
 			statement = connect.createStatement();
 			ResultSet result = statement.executeQuery(queryUser);
+			//while there are users remaining
 			while(result.next())
 			{
+				//check if the user exist
 				if(name.equalsIgnoreCase(result.getString(2)))
 				{
+					//then get their name from user table and change removed to true
 					name = result.getString(2);
 					removed = true;
 				}
 			}
+			//if the removed boolean is true then remove the person from user table
 			if(removed)
 				connect.createStatement().execute("delete from UserPassword where name = '" + name+"'");
 		} catch (SQLException e) {
-			removed = false;
-		}finally
+			e.printStackTrace();
+		} finally
 		{
-			try {
+			//cleans up the connection resources
+			if(statement != null)
 				statement.close();
+			if(connect != null)
 				connect.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 
 		return removed;
@@ -262,7 +281,7 @@ public class DatabaseManager {
 	 * output:	true if the location exist
 	 * 			false otherwise
 	 */
-	public boolean removeLocation(String name)
+	public boolean removeLocation(String name) throws SQLException
 	{
 		if(!admin)
 			return false;
@@ -271,21 +290,25 @@ public class DatabaseManager {
 		boolean removed = false;
 		try {
 
+			//calls the driver to call the database and query the user table
 			connect = DriverManager.getConnection(url);
 			statement = connect.createStatement();
 			ResultSet result = statement.executeQuery(queryUser);
 			ResultSetMetaData data = result.getMetaData();
 			int columns = data.getColumnCount();
+			//check all the columns in the table
 			for(int i = 5; i <= columns; i++)
 			{
+				//get the column's name
 				if(name.equalsIgnoreCase(data.getColumnName(i)))
 				{	
 					name = data.getColumnName(i);
 					removed = true;
 				}
 			}
-
+			//makes sure the name doesn't have illegal quotes
 			name = name.replaceAll("\'", "\'\'");
+			//remove the location from the user table and location table
 			if(removed){
 				connect.createStatement().execute("alter table UserPassword drop column \"" + name+ "\"");
 				connect.createStatement().execute("delete from Location where name = '" + name+ "'");
@@ -293,15 +316,13 @@ public class DatabaseManager {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}finally
+		} finally
 		{
-			try {
+			//cleans up the connection resources
+			if(statement != null)
 				statement.close();
+			if(connect != null)
 				connect.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 		return removed;
 	}
@@ -311,7 +332,7 @@ public class DatabaseManager {
 	 * output:	true if there is a user logged in
 	 * 			false if otherwise
 	 */
-	public boolean removeUserLocation(String removeLocation)
+	public boolean removeUserLocation(String removeLocation) throws SQLException
 	{
 		if(userId == 0)
 			return false;
@@ -319,34 +340,36 @@ public class DatabaseManager {
 		Statement statement = null;
 		boolean removed = false;
 		try {
+			//calls the driver to call the database and query the user table
 			connect = DriverManager.getConnection(url);
 			statement = connect.createStatement();
 			ResultSet result = statement.executeQuery(queryUser);
 			ResultSetMetaData data = result.getMetaData();
 			int columns = data.getColumnCount();
+			//check all the columns
 			for(int i = 5; i <= columns; i++)
 			{
+				//check if the column name exist and then get the exact spelling of the column
 				if(removeLocation.equalsIgnoreCase(data.getColumnName(i)))
 				{	
 					removeLocation = data.getColumnName(i);
 					removed = true;
 				}
 			}
+			//remove the location if it exist from the user table choice
 			if(removed)
 				connect.createStatement().execute("Update UserPassword set \"" + removeLocation + "\" = false " +
 						"where id = " + userId);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}finally
+		} finally
 		{
-			try {
+			//cleans up the connection resources
+			if(statement != null)
 				statement.close();
+			if(connect != null)
 				connect.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 		return removed;
 	}
@@ -359,17 +382,19 @@ public class DatabaseManager {
 	 * output:	false if the user cannot edit the location
 	 * 			true otherwise
 	 */
-	public boolean editLocation(float latitude, float longitude, String name, String description)
+	public boolean editLocation(float latitude, float longitude, String name, String description) throws SQLException
 	{
 		Connection connect = null;
 		Statement statement = null;
 		boolean editted = false;
 		try {
+			//calls the driver to call the database and query the user table
 			connect = DriverManager.getConnection(url);
 			statement = connect.createStatement();
 			ResultSet result = statement.executeQuery(queryUser);
 			ResultSetMetaData data = result.getMetaData();
 			int columns = data.getColumnCount();
+			
 			for(int i = 5; i <= columns; i++)
 			{
 				if(name.equalsIgnoreCase(data.getColumnName(i)))
@@ -385,17 +410,14 @@ public class DatabaseManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
-		}finally
+		} finally
 		{
-			try {
+			//cleans up the connection resources
+			if(statement != null)
 				statement.close();
+			if(connect != null)
 				connect.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
-
 		return editted;
 	}
 	public boolean isUserAdmin()
@@ -408,7 +430,7 @@ public class DatabaseManager {
 	 * input:	none
 	 * output:	linked list of location the user entered
 	 */
-	public LinkedList<Waypoint> getUserLocations()
+	public LinkedList<Waypoint> getUserLocations() throws SQLException
 	{
 		if(userId == 0)
 			return null;
@@ -416,6 +438,7 @@ public class DatabaseManager {
 		Statement statement = null;
 		LinkedList<Waypoint> news = new LinkedList<Waypoint>();
 		try {
+			//calls the driver to call the database and query the location table
 			connect = DriverManager.getConnection(url);
 			statement = connect.createStatement();
 			ResultSet locationResult = statement.executeQuery(queryLocation);
@@ -435,21 +458,19 @@ public class DatabaseManager {
 			}
 			for(int i = 0; i < news.size(); i++)
 			{
-			if(personResult.getBoolean(i + 5) == true)
-				location.add(news.get(i));
+				if(personResult.getBoolean(i + 5) == true)
+					location.add(news.get(i));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}finally
+		} finally
 		{
-			try {
+			//cleans up the connection resources
+			if(statement != null)
 				statement.close();
+			if(connect != null)
 				connect.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 		return location;
 
@@ -458,10 +479,10 @@ public class DatabaseManager {
 	{
 		DatabaseManager read = new DatabaseManager();
 		//read.addUser("Kevin", "password3", false);
-//		read.login("Keith", "password1");
+		//		read.login("Keith", "password1");
 		read.login("Steven", "password5");
-//		read.addUserLocation("yellowstone");
-//		read.addUserLocation("wind cave");
+		//		read.addUserLocation("yellowstone");
+		//		read.addUserLocation("wind cave");
 		read.addUserLocation("zion");
 		//		read.addUserLocation("acadia");
 		//		read.addUserLocation("American Samoa");
