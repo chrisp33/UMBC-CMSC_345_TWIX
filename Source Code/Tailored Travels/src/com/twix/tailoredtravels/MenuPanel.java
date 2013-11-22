@@ -8,6 +8,7 @@ package com.twix.tailoredtravels;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.Vector;
 
@@ -17,7 +18,9 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
 public class MenuPanel extends JPanel {
@@ -29,11 +32,13 @@ public class MenuPanel extends JPanel {
 	private boolean isAdmin;
 	private JPanel p1, p2, p3, p4, p5;
 	private DatabaseManager dbm;
+	private String currentUser;
 	
 	public MenuPanel(DatabaseManager dbm,String user, boolean admin){
 		
 		this.dbm = dbm;
 		isAdmin = admin;
+		currentUser = user;
 		
 		p1 = new JPanel();
 		p2 = new JPanel();
@@ -124,27 +129,37 @@ public class MenuPanel extends JPanel {
 			}
 	}
 	
-	private class RemLocListener implements ActionListener{
+	private class RemLocListener implements ActionListener
+	{
 		
 		/**
 		 * Overwritten method for ActionListener class. 
 		 * Prompts for waypoint data and removes it from the system.
 		 * @param ae An ActionEvent is created when the user clicks the "Remove Location" button
 		 */
-		public void actionPerformed(ActionEvent ae) {
-			
-			LinkedList<Waypoint> waypoints = dbm.getUserLocations();
-			String[] waypointNames = new String[waypoints.size()];
-			for (int i = 0; i < waypoints.size(); i++)
+		public void actionPerformed(ActionEvent ae) 
+		{
+			try
 			{
-				waypointNames[i] = waypoints.get(i).getName();
+				LinkedList<Waypoint> waypoints = dbm.getUserLocations();
+				String[] waypointNames = new String[waypoints.size()];
+				for (int i = 0; i < waypoints.size(); i++)
+				{
+					waypointNames[i] = waypoints.get(i).getName();
+				}
+				String remLoc = (String) JOptionPane.showInputDialog(null, "Which location would you like to remove?",
+						"Remove Location", JOptionPane.PLAIN_MESSAGE, null, waypointNames, waypointNames[0]);
+				System.out.println(remLoc);
+				dbm.removeLocation(remLoc);
 			}
-			String remLoc = (String) JOptionPane.showInputDialog(null, "Which location would you like to remove?",
-					"Remove Location", JOptionPane.PLAIN_MESSAGE, null, waypointNames, waypointNames[0]);
-			System.out.println(remLoc);
-			dbm.removeLocation(remLoc);
+			catch (SQLException e)
+			{
+				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", "Error", JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
+				System.exit(0);
 			}
 		}
+	}
 	
 	private class AddUserListener implements ActionListener{
 		
@@ -154,8 +169,74 @@ public class MenuPanel extends JPanel {
 		 * @param ae An ActionEvent is created when the user clicks the "Add User" button
 		 */
 		public void actionPerformed(ActionEvent ae) {
+			
+			//Prompt for username and password
+			JTextField nameField = new JTextField();
+			JPasswordField passField =  new JPasswordField();
+			Object[] message = {"Enter the New Username", nameField, "Enter the New Password", passField};
+			int option = JOptionPane.showConfirmDialog(null, message, "Enter Details for New User", JOptionPane.OK_CANCEL_OPTION);
+			String newName = nameField.getText();
+			char[] passChars = passField.getPassword();
+			
+			//Check for valid data
+			if ((option == JOptionPane.OK_OPTION) && (!newName.equals("")) && (passChars.length > 0))
+			{
+				boolean admin = false;
+				
+				//Prompt for new user privlege level
+				Object[] opts = {"Administrator", "Normal User"};
+				String selection = (String) JOptionPane.showInputDialog(null, "Select User Privilege Level", "User Privilege", JOptionPane.QUESTION_MESSAGE, null, opts, "Administrator");
+				
+				if (selection == null)
+				{
+					//Inform user that the new user has not been added
+					JOptionPane.showMessageDialog(null, "The New User Has Not Been Added.", "User Not Added", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				String addMsg = "A new user \"" + newName + "\" has been added as ";
+
+				if (selection.equals("Administrator"))
+				{
+					admin = true;
+					addMsg += "an administrator.";
+				}
+				else
+				{
+					admin = false;
+					addMsg += "a normal user.";
+				}
+				
+				//Convert password to string
+				String password = "";
+				for (int i = 0; i < passChars.length; i++)
+				{
+					password += passChars[i];
+					passChars[i] = ' '; // clear array for security purposes
+				}
+				
+				
+				try 
+				{
+					
+					//Add user to database
+					dbm.addUser(newName, password, admin);
+					JOptionPane.showMessageDialog(null, addMsg, "Added User", JOptionPane.INFORMATION_MESSAGE);
+				}
+				catch (SQLException e)
+				{
+					JOptionPane.showMessageDialog(null, "Database Error. Exiting Program.", "Error", JOptionPane.ERROR_MESSAGE);
+					e.printStackTrace();
+					System.exit(0);
+				}
+
+			}
+			else
+			{
+				//User is not added if "cancel" is pressed
+				JOptionPane.showMessageDialog(null, "The New User Has Not Been Added.", "User Not Added", JOptionPane.ERROR_MESSAGE);
+			}
 		
-		//dbm.addUser(name, password, admin);
 		}
 	}
 	
@@ -168,7 +249,41 @@ public class MenuPanel extends JPanel {
 		 */
 		public void actionPerformed(ActionEvent ae) {
 			
-			//dbm.removeUser(name); //No need for password?
+			//Prompt for user name
+			String name = JOptionPane.showInputDialog(null, "Enter the name of the user.", "Remove User", JOptionPane.QUESTION_MESSAGE);
+			if (name == null)
+			{
+				JOptionPane.showMessageDialog(null, "No users have been removed from the database.", "User Not Removed", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
+			// Validation if removing the current user
+			if (currentUser.equals(name))
+			{
+				JOptionPane.showMessageDialog(null, "Cannot remove current users. Log in as another administrator first.", "Cannot Remove User", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+
+			int sel = JOptionPane.showConfirmDialog(null, "Are you sure you want to remove user ,\"" + name + "\"?", "Confirm Remove User", JOptionPane.YES_NO_OPTION);
+			
+			// Cancel operation if No option is clicked
+			if (sel == JOptionPane.NO_OPTION)
+			{
+				JOptionPane.showMessageDialog(null, "No users have been removed.", "User Not Removed", JOptionPane.PLAIN_MESSAGE);
+				return;
+			}
+			
+			try 
+			{
+				dbm.removeUser(name);
+				JOptionPane.showMessageDialog(null, "The user \"" + name + "\" has been removed.");
+			} 
+			catch (SQLException e)
+			{
+				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program.", "Error", JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
+				System.exit(0);
+			}
 		}
 	}
 	

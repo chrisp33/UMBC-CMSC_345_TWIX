@@ -82,14 +82,16 @@ public class Client{
 		frame.pack();
 		
 // check login credentials here ------------------------------------------------------
-		login.addActionListener(new ActionListener(){
+		login.addActionListener(new ActionListener()
+		{
 			
 			/**
 			 * Overwritten method for ActionListener class. Verifies the user is
 			 * authorized to use the system.
 			 * @param e An ActionEvent is created when the user clicks the login button
 			 */
-			public void actionPerformed(ActionEvent e){
+			public void actionPerformed(ActionEvent e)
+			{
 				
 				String userName = nameField.getText();
 				char[] password = passField.getPassword();
@@ -98,39 +100,58 @@ public class Client{
 				passField.setText(null);
 				
 				DatabaseManager dbm = null;
-				try {
+				
+				try 
+				{
 					dbm = new DatabaseManager();
-				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
+				} 
+				catch (ClassNotFoundException e1) 
+				{
 					e1.printStackTrace();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
+				} 
+				catch (SQLException e1)
+				{
+					JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", "Error", JOptionPane.ERROR_MESSAGE);
 					e1.printStackTrace();
+					System.exit(0);
 				}
+				
 				String passwd = "";
 				
 				//convert password to string
 				for (int i = 0; i < password.length; i++)
 					passwd += password[i];
 					
-				boolean validUser = dbm.login(userName, passwd);
-
-				// Java documentation recommends clearing password array after use
-				for (int i = 0; i < password.length; i++)
-					password[i] = ' ';
-				
-				boolean admin = true; //true for time being. Will verify with database
-				
-				if (!validUser)
+				try 
 				{
-					JOptionPane.showMessageDialog(null, "Username and password are incorrect, please try again.", "Invalid User", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				else
+					boolean validUser = dbm.login(userName, passwd);
+					// Java documentation recommends clearing password array after use
+					for (int i = 0; i < password.length; i++)
+						password[i] = ' ';
+					boolean admin = dbm.isUserAdmin();
+					if (!validUser) 
+					{
+						JOptionPane
+								.showMessageDialog(
+										null,
+										"Username and password are incorrect, please try again.",
+										"Invalid User",
+										JOptionPane.ERROR_MESSAGE);
+						return;
+					} 
+					else 
+					{
+						LinkedList<Waypoint> locations = dbm.getUserLocations();
+						openGE(dbm, userName, admin, locations);
+					}
+				} 
+				catch (SQLException e1)
 				{
-					LinkedList<Waypoint> locations = dbm.getUserLocations();
-					openGE(dbm,userName, admin, locations);
+					JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", "Error", JOptionPane.ERROR_MESSAGE);
+					e1.printStackTrace();
+					System.exit(0);
 				}
+				
 			}
 		});
 	}
