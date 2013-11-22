@@ -1,4 +1,4 @@
-package com.twix.tailoredtravels;
+package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,16 +9,17 @@ public class CreateUserTable {
 	public static final String url = "jdbc:derby:Database;create = true";
 	public static void main(String[] args) throws ClassNotFoundException, SQLException
 	{
-//		DriverManager.getConnection("jdbc:derby:;shutdown=true");
 		Class.forName(newDatabase);
+		//create the database if it doesn't exist
 		Connection connect = DriverManager.getConnection(url);
-//		connect.createStatement().execute("Drop table UserPassword");
+		//creates the location table in database
 		connect.createStatement().execute("create table UserPassword (" +
 				"id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
 				"PRIMARY KEY (id)," +
 				"name varchar(20) not null," +
 				"password varchar(20) not null," +
 				"admin boolean not null)");
+		//add default columns for user
 		connect.createStatement().execute("alter table UserPassword add column \"Acadia\" boolean default false");
 		connect.createStatement().execute("alter table UserPassword add column \"American Samoa\" boolean default false");
 		connect.createStatement().execute("alter table UserPassword add column \"Arches\" boolean default false");

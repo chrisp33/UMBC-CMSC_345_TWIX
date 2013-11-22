@@ -1,4 +1,4 @@
-package com.twix.tailoredtravels;
+package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -20,6 +20,7 @@ public class QueryUserTable {
 		for(int i = 2; i <= count; i++) System.out.format("%25s |", metaData.getColumnName(i));
 		while(resultSet.next())
 		{
+			//print all the user table in a readable format
 			System.out.println();
 			System.out.format("%5s |", resultSet.getString(1));			
 			for(int i = 2; i <= count;i++) System.out.format("%25s |", resultSet.getString(i));

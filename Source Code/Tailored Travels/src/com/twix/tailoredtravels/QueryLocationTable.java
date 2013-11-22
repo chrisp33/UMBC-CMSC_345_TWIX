@@ -1,4 +1,4 @@
-package com.twix.tailoredtravels;
+package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,12 +13,14 @@ public class QueryLocationTable {
 	{
 		Connection connect = DriverManager.getConnection(CreateLocationTable.url);
 		Statement statement = connect.createStatement();
+		//query the user location table
 		ResultSet resultSet = statement.executeQuery(queryStatement);
 		ResultSetMetaData metaData = resultSet.getMetaData();
 		int count = metaData.getColumnCount();
 		for(int i = 1; i <= count; i++) System.out.format("%20s |", metaData.getColumnName(i));
 		while(resultSet.next())
 		{
+			//prints all the location in a readable format
 			System.out.println();
 			for(int i = 1; i < count;i++) System.out.format("%20s |", resultSet.getString(i));
 			System.out.format("%-300s", resultSet.getString(count));

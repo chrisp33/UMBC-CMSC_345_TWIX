@@ -1,4 +1,4 @@
-package com.twix.tailoredtravels;
+package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,8 +11,9 @@ public class CreateLocationTable {
 	public static void main(String[] args) throws ClassNotFoundException, SQLException
 	{
 		Class.forName(newDatabase);
-				Connection connect = DriverManager.getConnection(url);	
-	//	connect.createStatement().execute("Drop table Location");
+		//creates the database if it doesn't exist
+		Connection connect = DriverManager.getConnection(url);	
+		//creates the location table in database
 		connect.createStatement().execute("create table Location (" +
 				"id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
 				"PRIMARY KEY (id)," +
@@ -21,7 +22,7 @@ public class CreateLocationTable {
 				"longitude decimal(7, 4) not null," +
 		"description varchar(500) not null)");
 
-
+		//adds default locations
 		connect.createStatement().execute("insert into Location (name, latitude, longitude, description) values ('Acadia', 44.35, -68.2167,'Covering most of Mount Desert Island and other coastal islands, Acadia features the tallest mountain on the Atlantic coast, granite peaks, ocean shoreline, woodlands, and lakes. There are freshwater, estuary, forest, and intertidal habitats')");
 		connect.createStatement().execute("insert into Location (name, latitude, longitude, description) values ('American Samoa', -14.25, -170.68,'The southernmost national park is on three Samoan islands and protects coral reefs, rainforests, volcanic mountains, and white beaches. The area is also home to flying foxes, brown boobies, sea turtles, and 900 species of fish')");
 		connect.createStatement().execute("insert into Location (name, latitude, longitude, description) values ('Arches', 38.68, -109.57,'This site features more than 2,000 natural sandstone arches, including the Delicate Arch. In a desert climate millions of years of erosion have led to these structures, and the arid ground has life-sustaining soil crust and potholes, natural water-collecting basins. Other geologic formations are stone columns, spires, fins, and towers')");
@@ -83,9 +84,6 @@ public class CreateLocationTable {
 		connect.createStatement().execute("insert into Location (name, latitude, longitude, description) values ('Yosemite', 37.83, -119.5,'Yosemite has towering cliffs, waterfalls, and sequoias in a diverse area of geology and hydrology. Half Dome and El Capitan rise from the central glacier-formed Yosemite Valley, as does Yosemite Falls, North America''s tallest waterfall. Three Giant Sequoia groves and vast wilderness are home to diverse wildlife.')");
 		connect.createStatement().execute("insert into Location (name, latitude, longitude, description) values ('Zion', 37.3, -113.05,'This geologically unique area has colorful sandstone canyons, high plateaus, and rock towers. Natural arches and exposed formations of the Colorado Plateau make up a large wilderness of four ecosystems.')");
 
-		//		connect.createStatement().execute("Update Location set latitude = 15.0 where Name = 'Machu Pichu' AND ID = 2");
-		//		connect.createStatement().execute("Delete from Location where Name = 'Machu Pichu' and ID = 2");
-		//		connect.createStatement().execute("Update Location set latitude = 29, longitude = 30 where Name = 'Machu Pichu'");
 		connect.close();
 		System.out.println("Code finished");
 	}
