@@ -7,7 +7,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
-
+//there must be the derby embeddeddriver loaded in plugins
+//the database must exist
 public class DatabaseManager {
 	private int userId;
 	private LinkedList<Waypoint> location;
@@ -36,6 +37,7 @@ public class DatabaseManager {
 	}
 	/*
 	 * allows the user to log in and sets the user
+	 * precondition: name / password are not null
 	 * input:	String: name of the person logging in
 	 * 			String: password of the person logging in
 	 * output:	true if the person is logged in
@@ -43,6 +45,8 @@ public class DatabaseManager {
 	 */
 	public boolean login(String name, String password) throws SQLException
 	{
+		if(name == null || password == null)
+			return false;
 		Connection connect = null;
 		Statement statement = null;
 		boolean login = false;
@@ -80,11 +84,14 @@ public class DatabaseManager {
 	}
 	/*
 	 * log the user out
+	 * switch user to 0 which means no one is logged in
+	 * switch admin to false;
 	 */
 	public void logout()
 	{
 		userId = 0;
 		admin = false;
+		location = new LinkedList<Waypoint>();
 	}
 	/*
 	 * add user locations and then update the user table
@@ -96,6 +103,8 @@ public class DatabaseManager {
 	 */
 	public void addUser(String name, String password, boolean admin) throws SQLException
 	{
+		if(name == null || password == null)
+			return;
 		Connection connect = null;
 		Statement statement = null;
 		boolean addUser = true;
@@ -137,6 +146,8 @@ public class DatabaseManager {
 	}
 	/*
 	 * add new location to file and update the location file
+	 * precondition:	latitude / longitude is not 0
+	 * 					name / description is not null
 	 * input:	double latitude	
 	 * 			double longitude
 	 * 			string name of location
@@ -146,6 +157,8 @@ public class DatabaseManager {
 	 */
 	public boolean addLocation(float latitude, float longitude ,String name,  String description) throws SQLException
 	{
+		if(latitude == 0 || longitude == 0 || name == null || description == null)
+			return false;
 		Connection connect = null;
 		Statement statement = null;
 		ResultSet result = null;
@@ -186,6 +199,10 @@ public class DatabaseManager {
 	}
 	/*
 	 * add a new location to the user
+	 * precondition:	a user is logged in
+	 * 					the name of the locations it not null
+	 * 					the name typed in is in the database
+	 * postcondition:	a location on the user table is switched to true
 	 * input:	string of the location being added
 	 * output:	false of the user is 0
 	 * 			true if the user adds a new location properly
@@ -194,7 +211,7 @@ public class DatabaseManager {
 	{
 		Connection connect = null;
 		Statement statement = null;
-		if( userId == 0)
+		if( userId == 0 || addLocation == null)
 			return false;
 		boolean added = false;
 		try {
@@ -233,12 +250,16 @@ public class DatabaseManager {
 	}
 	/*
 	 * remove the user from the database
+	 * precondition:	name is not null
+	 * 					the user is in the database
 	 * input:	string of the user being removed
 	 * output:	true if user exist and removed
 	 * 			false otherwise
 	 */
 	public boolean removeUser(String name) throws SQLException
 	{
+		if(name == null)
+			return false;
 		Connection connect = null;
 		Statement statement = null;
 		boolean removed = false;
@@ -276,6 +297,10 @@ public class DatabaseManager {
 		return removed;
 	}
 	/*
+	 * precondition:	name is not null
+	 * 					the person logged in is a admin
+	 * 					location is in the database
+	 * postcondition:	a location is removed from the database
 	 * remove the location being called
 	 * input:	name being removed
 	 * output:	true if the location exist
@@ -283,7 +308,7 @@ public class DatabaseManager {
 	 */
 	public boolean removeLocation(String name) throws SQLException
 	{
-		if(!admin)
+		if((!admin) || name == null)
 			return false;
 		Connection connect = null;
 		Statement statement = null;
@@ -327,6 +352,9 @@ public class DatabaseManager {
 		return removed;
 	}
 	/*
+	 * precondition:	removeLocation is not null
+	 * 					a user is logged in
+	 * 					the location exist in the database
 	 * remove the location from the user
 	 * input:	String of removeLocation
 	 * output:	true if there is a user logged in
@@ -334,7 +362,7 @@ public class DatabaseManager {
 	 */
 	public boolean removeUserLocation(String removeLocation) throws SQLException
 	{
-		if(userId == 0)
+		if(userId == 0 || removeLocation == null)
 			return false;
 		Connection connect = null;
 		Statement statement = null;
@@ -375,6 +403,10 @@ public class DatabaseManager {
 	}
 	/*
 	 * edit the location
+	 * precondition:	latitude / longitude is not 0
+	 * 					name / description is not null
+	 * 					person is admin
+	 * postcondition:	a location is modified
 	 * input:	double latitude
 	 * 			double longitude
 	 * 			String name
@@ -384,6 +416,8 @@ public class DatabaseManager {
 	 */
 	public boolean editLocation(float latitude, float longitude, String name, String description) throws SQLException
 	{
+		if(latitude == 0 || longitude == 0 || name == null || description == null || admin == false)
+			return false;
 		Connection connect = null;
 		Statement statement = null;
 		boolean editted = false;
@@ -394,9 +428,10 @@ public class DatabaseManager {
 			ResultSet result = statement.executeQuery(queryUser);
 			ResultSetMetaData data = result.getMetaData();
 			int columns = data.getColumnCount();
-			
+			//check all the columns
 			for(int i = 5; i <= columns; i++)
 			{
+				//check if the name of the location exist in the database
 				if(name.equalsIgnoreCase(data.getColumnName(i)))
 				{	
 					name = data.getColumnName(i);
@@ -404,12 +439,12 @@ public class DatabaseManager {
 				}
 			}
 			description = description.replaceAll("'", "''");
+			//check if the location exist
 			if(editted)
 				connect.createStatement().execute("update Location set LATITUDE = " + latitude + ", " +
 						"LONGITUDE = " +longitude + ", DESCRIPTION = '" + description + "' where NAME = '" + name + "'");
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
 		} finally
 		{
 			//cleans up the connection resources
@@ -427,6 +462,8 @@ public class DatabaseManager {
 
 	/*
 	 * get the user locations from the array and return all the locations
+	 * precondition: a user is logged in so userId != 0
+	 * postcondition: a linkedlist of waypoint is generated
 	 * input:	none
 	 * output:	linked list of location the user entered
 	 */
@@ -442,6 +479,7 @@ public class DatabaseManager {
 			connect = DriverManager.getConnection(url);
 			statement = connect.createStatement();
 			ResultSet locationResult = statement.executeQuery(queryLocation);
+			//add the waypoints to the waypoint linked list for all possible locations
 			while(locationResult.next())
 			{
 				Waypoint newWaypoint = new Waypoint(locationResult.getString(2), 
@@ -451,13 +489,16 @@ public class DatabaseManager {
 				news.add(newWaypoint);
 			}
 			ResultSet personResult = statement.executeQuery(queryUser);
+			//check if the id matches the database
 			while(personResult.next())
 			{
+				//if the person is the one searched for then don't move the cursor
 				if(personResult.getInt(1) == userId)
 					break;
 			}
 			for(int i = 0; i < news.size(); i++)
-			{
+			{	
+				//check all their location and add them to the user's location
 				if(personResult.getBoolean(i + 5) == true)
 					location.add(news.get(i));
 			}
