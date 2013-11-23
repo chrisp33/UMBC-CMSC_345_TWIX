@@ -215,7 +215,6 @@ public class MenuPanel extends JPanel {
 					passChars[i] = ' '; // clear array for security purposes
 				}
 				
-				
 				try 
 				{
 					
