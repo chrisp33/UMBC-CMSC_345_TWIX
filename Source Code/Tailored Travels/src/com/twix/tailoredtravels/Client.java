@@ -33,6 +33,7 @@ public class Client{
 	private static JTextField nameField;
 	private static JPasswordField passField;
 	private static MenuPanel mainMenu;
+	
 	/**
 	 * @param args
 	 */
@@ -173,7 +174,6 @@ public class Client{
 		try
 		{
 			Process googleEarth = Runtime.getRuntime().exec("C:\\Program Files (x86)\\Google\\Google Earth\\client\\googleearth.exe");
-         //KML stuff here? ------------------------------------------------------------------------------------
 		}
 		catch (IOException e1) //Not sure if necessary for requirements (feature creep?)
 		{
