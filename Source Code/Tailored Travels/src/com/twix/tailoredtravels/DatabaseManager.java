@@ -1,4 +1,4 @@
-package com.twix.tailoredtravels;
+package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -119,6 +119,7 @@ public class DatabaseManager {
 					//if the user exist then addUser is false
 					addUser = false;
 			//if user is unique then add the user
+			result.close();
 			if(addUser)
 			{
 				//if the new person added is admin then give them admin privileges
@@ -159,6 +160,8 @@ public class DatabaseManager {
 	{
 		if(latitude == 0 || longitude == 0 || name == null || description == null)
 			return false;
+		if(latitude > 90 || latitude < 90 || longitude > 180 || longitude < 180)
+			return false;
 		Connection connect = null;
 		Statement statement = null;
 		ResultSet result = null;
@@ -177,6 +180,7 @@ public class DatabaseManager {
 				if(name.equals(result.getString(2)))
 					locationAdded =  false;
 			}
+			result.close();
 			//if the location added is true then add a new location to location table and column to user table
 			if(locationAdded)
 			{
@@ -230,6 +234,7 @@ public class DatabaseManager {
 				}
 			}
 			addLocation = addLocation.replaceAll("'", "''");
+			result.close();
 			if(added)
 				connect.createStatement().execute("Update UserPassword set \"" + addLocation + "\" = true " +
 						"where id = " + userId);
@@ -280,6 +285,7 @@ public class DatabaseManager {
 					removed = true;
 				}
 			}
+			result.close();
 			//if the removed boolean is true then remove the person from user table
 			if(removed)
 				connect.createStatement().execute("delete from UserPassword where name = '" + name+"'");
@@ -332,7 +338,8 @@ public class DatabaseManager {
 				}
 			}
 			//makes sure the name doesn't have illegal quotes
-			name = name.replaceAll("\'", "\'\'");
+			name = name.replaceAll("'", "''");
+			result.close();
 			//remove the location from the user table and location table
 			if(removed){
 				connect.createStatement().execute("alter table UserPassword drop column \"" + name+ "\"");
@@ -384,6 +391,7 @@ public class DatabaseManager {
 					removed = true;
 				}
 			}
+			result.close();
 			//remove the location if it exist from the user table choice
 			if(removed)
 				connect.createStatement().execute("Update UserPassword set \"" + removeLocation + "\" = false " +
@@ -418,6 +426,8 @@ public class DatabaseManager {
 	{
 		if(latitude == 0 || longitude == 0 || name == null || description == null || admin == false)
 			return false;
+		if(latitude > 90 || latitude < 90 || longitude > 180 || longitude < 180)
+			return false;
 		Connection connect = null;
 		Statement statement = null;
 		boolean editted = false;
@@ -438,6 +448,7 @@ public class DatabaseManager {
 					editted = true;
 				}
 			}
+			result.close();
 			description = description.replaceAll("'", "''");
 			//check if the location exist
 			if(editted)
@@ -521,10 +532,25 @@ public class DatabaseManager {
 		DatabaseManager read = new DatabaseManager();
 		//read.addUser("Kevin", "password3", false);
 		//		read.login("Keith", "password1");
-		read.login("Steven", "password5");
+		read.login("Keith", "password1");
+		read.addUser("Kevin", "password4", true);
+		read.addUser("Kevin", "password5", true);
+		read.addUser("Time", "password5", true);
+		read.addLocation((float)3.213, (float)94.0126, "Maryland", "This is a new place");
+		read.removeLocation("Maryland");
+		read.removeUser("Beware");
 		//		read.addUserLocation("yellowstone");
 		//		read.addUserLocation("wind cave");
 		read.addUserLocation("zion");
+		read.addUserLocation("acadia");
+		read.removeUserLocation("acadia");
+		read.addLocation((float)64.21, (float)97.54, "Heaven", "This is another test");
+		read.addLocation((float)4516.461, (float)46.1543, "Bryce canyon", "Another test");
+		read.addUserLocation("Heaven");
+		read.editLocation((float) 4154, (float)4613.112, "Heaven", "This is the end");
+		read.editLocation((float) 46.1, (float)465.23, "This does not exist", "Hello hell");
+		read.removeUser("Kevin");
+		read.removeUser("Beware");
 		//		read.addUserLocation("acadia");
 		//		read.addUserLocation("American Samoa");
 		//		read.addUser("Steven", "password5", false);
