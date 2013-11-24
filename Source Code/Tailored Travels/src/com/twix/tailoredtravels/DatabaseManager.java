@@ -160,7 +160,7 @@ public class DatabaseManager {
 	{
 		if(latitude == 0 || longitude == 0 || name == null || description == null)
 			return false;
-		if(latitude > 90 || latitude < 90 || longitude > 180 || longitude < 180)
+		if(latitude > 90 || latitude < -90 || longitude > 180 || longitude < -180)
 			return false;
 		Connection connect = null;
 		Statement statement = null;
@@ -426,7 +426,7 @@ public class DatabaseManager {
 	{
 		if(latitude == 0 || longitude == 0 || name == null || description == null || admin == false)
 			return false;
-		if(latitude > 90 || latitude < 90 || longitude > 180 || longitude < 180)
+		if(latitude > 90 || latitude < -90 || longitude > 180 || longitude < -180)
 			return false;
 		Connection connect = null;
 		Statement statement = null;
