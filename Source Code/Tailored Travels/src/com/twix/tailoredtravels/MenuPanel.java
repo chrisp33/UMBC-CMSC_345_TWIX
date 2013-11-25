@@ -536,7 +536,8 @@ public class MenuPanel extends JPanel {
 				ArrayList<Waypoint> routeWaypoints = DistCalcDriver.shortDistAlgorithm(points, ptA, ptB);
 				GoogleEarthPath path = new GoogleEarthPath(routeWaypoints);
 				GoogleEarthManager gem = new GoogleEarthManager();
-				gem.Path2KML(path);
+				String result = gem.Path2KML(path);
+				JOptionPane.showMessageDialog(null, result, "Route", JOptionPane.INFORMATION_MESSAGE);
 			}
 			catch (SQLException e)
 			{

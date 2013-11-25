@@ -33,11 +33,14 @@ public class GoogleEarthManager {
 	 * @param _path The created path of Waypoints in LinkedList<Waypoint> format
 	 * @return the generated KML
 	 */
-	public void Path2KML(GoogleEarthPath _path)
+	public String Path2KML(GoogleEarthPath _path)
 	{
+		LinkedList<Waypoint> wPath = _path.getPath();
+		String filename = wPath.getFirst().getName() + "-" + wPath.getLast().getName() + ".kml";
 		final Kml kml = KmlFactory.createKml();
 		final Document document = kml.createAndSetDocument()
-		.withName("Test2.kml").withOpen(true);
+		.withName("TailoredTravel: " + wPath.getFirst().getName() + 
+				" to " + wPath.getLast().getName()).withOpen(true);
 
 		document.createAndAddDocument();
 
@@ -49,7 +52,6 @@ public class GoogleEarthManager {
 				.withTessellate(true);
 		List<Coordinate> coord = path.createAndSetCoordinates();
 		
-		LinkedList<Waypoint> wPath = _path.getPath();
 		for(Waypoint w : wPath) 
 		{
 			final Placemark _placemark = document.createAndAddPlacemark()
@@ -61,10 +63,10 @@ public class GoogleEarthManager {
 		}
 		
 		try {
-			kml.marshal(new File("TEST_KML_OUTPUT.kml"));
+			kml.marshal(new File(filename));
+			return "File Created: " + filename;
 		} catch (FileNotFoundException e) {
-			// output.marshal creates the file TEST_KML_OUTPUT.kml.
-			e.printStackTrace();
+			return "Error: could not create kml file.";
 		}
 	}
 }

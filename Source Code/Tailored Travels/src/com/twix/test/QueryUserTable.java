@@ -9,7 +9,7 @@ import java.sql.Statement;
 
 public class QueryUserTable {
 	public static final String url = "jdbc:derby:Database;create = true";
-	public static final String queryStatement = "select * from UserPassword";
+	public static final String queryStatement = "select * from db_users";
 	public static void main(String[] args) throws SQLException
 	{
 		Connection connect = DriverManager.getConnection(url);
