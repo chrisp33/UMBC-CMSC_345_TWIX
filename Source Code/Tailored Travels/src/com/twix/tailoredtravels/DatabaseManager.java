@@ -12,6 +12,7 @@ import java.util.LinkedList;
 public class DatabaseManager {
 	private int userId;
 	private LinkedList<Waypoint> location;
+	private LinkedList<Waypoint> locationChoice;
 	private boolean admin;
 	private final String newDatabase = "org.apache.derby.jdbc.EmbeddedDriver";
 	private final String url = "jdbc:derby:Database;create = true";
@@ -32,6 +33,7 @@ public class DatabaseManager {
 	{
 		Class.forName(newDatabase);
 		location = new LinkedList<Waypoint>();
+		locationChoice = new LinkedList<Waypoint>();
 		userId = 0;
 		admin = false;
 	}
@@ -101,10 +103,10 @@ public class DatabaseManager {
 	 * 			Boolean of admin
 	 * output:	none
 	 */
-	public void addUser(String name, String password, boolean admin) throws SQLException
+	public boolean addUser(String name, String password, boolean admin) throws SQLException
 	{
 		if(name == null || password == null)
-			return;
+			return false;
 		Connection connect = null;
 		Statement statement = null;
 		boolean addUser = true;
@@ -144,6 +146,7 @@ public class DatabaseManager {
 			if(connect != null)
 				connect.close();
 		}
+		return addUser;
 	}
 	/*
 	 * add new location to file and update the location file
@@ -422,7 +425,7 @@ public class DatabaseManager {
 	 * output:	false if the user cannot edit the location
 	 * 			true otherwise
 	 */
-	public boolean editLocation(float latitude, float longitude, String name, String description) throws SQLException
+	public boolean editLocation(float latitude, float longitude, String name, String description, String newName) throws SQLException
 	{
 		if(latitude == 0 || longitude == 0 || name == null || description == null || admin == false)
 			return false;
@@ -453,7 +456,7 @@ public class DatabaseManager {
 			//check if the location exist
 			if(editted)
 				connect.createStatement().execute("update Location set LATITUDE = " + latitude + ", " +
-						"LONGITUDE = " +longitude + ", DESCRIPTION = '" + description + "' where NAME = '" + name + "'");
+						"LONGITUDE = " +longitude + ", DESCRIPTION = '" + description + "NAME = '" + newName  +"'' where NAME = '" + name + "'");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally
@@ -470,7 +473,45 @@ public class DatabaseManager {
 	{
 		return new Boolean(admin);
 	}
-
+	/*
+	 * get the user locations from the array and return all the locations
+	 * precondition: a user is logged in so userId != 0
+	 * postcondition: a linkedlist of waypoint is generated
+	 * input:	none
+	 * output:	linked list of location
+	 */
+	public LinkedList<Waypoint> getLocation() throws SQLException
+	{
+		Connection connect = null;
+		Statement statement = null;
+		try {
+			//calls the driver to call the database and query the location table
+			connect = DriverManager.getConnection(url);
+			statement = connect.createStatement();
+			ResultSet locationResult = statement.executeQuery(queryLocation);
+			//add the waypoints to the waypoint linked list for all possible locations
+			while(locationResult.next())
+			{
+				Waypoint newWaypoint = new Waypoint(locationResult.getString(2), 
+						(float)locationResult.getDouble(3),
+						(float)locationResult.getDouble(4),
+						locationResult.getString(5));
+				locationChoice.add(newWaypoint);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally
+		{
+			//cleans up the connection resources
+			if(statement != null)
+				statement.close();
+			if(connect != null)
+				connect.close();
+		}
+		return locationChoice;
+		
+	}
 	/*
 	 * get the user locations from the array and return all the locations
 	 * precondition: a user is logged in so userId != 0
@@ -484,21 +525,11 @@ public class DatabaseManager {
 			return null;
 		Connection connect = null;
 		Statement statement = null;
-		LinkedList<Waypoint> news = new LinkedList<Waypoint>();
+		LinkedList<Waypoint> news = getLocation();
 		try {
 			//calls the driver to call the database and query the location table
 			connect = DriverManager.getConnection(url);
 			statement = connect.createStatement();
-			ResultSet locationResult = statement.executeQuery(queryLocation);
-			//add the waypoints to the waypoint linked list for all possible locations
-			while(locationResult.next())
-			{
-				Waypoint newWaypoint = new Waypoint(locationResult.getString(2), 
-						(float)locationResult.getDouble(3),
-						(float)locationResult.getDouble(4),
-						locationResult.getString(5));
-				news.add(newWaypoint);
-			}
 			ResultSet personResult = statement.executeQuery(queryUser);
 			//check if the id matches the database
 			while(personResult.next())
@@ -525,7 +556,16 @@ public class DatabaseManager {
 				connect.close();
 		}
 		return location;
-
+	}
+	public void printLocations()
+	{
+		for(int i = 0; i < location.size(); i++)
+			System.out.println(location.get(i).toString());
+	}
+	public void printLocationsChoice()
+	{
+		for(int i = 0; i < locationChoice.size(); i++)
+			System.out.println(locationChoice.get(i).toString());
 	}
 	public static void main(String[] args) throws ClassNotFoundException, SQLException
 	{
@@ -547,8 +587,8 @@ public class DatabaseManager {
 		read.addLocation((float)64.21, (float)97.54, "Heaven", "This is another test");
 		read.addLocation((float)4516.461, (float)46.1543, "Bryce canyon", "Another test");
 		read.addUserLocation("Heaven");
-		read.editLocation((float) 4154, (float)4613.112, "Heaven", "This is the end");
-		read.editLocation((float) 46.1, (float)465.23, "This does not exist", "Hello hell");
+		read.editLocation((float) 4154, (float)4613.112, "Heaven", "This is the end", "Hell");
+		read.editLocation((float) 46.1, (float)465.23, "This does not exist", "Hello hell", "not exist");
 		read.removeUser("Kevin");
 		read.removeUser("Beware");
 		//		read.addUserLocation("acadia");
@@ -569,6 +609,8 @@ public class DatabaseManager {
 		//		read.removeLocation("Maryland");
 		//		read.editLocation((float)93.7815, (float)-40.14521, "american samoa", "New description");
 		read.getUserLocations();
+		read.printLocations();
+		read.printLocationsChoice();
 		read.logout();
 		System.out.println("Code finished");
 
