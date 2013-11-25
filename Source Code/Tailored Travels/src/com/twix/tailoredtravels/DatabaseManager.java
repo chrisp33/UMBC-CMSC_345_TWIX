@@ -1,4 +1,4 @@
-package com.twix.tailoredtravels;
+package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -490,6 +490,7 @@ public class DatabaseManager {
 			statement = connect.createStatement();
 			ResultSet locationResult = statement.executeQuery(queryLocation);
 			//add the waypoints to the waypoint linked list for all possible locations
+			locationChoice = new LinkedList<Waypoint>();
 			while(locationResult.next())
 			{
 				Waypoint newWaypoint = new Waypoint(locationResult.getString(2), 
