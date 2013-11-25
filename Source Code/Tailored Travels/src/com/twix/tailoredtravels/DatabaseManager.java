@@ -455,9 +455,17 @@ public class DatabaseManager {
 			description = description.replaceAll("'", "''");
 			//check if the location exist
 			if(editted)
+			{
 				connect.createStatement().execute("update Location set LATITUDE = " + latitude + ", " +
-						"LONGITUDE = " +longitude + ", DESCRIPTION = '" + description + "NAME = '" + newName  +"'' where NAME = '" + name + "'");
-		} catch (SQLException e) {
+						"LONGITUDE = " +longitude + ", DESCRIPTION = '" + description + "', NAME = '" + 
+						newName  +"' where NAME = '" + name + "'");
+				connect.createStatement().execute("RENAME COLUMN UserPassword.\"" + name + "\" TO \"" + newName +"\"");
+			}
+//				connect.createStatement().execute("ALTER TABLE UserPassword ALTER COLUMN \"" + name + "\" RENAME TO \"" + newName +"\"");
+//			connect.createStatement().execute("ALTER TABLE UserPassword ADD COLUMN \""  + newName +"\" boolean default false");
+//			connect.createStatement().execute("UPDATE  UserPassword set \"" + newName + "\" = \"" + name + "\"");
+			
+				} catch (SQLException e) {
 			e.printStackTrace();
 		} finally
 		{
@@ -474,8 +482,8 @@ public class DatabaseManager {
 		return new Boolean(admin);
 	}
 	/*
-	 * get the user locations from the array and return all the locations
-	 * precondition: a user is logged in so userId != 0
+	 * get the locations from the database and return all the locations
+	 * precondition: none
 	 * postcondition: a linkedlist of waypoint is generated
 	 * input:	none
 	 * output:	linked list of location
@@ -523,7 +531,7 @@ public class DatabaseManager {
 	public LinkedList<Waypoint> getUserLocations() throws SQLException
 	{
 		if(userId == 0)
-			return null;
+			return location;
 		Connection connect = null;
 		Statement statement = null;
 		LinkedList<Waypoint> news = getLocation();
@@ -588,8 +596,10 @@ public class DatabaseManager {
 		read.addLocation((float)64.21, (float)97.54, "Heaven", "This is another test");
 		read.addLocation((float)4516.461, (float)46.1543, "Bryce canyon", "Another test");
 		read.addUserLocation("Heaven");
-		read.editLocation((float) 4154, (float)4613.112, "Heaven", "This is the end", "Hell");
-		read.editLocation((float) 46.1, (float)465.23, "This does not exist", "Hello hell", "not exist");
+		read.editLocation((float)464, (float)312, "YellowStone", "New description", "Bull");
+		read.editLocation((float) 54, (float)113.112, "Zion", "This is the end", "new beginning");
+//		read.editLocation((float) 46.1, (float)465.23, "This does not exist", "Hello hell", "not exist");
+//		read.editLocation((float)63.145, longitude, name, description, newName)
 		read.removeUser("Kevin");
 		read.removeUser("Beware");
 		//		read.addUserLocation("acadia");
