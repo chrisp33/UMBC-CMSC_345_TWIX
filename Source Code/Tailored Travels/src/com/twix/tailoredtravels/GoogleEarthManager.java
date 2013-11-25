@@ -16,10 +16,7 @@ import de.micromata.opengis.kml.v_2_2_0.Kml;
 public class GoogleEarthManager {
 
 	public GoogleEarthManager()
-	{
-		
-		
-		
+	{	
 	}
 	
 	/**
@@ -46,8 +43,5 @@ public class GoogleEarthManager {
 			// output.marshal creates the file TEST_KML_OUTPUT.kml.
 			e.printStackTrace();
 		}
-		
-		
-		
 	}
 }

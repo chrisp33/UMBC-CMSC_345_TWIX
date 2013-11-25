@@ -1,6 +1,11 @@
-package com.twix.tailoredtravels;
+package com.twix.test;
 
 import java.util.ArrayList;
+
+import com.twix.tailoredtravels.DistCalcDriver;
+import com.twix.tailoredtravels.GoogleEarthManager;
+import com.twix.tailoredtravels.GoogleEarthPath;
+import com.twix.tailoredtravels.Waypoint;
 
 public class UnitTestKML {
 

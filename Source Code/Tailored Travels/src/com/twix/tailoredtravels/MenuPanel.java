@@ -11,24 +11,23 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Vector;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-
-import org.apache.derby.impl.sql.catalog.SYSPERMSRowFactory;
 
 public class MenuPanel extends JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3359477065217156534L;
 	private JButton calcRoute, calcDist, addLocation, removeLocation, addUser, removeUser;
 	private JLabel welcomeMsg,availMsg;
 	private JTextArea textArea;
@@ -93,7 +92,7 @@ public class MenuPanel extends JPanel {
 		try 
 		{
 			//Fill textArea with the waypoint names for user to see
-			LinkedList<Waypoint> waypoints = dbm.getLocation();
+			LinkedList<Waypoint> waypoints = dbm.getWaypoints();
 			String locations = "";
 			for (Waypoint wp: waypoints)
 			{
@@ -200,7 +199,7 @@ public class MenuPanel extends JPanel {
 							"Location Added", JOptionPane.INFORMATION_MESSAGE);
 
 					//Update textArea with the new waypoint names
-					LinkedList<Waypoint> waypoints = dbm.getLocation();
+					LinkedList<Waypoint> waypoints = dbm.getWaypoints();
 					String locations = "";
 					for (Waypoint wp: waypoints)
 					{
@@ -232,7 +231,7 @@ public class MenuPanel extends JPanel {
 			LinkedList<Waypoint> waypoints = null;
 			try 
 			{
-				waypoints = dbm.getLocation();
+				waypoints = dbm.getWaypoints();
 			}
 			catch (Exception e)
 			{
@@ -293,7 +292,7 @@ public class MenuPanel extends JPanel {
 			
 			try 
 			{
-				waypoints = dbm.getLocation();
+				waypoints = dbm.getWaypoints();
 				//Update textArea
 				String locations = "";
 				for (Waypoint wp: waypoints)
@@ -453,7 +452,7 @@ public class MenuPanel extends JPanel {
 			LinkedList<Waypoint> waypoints = new LinkedList<Waypoint>();
 			try 
 			{
-				waypoints = dbm.getLocation();
+				waypoints = dbm.getWaypoints();
 			}
 			catch (Exception e)
 			{
@@ -517,8 +516,8 @@ public class MenuPanel extends JPanel {
 			LinkedList<Waypoint> pts = new LinkedList<Waypoint>();
 			try
 			{
-				pts = dbm.getLocation();
-				for (int i = 0; i < pts.size() - 1; i++)
+				pts = dbm.getWaypoints();
+				for (int i = 0; i < pts.size(); i++)
 				{
 					points.add(pts.get(i));
 					if (pts.get(i).getName().equals(startPoint))
@@ -563,7 +562,7 @@ public class MenuPanel extends JPanel {
 			LinkedList<Waypoint> waypoints = new LinkedList<Waypoint>();
 			try 
 			{
-				waypoints = dbm.getLocation();
+				waypoints = dbm.getWaypoints();
 			}
 			catch (Exception e1)
 			{
@@ -627,7 +626,7 @@ public class MenuPanel extends JPanel {
 			LinkedList<Waypoint> pts = new LinkedList<Waypoint>();
 			try
 			{
-				pts = dbm.getLocation();
+				pts = dbm.getWaypoints();
 				for (int i = 0; i < pts.size() - 1; i++)
 				{
 					points.add(pts.get(i));

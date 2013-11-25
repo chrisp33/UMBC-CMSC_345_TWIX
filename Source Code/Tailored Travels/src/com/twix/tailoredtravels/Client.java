@@ -168,7 +168,7 @@ public class Client{
 
 		frame.dispose();
 		mainMenu = new MenuPanel(dbm, userName, admin);
-		
+		/*
 		try
 		{
 			Process googleEarth = Runtime.getRuntime().exec("C:\\Program Files (x86)\\Google\\Google Earth\\client\\googleearth.exe");
@@ -192,6 +192,7 @@ public class Client{
 				//Install GE
 			}
 		}
+		*/
 		
 		JFrame frame2 = new JFrame("Tailored Travels");
 		mainMenu.addComponents();
