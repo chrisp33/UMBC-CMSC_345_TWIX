@@ -13,7 +13,7 @@ package com.twix.tailoredtravels;
  * Longitude - horizontal dimension
  * Latitude - vertical dimension
  */
-public class Coordinate {
+public class LatLongPair {
 
 	/**
 	 * Default value for longitude and latitude
@@ -66,7 +66,7 @@ public class Coordinate {
 	 * takes in the latitude and longitude (x & y respectively)
 	 *  
 	 */
-	public Coordinate(String label, double x, double y){
+	public LatLongPair(String label, double x, double y){
 		
 		this.label = label;
 		this.x = x;
@@ -79,7 +79,7 @@ public class Coordinate {
 	 * the longitude and latitude to DEFAULT_VALUE
 	 * Note: the default value for the label is 'null'
 	 */
-	public Coordinate(){
+	public LatLongPair(){
 		
 		this.label = DEFAULT_LABEL;
 		this.x = DEFAULT_VALUE;
@@ -98,7 +98,7 @@ public class Coordinate {
 	 * c = 2 * atan2( sqrt(a), sqrt(1-a) )
 	 * d = R * c (where R is the radius of the Earth) 
 	 */
-	public double distance(Coordinate other)
+	public double distance(LatLongPair other)
 	{
 		double dlon = Math.toRadians(other.x - this.x);
 		double dlat = Math.toRadians(other.y - this.y);
@@ -120,8 +120,8 @@ public class Coordinate {
 	 */
 	public static void main(String[] args){
 		
-		Coordinate destA = new Coordinate("Destination A",-77.037852,38.898556);
-		Coordinate destB = new Coordinate("Destination B",-77.043934,38.897147);
+		LatLongPair destA = new LatLongPair("Destination A",-77.037852,38.898556);
+		LatLongPair destB = new LatLongPair("Destination B",-77.043934,38.897147);
 		
 		/*
 		 * TESTING .DISTANCE()

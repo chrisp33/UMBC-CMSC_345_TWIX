@@ -9,7 +9,6 @@ import java.util.LinkedList;
 //there must be the derby embeddeddriver loaded in plugins
 //the database must exist
 public class DatabaseManager {
-	private int userId;
 	private LinkedList<Waypoint> db_waypoints;
 	private boolean admin;
 	private final String newDatabase = "org.apache.derby.jdbc.EmbeddedDriver";
@@ -30,7 +29,6 @@ public class DatabaseManager {
 	{
 		Class.forName(newDatabase);
 		db_waypoints = new LinkedList<Waypoint>();
-		userId = 0;
 		admin = false;
 	}
 	/*
@@ -86,7 +84,6 @@ public class DatabaseManager {
 	 */
 	public void logout()
 	{
-		userId = 0;
 		admin = false;
 		db_waypoints = new LinkedList<Waypoint>();
 	}
