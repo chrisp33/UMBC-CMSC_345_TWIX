@@ -514,8 +514,9 @@ public class MenuPanel extends JPanel {
 				}
 				
 				ArrayList<Waypoint> routeWaypoints = DistCalcDriver.shortDistAlgorithm(points, ptA, ptB);
-				
-				//KML Methods here----------------------------------------------------------------
+				GoogleEarthPath path = new GoogleEarthPath(routeWaypoints);
+				GoogleEarthManager gem = new GoogleEarthManager();
+				gem.Path2KML(path);
 			}
 			catch (SQLException e)
 			{
