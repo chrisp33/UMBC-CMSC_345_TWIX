@@ -142,8 +142,7 @@ public class Client{
 					} 
 					else 
 					{
-						LinkedList<Waypoint> locations = dbm.getUserLocations();
-						openGE(dbm, userName, admin, locations);
+						openGE(dbm, userName, admin);
 					}
 				} 
 				catch (SQLException e1)
@@ -164,12 +163,11 @@ public class Client{
 	 * @param admin whether or not a user is an administrator
 	 * @param locations the list of waypoints
 	 */
-	public static void openGE(DatabaseManager dbm, String userName, boolean admin, LinkedList<Waypoint> locations)
+	public static void openGE(DatabaseManager dbm, String userName, boolean admin)
 	{
 
 		frame.dispose();
 		mainMenu = new MenuPanel(dbm, userName, admin);
-		mainMenu.populateJList(locations);
 		
 		try
 		{

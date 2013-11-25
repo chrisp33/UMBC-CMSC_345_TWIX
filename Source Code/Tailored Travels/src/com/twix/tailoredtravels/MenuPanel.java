@@ -21,21 +21,22 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+
+import org.apache.derby.impl.sql.catalog.SYSPERMSRowFactory;
 
 public class MenuPanel extends JPanel {
 
 	private JButton calcRoute, calcDist, addLocation, removeLocation, addUser, removeUser;
 	private JLabel welcomeMsg,availMsg;
-	private JList<String> locations;
+	private JTextArea textArea;
 	private JScrollPane scroller;
 	private boolean isAdmin;
 	private JPanel p1, p2, p3, p4, p5;
 	private DatabaseManager dbm;
 	private String currentUser;
-	private ArrayList<String> waypointNames,userWaypoints;
-	private Vector<String> locs;
 	
 	public MenuPanel(DatabaseManager dbm,String user, boolean admin){
 		
@@ -71,10 +72,11 @@ public class MenuPanel extends JPanel {
 		welcomeMsg = new JLabel("Welcome back, " + user + "!");
 		p1.add(welcomeMsg);
 		availMsg = new JLabel("Available Locations");
-		locations = new JList<String>();
-		locations.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		scroller = new JScrollPane(locations);
-		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		textArea = new JTextArea(5, 20);
+		textArea.setEditable(false);
+		scroller = new JScrollPane(textArea);
+		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		calcRoute = new JButton("Calculate Route");
 		calcDist = new JButton("Calculate Distance");
 		
@@ -83,92 +85,30 @@ public class MenuPanel extends JPanel {
 		
 		p4 = new JPanel();
 		p4.add(availMsg);
-		p4.add(locations);
 		p4.add(scroller);
 		p5 = new JPanel();
 		p5.add(calcRoute);
 		p5.add(calcDist);
-		
-		//List of waypoint names
-		userWaypoints = new ArrayList<String>();
-		waypointNames = new ArrayList<String>();
-		waypointNames.add("Acadia");
-		waypointNames.add("American Samoa");
-		waypointNames.add("Arches");
-		waypointNames.add("Badlands");
-		waypointNames.add("Big Bend");
-		waypointNames.add("Biscayne");
-		waypointNames.add("Black Canyon of Guinnson");
-		waypointNames.add("Bryce Canyon");
-		waypointNames.add("Canyonlands");
-		waypointNames.add("Capitol Reef");
-		waypointNames.add("Carlsbad Caverns");
-		waypointNames.add("Channel Islands");
-		waypointNames.add("Congaree");
-		waypointNames.add("Crater Lake");
-		waypointNames.add("Cuyahoga Valley");
-		waypointNames.add("Death Valley");
-		waypointNames.add("Denali");
-		waypointNames.add("Dry Tortugas");
-		waypointNames.add("Everglades");
-		waypointNames.add("Gates of the Arctic");
-		waypointNames.add("Glacier");
-		waypointNames.add("Glacier Bay");
-		waypointNames.add("Grand Canyon");
-		waypointNames.add("Grand Teton");
-		waypointNames.add("Great Basin");
-		waypointNames.add("Great Sand Dunes");
-		waypointNames.add("Great Smoky Mountains");
-		waypointNames.add("Guadalupe Mountains");
-		waypointNames.add("Haleakala");
-		waypointNames.add("Hawaii Volcanoes");
-		waypointNames.add("Hot Springs");
-		waypointNames.add("Isle Royale");
-		waypointNames.add("Joshua Tree");
-		waypointNames.add("Katmai");
-		waypointNames.add("Kenai Fjords");
-		waypointNames.add("Kings Canyon");
-		waypointNames.add("Kobuk Valley");
-		waypointNames.add("Lake Clark");
-		waypointNames.add("Lassen Vocanic");
-		waypointNames.add("Machu Pichu");
-		waypointNames.add("Mammoth Cave");
-		waypointNames.add("Mesa Verde");
-		waypointNames.add("Mount Rainier");
-		waypointNames.add("North Cascades");
-		waypointNames.add("Olympic");
-		waypointNames.add("Petrified Forest");
-		waypointNames.add("Pinnacles");
-		waypointNames.add("Redwood");
-		waypointNames.add("Rocky Mountain");
-		waypointNames.add("saguaro");
-		waypointNames.add("sequoia");
-		waypointNames.add("shenandoah");
-		waypointNames.add("Theodore Roosevelt");
-		waypointNames.add("Virgin Islands");
-		waypointNames.add("Voyageurs");
-		waypointNames.add("Wind Cave");
-		waypointNames.add("Wrangell -St. Elias");
-		waypointNames.add("YellowStone");
-		waypointNames.add("Yosemite");
-		waypointNames.add("Zion");
-
-	}
 	
-	/**
-	 * Finds the list of locations for the user and uses them to fill the JList
-	 * @param locations2 list of Locations containing waypoint information.
-	 */
-	public void populateJList(LinkedList<Waypoint> locations2)
-	{
-		locs = new Vector<String>();
-		for (Waypoint loc : locations2)
-		{	
-			locs.add(loc.getName());
-			userWaypoints.add(loc.getName());
+		try 
+		{
+			//Fill textArea with the waypoint names for user to see
+			LinkedList<Waypoint> waypoints = dbm.getLocation();
+			String locations = "";
+			for (Waypoint wp: waypoints)
+			{
+				locations += wp.getName() + "\n";
+			}
+			locations = locations.trim();
+			textArea.setText(locations);
+			textArea.setCaretPosition(0);
+		} 
+		catch (SQLException e)
+		{
+			JOptionPane.showMessageDialog(null, "Database Error. Exiting Program.", "Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+			System.exit(0);
 		}
-		
-		this.locations.setListData(locs);
 	}
 	
 	/**
@@ -200,39 +140,75 @@ public class MenuPanel extends JPanel {
 			 */
 			public void actionPerformed(ActionEvent ae) 
 			{
+				JTextField name = new JTextField();
+				JTextField latitude = new JTextField();
+				JTextField longitude = new JTextField();
+				JTextField details = new JTextField();
 				
-				//Find the locations that have not been added yet
-				LinkedList<String> waypointsNotAdded = new LinkedList<String>();
-				for (int i = 0 ; i < waypointNames.size(); i++)
-				{
-					if (!userWaypoints.contains(waypointNames.get(i)))
-						waypointsNotAdded.add(waypointNames.get(i));
-				}
+				//Prompt to enter details
+				Object[] message = {"Enter the name of the location:", name,
+						"Enter the location's latitude position:", latitude, 
+						"Enter the location's longitude position:", longitude,
+						"Enter some detail about the location:", details};
+
+				int sel = JOptionPane.showConfirmDialog(null, message,
+						"Add Location", JOptionPane.OK_CANCEL_OPTION);
+				String wName = name.getText();
+				String lat = latitude.getText();
+				String lon = longitude.getText();
+				String det = details.getText();
 				
-				//Error message if there are no more locations to add
-				if (waypointsNotAdded.size() == 0)
+				if (sel == JOptionPane.CANCEL_OPTION)
 				{
-					JOptionPane.showMessageDialog(null, "There are no more locations available to add.", "No More Locations", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				
-				//Construct array of locations that haven't been added specifically for the dialog box
-				String[] newWaypoints = new String[waypointsNotAdded.size()];
-				for (int i = 0; i < waypointsNotAdded.size(); i++)
-					newWaypoints[i] = waypointsNotAdded.get(i);
+				if (wName.equals("") || lat.equals("") || lon.equals("") || det.equals(""))
+				{
+					JOptionPane.showMessageDialog(null, "Cannot leave any fields blank.",
+							"Location Not Added", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 				
-				//Prompt for selection
-				String addLocation = (String) JOptionPane.showInputDialog(null, "Select a location to add:",
-						"Add Location", JOptionPane.OK_CANCEL_OPTION, null, newWaypoints, newWaypoints[0]);
+				float wLat, wLong;
 				
 				try
 				{
-					//Add location to the user's list of locations
-					dbm.addUserLocation(addLocation);
-					JOptionPane.showMessageDialog(null, "The location \"" + addLocation + "\" has been successfully added.", "Location Added", JOptionPane.INFORMATION_MESSAGE);
-					userWaypoints.add(addLocation);
-					locs.add(addLocation);
-					locations.setListData(locs);
+					wLat = Float.parseFloat(lat);
+					wLong = Float.parseFloat(lon);
+				}
+				catch(NumberFormatException e1)
+				{
+					JOptionPane.showMessageDialog(null, "Latitude and can only be numbers",
+							"Invalid Characters", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				if (wLat < -90 || wLat > 90 || wLong < -180 || wLong > 180)
+				{
+					String msg = "Latitude can only range from -90 degrees to +90 degrees.\n" +
+							"Longitude can only range from -180 degrees to +180 degrees.";
+					JOptionPane.showMessageDialog(null, msg,
+							"Invalid Values", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				try
+				{
+					dbm.addLocation(wLat, wLong, wName, det);
+					JOptionPane.showMessageDialog(null, "The location \"" + wName + "\" has been added.", 
+							"Location Added", JOptionPane.INFORMATION_MESSAGE);
+
+					//Update textArea with the new waypoint names
+					LinkedList<Waypoint> waypoints = dbm.getLocation();
+					String locations = "";
+					for (Waypoint wp: waypoints)
+					{
+						locations += wp.getName() + "\n";
+					}
+					locations = locations.trim();
+					textArea.setText(locations);
+					textArea.setCaretPosition(0);
 				}
 				catch (SQLException e)
 				{
@@ -253,8 +229,20 @@ public class MenuPanel extends JPanel {
 		 */
 		public void actionPerformed(ActionEvent ae) 
 		{
+			LinkedList<Waypoint> waypoints = null;
+			try 
+			{
+				waypoints = dbm.getLocation();
+			}
+			catch (Exception e)
+			{
+				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", "Error", JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
+				System.exit(0);
+			}
+			
 			//Initialize array of removable waypoint names
-			String[] waypointNames = new String[userWaypoints.size()];
+			String[] waypointNames = new String[waypoints.size()];
 			
 			//Error message for empty list
 			if (waypointNames.length == 0)
@@ -264,9 +252,9 @@ public class MenuPanel extends JPanel {
 			}
 			
 			//Create array for use in JOptionPane
-			for (int i = 0; i < userWaypoints.size(); i++)
+			for (int i = 0; i < waypoints.size(); i++)
 			{
-				waypointNames[i] = userWaypoints.get(i);
+				waypointNames[i] = waypoints.get(i).getName();
 			}
 			
 			String remLoc = (String) JOptionPane.showInputDialog(null, "Select a location to remove:",
@@ -293,10 +281,28 @@ public class MenuPanel extends JPanel {
 			{
 				//Remove waypoint
 				dbm.removeLocation(remLoc);
-				userWaypoints.remove(remLoc);
-				locs.remove(remLoc);
 				JOptionPane.showMessageDialog(null, "\"" + remLoc + "\" has been removed from the list successfully.", "Location Removed", JOptionPane.INFORMATION_MESSAGE);
-				locations.setListData(locs);
+				
+			}
+			catch (Exception e)
+			{
+				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", "Error", JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
+				System.exit(0);
+			}
+			
+			try 
+			{
+				waypoints = dbm.getLocation();
+				//Update textArea
+				String locations = "";
+				for (Waypoint wp: waypoints)
+				{
+					locations += wp.getName() + "\n";
+				}
+				locations = locations.trim();
+				textArea.setText(locations);
+				textArea.setCaretPosition(0);
 			}
 			catch (Exception e)
 			{
@@ -379,7 +385,8 @@ public class MenuPanel extends JPanel {
 			else
 			{
 				//User is not added if "cancel" is pressed
-				JOptionPane.showMessageDialog(null, "The New User Has Not Been Added.", "User Not Added", JOptionPane.ERROR_MESSAGE);
+				return;
+				//JOptionPane.showMessageDialog(null, "The New User Has Not Been Added.", "User Not Added", JOptionPane.ERROR_MESSAGE);
 			}
 		
 		}
@@ -442,20 +449,33 @@ public class MenuPanel extends JPanel {
 		 */
 		public void actionPerformed(ActionEvent arg0) {
 			
+			//Get list of points from database
+			LinkedList<Waypoint> waypoints = new LinkedList<Waypoint>();
+			try 
+			{
+				waypoints = dbm.getLocation();
+			}
+			catch (Exception e)
+			{
+				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", "Error", JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
+				System.exit(0);
+			}
+			
 			//Validation for fewer than two available locations
-			if (userWaypoints.size() < 2)
+			if (waypoints.size() < 2)
 			{
 				JOptionPane.showMessageDialog(null, "There must be two locations available to find the shortest route", "Need More Locations", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			
 			//Prompt for starting point
-			String[] firstPts = new String[userWaypoints.size()];
+			String[] firstPts = new String[waypoints.size()];
 			
 			//Create array for use in JOptionPane
-			for (int i = 0; i < userWaypoints.size(); i++)
+			for (int i = 0; i < waypoints.size(); i++)
 			{
-				firstPts[i] = userWaypoints.get(i);
+				firstPts[i] = waypoints.get(i).getName();
 			}
 			String startPoint = (String) JOptionPane.showInputDialog(null, "Select the starting location:","Select Starting Point", JOptionPane.PLAIN_MESSAGE, null, firstPts, firstPts[0]);
 			
@@ -467,13 +487,13 @@ public class MenuPanel extends JPanel {
 			
 			//Prompt for ending point
 			ArrayList<String> secondList = new ArrayList<String>(); 
-			String[] secondPts = new String[userWaypoints.size() - 1];
+			String[] secondPts = new String[waypoints.size() - 1];
 			
 			//Create array for use in JOptionPane
-			for (int i = 0; i < userWaypoints.size(); i++)
+			for (int i = 0; i < waypoints.size(); i++)
 			{
-				if (!userWaypoints.get(i).equals(startPoint))
-					secondList.add(userWaypoints.get(i));
+				if (!waypoints.get(i).getName().equals(startPoint))
+					secondList.add(waypoints.get(i).getName());
 			}
 			
 			for (int i = 0; i < secondList.size(); i++)
@@ -494,17 +514,17 @@ public class MenuPanel extends JPanel {
 			Waypoint ptB = null;
 			
 			ArrayList<Waypoint> points = new ArrayList<Waypoint>();
-			LinkedList<Waypoint> pts;
+			LinkedList<Waypoint> pts = new LinkedList<Waypoint>();
 			try
 			{
-				pts = dbm.getUserLocations();
-				for (Waypoint wp : pts)
+				pts = dbm.getLocation();
+				for (int i = 0; i < pts.size() - 1; i++)
 				{
-					points.add(wp);
-					if (wp.getName().equals(startPoint))
-						ptA = wp;
-					if (wp.getName().equals(endPoint))
-						ptB = wp;
+					points.add(pts.get(i));
+					if (pts.get(i).getName().equals(startPoint))
+						ptA = pts.get(i);
+					if (pts.get(i).getName().equals(endPoint))
+						ptB = pts.get(i);
 				}
 				
 				if (ptA == null || ptB == null)
@@ -512,6 +532,7 @@ public class MenuPanel extends JPanel {
 					JOptionPane.showMessageDialog(null, "Database Error. Exiting Operation.", "Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
+				
 				
 				ArrayList<Waypoint> routeWaypoints = DistCalcDriver.shortDistAlgorithm(points, ptA, ptB);
 				GoogleEarthPath path = new GoogleEarthPath(routeWaypoints);
@@ -538,38 +559,51 @@ public class MenuPanel extends JPanel {
 		 */
 		public void actionPerformed(ActionEvent e) {
 			
-			//Validation for less than two points
-			if (userWaypoints.size() < 2)
+			//Get list of points from database
+			LinkedList<Waypoint> waypoints = new LinkedList<Waypoint>();
+			try 
 			{
-				JOptionPane.showMessageDialog(null, "There must be two locations available to calculate the distance between them", "Need More Locations", JOptionPane.ERROR_MESSAGE);
+				waypoints = dbm.getLocation();
+			}
+			catch (Exception e1)
+			{
+				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", "Error", JOptionPane.ERROR_MESSAGE);
+				e1.printStackTrace();
+				System.exit(0);
+			}
+			
+			//Validation for fewer than two available locations
+			if (waypoints.size() < 2)
+			{
+				JOptionPane.showMessageDialog(null, "There must be two locations available to find the shortest route", "Need More Locations", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			
-			//Prompt for first point
-			String[] firstPts = new String[userWaypoints.size()];
+			//Prompt for starting point
+			String[] firstPts = new String[waypoints.size()];
 			
 			//Create array for use in JOptionPane
-			for (int i = 0; i < userWaypoints.size(); i++)
+			for (int i = 0; i < waypoints.size(); i++)
 			{
-				firstPts[i] = userWaypoints.get(i);
+				firstPts[i] = waypoints.get(i).getName();
 			}
 			String startPoint = (String) JOptionPane.showInputDialog(null, "Select the starting location:","Select Starting Point", JOptionPane.PLAIN_MESSAGE, null, firstPts, firstPts[0]);
 			
 			if (startPoint == null)
 			{
-				JOptionPane.showMessageDialog(null, "The operation to calculate distance has been cancelled.", "Operation Cancelled", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "The operation to calculate route has been cancelled.", "Operation Cancelled", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 			
-			//Prompt for second point
+			//Prompt for ending point
 			ArrayList<String> secondList = new ArrayList<String>(); 
-			String[] secondPts = new String[userWaypoints.size() - 1];
+			String[] secondPts = new String[waypoints.size() - 1];
 			
 			//Create array for use in JOptionPane
-			for (int i = 0; i < userWaypoints.size(); i++)
+			for (int i = 0; i < waypoints.size(); i++)
 			{
-				if (!userWaypoints.get(i).equals(startPoint))
-					secondList.add(userWaypoints.get(i));
+				if (!waypoints.get(i).getName().equals(startPoint))
+					secondList.add(waypoints.get(i).getName());
 			}
 			
 			for (int i = 0; i < secondList.size(); i++)
@@ -581,7 +615,7 @@ public class MenuPanel extends JPanel {
 
 			if (endPoint == null)
 			{
-				JOptionPane.showMessageDialog(null, "The operation to calculate distance has been cancelled.", "Operation Cancelled", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "The operation to calculate route has been cancelled.", "Operation Cancelled", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 			
@@ -590,35 +624,40 @@ public class MenuPanel extends JPanel {
 			Waypoint ptB = null;
 			
 			ArrayList<Waypoint> points = new ArrayList<Waypoint>();
-			LinkedList<Waypoint> pts;
+			LinkedList<Waypoint> pts = new LinkedList<Waypoint>();
 			try
 			{
-				pts = dbm.getUserLocations();
-				for (Waypoint wp : pts)
+				pts = dbm.getLocation();
+				for (int i = 0; i < pts.size() - 1; i++)
 				{
-					points.add(wp);
-					if (wp.getName().equals(startPoint))
-						ptA = wp;
-					if (wp.getName().equals(endPoint))
-						ptB = wp;
+					points.add(pts.get(i));
+					if (pts.get(i).getName().equals(startPoint))
+						ptA = pts.get(i);
+					if (pts.get(i).getName().equals(endPoint))
+						ptB = pts.get(i);
 				}
-			}
-				catch (SQLException e1)
-				{
-					JOptionPane.showMessageDialog(null, "Database Error. Exiting Program.", "Error", JOptionPane.ERROR_MESSAGE);
-					e1.printStackTrace();
-					System.exit(0);
-				}
-
+				
 				if (ptA == null || ptB == null)
 				{
 					JOptionPane.showMessageDialog(null, "Database Error. Exiting Operation.", "Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
+			}
+			catch (Exception e1)
+			{
+				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", "Error", JOptionPane.ERROR_MESSAGE);
+				e1.printStackTrace();
+				System.exit(0);
+			}
 			
 			//Calculate the distance
 			ArrayList<Waypoint> rt = DistCalcDriver.shortDistAlgorithm(points, ptA, ptB);
-			System.out.println(DistCalcDriver.totalDistance(rt));
+			double dist = DistCalcDriver.totalDistance(rt);
+			
+			String distMsg = String.format("The total distance between all points, starting from \"" + startPoint +
+					"\" and ending at\n \"" + endPoint + "\", is %.2f miles.", dist);
+			
+			JOptionPane.showMessageDialog(null, distMsg, "Total Distance", JOptionPane.INFORMATION_MESSAGE);
 			
 			//KML Methods here----------------------------------------------------------------
 		}
