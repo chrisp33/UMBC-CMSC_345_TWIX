@@ -74,6 +74,7 @@ public class MenuPanel extends JPanel {
 		locations = new JList<String>();
 		locations.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scroller = new JScrollPane(locations);
+		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		calcRoute = new JButton("Calculate Route");
 		calcDist = new JButton("Calculate Distance");
 		
@@ -527,7 +528,6 @@ public class MenuPanel extends JPanel {
 		
 	}
 	
-	
 	private class DistListener implements ActionListener{
 
 		/**
@@ -584,8 +584,40 @@ public class MenuPanel extends JPanel {
 				return;
 			}
 			
+			//Use waypoint names to calculate route
+			Waypoint ptA = null;
+			Waypoint ptB = null;
+			
+			ArrayList<Waypoint> points = new ArrayList<Waypoint>();
+			LinkedList<Waypoint> pts;
+			try
+			{
+				pts = dbm.getUserLocations();
+				for (Waypoint wp : pts)
+				{
+					points.add(wp);
+					if (wp.getName().equals(startPoint))
+						ptA = wp;
+					if (wp.getName().equals(endPoint))
+						ptB = wp;
+				}
+			}
+				catch (SQLException e1)
+				{
+					JOptionPane.showMessageDialog(null, "Database Error. Exiting Program.", "Error", JOptionPane.ERROR_MESSAGE);
+					e1.printStackTrace();
+					System.exit(0);
+				}
+
+				if (ptA == null || ptB == null)
+				{
+					JOptionPane.showMessageDialog(null, "Database Error. Exiting Operation.", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+			
 			//Calculate the distance
-			//DistCalcDriver.totalDistance(endlist)
+			ArrayList<Waypoint> rt = DistCalcDriver.shortDistAlgorithm(points, ptA, ptB);
+			System.out.println(DistCalcDriver.totalDistance(rt));
 			
 			//KML Methods here----------------------------------------------------------------
 		}
