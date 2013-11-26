@@ -106,6 +106,8 @@ public class Waypoint {
 	}
 	
 	
+	
+	
 	/**
 	 * toString - returns wName, wLatitude:wLongitude, wDescription
 	 */
