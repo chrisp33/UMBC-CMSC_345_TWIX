@@ -95,7 +95,7 @@ public class DistCalcDriver {
 	
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		
 
 		Waypoint p1 = new Waypoint(30,30);
 		Waypoint p2 = new Waypoint(200,45);
