@@ -399,11 +399,13 @@ public class MenuPanel extends JPanel {
 				
 				try 
 				{
-					
 					//Add user to database
-					dbm.addUser(newName, password, admin);
-					JOptionPane.showMessageDialog(null, addMsg, "Added User",
-							JOptionPane.INFORMATION_MESSAGE);
+					if (dbm.addUser(newName, password, admin))
+						JOptionPane.showMessageDialog(null, addMsg, "Added User",
+								JOptionPane.INFORMATION_MESSAGE);
+					else 
+						JOptionPane.showMessageDialog(null, "User already exists.", "Error",
+								JOptionPane.ERROR_MESSAGE);
 				}
 				catch (SQLException e)
 				{
@@ -903,10 +905,16 @@ public class MenuPanel extends JPanel {
 					}
 				}
 				
-				dbm.setWaypointName(editLoc, newName);
-				JOptionPane.showMessageDialog(null,
-						"\""+ editLoc + "\" has been changed to \"" + newName + "\" successfully.",
-						"Name Edited", JOptionPane.INFORMATION_MESSAGE);
+				try
+				{
+					dbm.setWaypointName(editLoc, newName);
+					JOptionPane.showMessageDialog(null,
+							"\""+ editLoc + "\" has been changed to \"" + newName + "\" successfully.",
+							"Name Edited", JOptionPane.INFORMATION_MESSAGE);
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(null, "\"" + editLoc + "\" Was not found.",
+							"Edit Cancelled", JOptionPane.INFORMATION_MESSAGE);
+				}
 				
 				updateJList();
 			}
@@ -987,11 +995,16 @@ public class MenuPanel extends JPanel {
 					}
 		
 				}
-				
-				dbm.setWaypointLatLong(editLoc, newLat, newLong);
-				JOptionPane.showMessageDialog(null, "\""+ editLoc
-						+ "\"'s coordinates have been updated successfully", "Coordinates Edited",
-						JOptionPane.INFORMATION_MESSAGE);
+				try
+				{
+					dbm.setWaypointLatLong(editLoc, newLat, newLong);
+					JOptionPane.showMessageDialog(null, "\""+ editLoc
+							+ "\"'s coordinates have been updated successfully", "Coordinates Edited",
+							JOptionPane.INFORMATION_MESSAGE);
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(null, "\"" + editLoc + "\" Was not found.",
+							"Edit Cancelled", JOptionPane.INFORMATION_MESSAGE);
+				}
 				
 				updateJList();
 			}
@@ -1030,10 +1043,15 @@ public class MenuPanel extends JPanel {
 					
 				}
 				
-				dbm.setWaypointDescription(editLoc, newDesc);
-				JOptionPane.showMessageDialog(null,
-						"\"" + editLoc + "\"'s description has been edited successfully",
-						"Description Edited", JOptionPane.INFORMATION_MESSAGE);
+				try {
+					dbm.setWaypointDescription(editLoc, newDesc);
+					JOptionPane.showMessageDialog(null,
+							"\"" + editLoc + "\"'s description has been edited successfully",
+							"Description Edited", JOptionPane.INFORMATION_MESSAGE);
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(null, "\"" + editLoc + "\" Was not found.",
+							"Edit Cancelled", JOptionPane.INFORMATION_MESSAGE);
+				}
 			}
 			//Cancel
 			else

@@ -14,6 +14,7 @@ public class DatabaseManager {
 	private final String newDatabase = "org.apache.derby.jdbc.EmbeddedDriver";
 	private final String url = "jdbc:derby:Database;create = true";
 	private final String userTable = "db_users";
+	Connection _connect = null;
 	//	private Connection connect = null;
 
 	/*
@@ -43,39 +44,40 @@ public class DatabaseManager {
 	{
 		if(name == null || password == null)
 			return false;
-		Connection connect = null;
-		Statement statement = null;
+		
 		boolean login = false;
+		ResultSet result = executeQueryForResult("SELECT * FROM " + userTable + 
+				" WHERE upper(name) LIKE upper('%"+name+"%')");
+		//while there is another item
+		while(result.next())
+		{
+			//check if the user name and password exist with name being case-insensitive
+			//and password being case sensitive
+			if(result.getString(3).equals(password))
+			{
+				//check if the person is a admin
+				if(result.getBoolean(4))
+					admin = true;
+				login = true;
+			}
+		}
+		_connect.close();
+		return login;
+	}
+	private ResultSet executeQueryForResult(String query) {
+		Statement statement = null;
+		ResultSet result = null;
 		try{
 			//calls the driver to call the database and query the user table
-			connect = DriverManager.getConnection(url);
-			statement = connect.createStatement();
-			ResultSet result = statement.executeQuery("SELECT * FROM " + userTable + 
-					" WHERE upper(name) LIKE upper('%"+name+"%')");
-			//while there is another item
-			while(result.next())
-			{
-				//check if the user name and password exist with name being case-insensitive
-				//and password being case sensitive
-				if(result.getString(3).equals(password))
-				{
-					//check if the person is a admin
-					if(result.getBoolean(4))
-						admin = true;
-					login = true;
-				}
-			}
+			_connect = DriverManager.getConnection(url);
+			statement = _connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, 
+                    ResultSet.CONCUR_UPDATABLE);
+			result = statement.executeQuery(query);
 		}catch(SQLException e)
 		{
-			e.printStackTrace();
-		}finally{
-			//cleans up the connection resources
-			if(statement != null)
-				statement.close();
-			if(statement != null)
-				connect.close();
+			// Cannot access database
 		}
-		return login;
+		return result;
 	}
 	/*
 	 * log the user out
@@ -102,9 +104,13 @@ public class DatabaseManager {
 			return false;
 
 		//check if the user already exist
-		if (executeQuery("SELECT * FROM " + userTable + 
-				" WHERE upper(name) LIKE upper('%"+name+"%')"))
+		ResultSet _r = executeQueryForResult("SELECT * FROM " + userTable + 
+				" WHERE upper(name) LIKE upper('%"+name+"%')");
+		if (_r.isBeforeFirst())
+		{
+			_connect.close();
 			return false;
+		}
 		
 		//if user is unique then add the user
 		String query = "";
@@ -112,7 +118,7 @@ public class DatabaseManager {
 		query = "INSERT into " + userTable + " (name, password, admin) " +
 				"values ('"+name+"', '"+password+"', "+isAdmin+")";
 		success = executeQuery(query);
-		return success;
+		return true;
 	}
 	/*
 	 * add new location to file and update the location file
@@ -137,16 +143,19 @@ public class DatabaseManager {
 			return false;
 
 		//calls the driver to call the database and query the location table
-		if (executeQuery("SELECT * FROM db_waypoints " +
-				" WHERE upper(name) LIKE upper('%"+name+"%')"))
+		ResultSet _r = executeQueryForResult("SELECT * FROM db_waypoints " +
+				" WHERE upper(name) LIKE upper('%"+name+"%')");
+		if (_r.isBeforeFirst())
+		{
+			_connect.close();
 			return false;
-		
+		}
 		success = executeQuery("INSERT into db_waypoints " +
 				"(name, latitude, longitude, description)  values " +
 				"('" + name + "', " + latitude + 
 				", " + longitude + ", '" + description + "')");
 
-		return success;
+		return true;
 	}
 	
 	/*
@@ -164,10 +173,13 @@ public class DatabaseManager {
 			return false;
 		
 		//check if the user already exist
-		if(!executeQuery("SELECT * FROM " + userTable + 
-				" WHERE upper(name) LIKE upper('%"+name+"%')"))
+		ResultSet _r = executeQueryForResult("SELECT * FROM " + userTable + 
+				" WHERE upper(name) LIKE upper('%"+name+"%')");
+		if (!_r.isBeforeFirst())
+		{
+			_connect.close();
 			return false;
-		
+		}
 		//if user is unique then add the user
 
 		//if the new person added is admin then give them admin privileges
@@ -194,10 +206,13 @@ public class DatabaseManager {
 		boolean success = false;
 		
 		//calls the driver to call the database and query the location table
-		if (!executeQuery("SELECT * FROM db_waypoints " +
-				" WHERE upper(name) LIKE upper('%"+name+"%')"))
+		ResultSet _r = executeQueryForResult("SELECT * FROM db_waypoints " +
+				" WHERE upper(name) LIKE upper('%"+name+"%')");
+		if (!_r.isBeforeFirst())
+		{
+			_connect.close();
 			return false;
-		
+		}
 		success = executeQuery("DELETE FROM db_waypoints " +
 				" WHERE upper(name) LIKE upper('%"+name+"%')");
 
@@ -221,24 +236,43 @@ public class DatabaseManager {
 		return success;
 	}
 	
-	public boolean setWaypointName(String oldName, String newName)
+	public boolean setWaypointName(String oldName, String newName) throws SQLException
 	{
+		ResultSet _r = executeQueryForResult("SELECT * FROM db_waypoints " +
+				" WHERE upper(name) LIKE upper('%"+oldName+"%')");
+		if (!_r.isBeforeFirst())
+			return false;
+		
 		String query = "UPDATE db_waypoints SET " +
 				"name='"+newName+"' WHERE upper(name) LIKE upper('%"+oldName+"%')";
 		
 		return executeQuery(query);
 	}
 	
-	public boolean setWaypointDescription(String name, String newDescription)
+	public boolean setWaypointDescription(String name, String newDescription) throws SQLException
 	{
+		ResultSet _r = executeQueryForResult("SELECT * FROM db_waypoints " +
+				" WHERE upper(name) LIKE upper('%"+name+"%')");
+		if (!_r.isBeforeFirst())
+		{
+			_connect.close();
+			return false;
+		}
 		String query = "UPDATE db_waypoints SET " +
 				"description='"+newDescription+"' WHERE upper(name) LIKE upper('%"+name+"%')";
 		
 		return executeQuery(query);
 	}
 	
-	public boolean setWaypointLatLong(String name, float newLat, float newLong)
+	public boolean setWaypointLatLong(String name, float newLat, float newLong) throws SQLException
 	{
+		ResultSet _r = executeQueryForResult("SELECT * FROM db_waypoints " +
+				" WHERE upper(name) LIKE upper('%"+name+"%')");
+		if (!_r.isBeforeFirst())
+		{
+			_connect.close();
+			return false;
+		}
 		String query = "UPDATE db_waypoints SET " +
 				"latitude="+newLat+", longitude="+newLong+" WHERE upper(name) LIKE upper('%"+name+"%')";
 		

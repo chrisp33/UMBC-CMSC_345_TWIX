@@ -169,6 +169,7 @@ public class Client{
 		frame.dispose();
 		mainMenu = new MenuPanel(dbm, userName, admin);
 
+		/* Feature Creep
 		try
 		{
 			Process googleEarth = Runtime.getRuntime().exec(
@@ -195,6 +196,7 @@ public class Client{
 				//Install GE
 			}
 		}
+		*/
 		
 		
 			JFrame frame2 = new JFrame("Tailored Travels");
