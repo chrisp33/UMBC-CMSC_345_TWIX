@@ -11,16 +11,21 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Vector;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class MenuPanel extends JPanel {
 
@@ -28,12 +33,13 @@ public class MenuPanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 3359477065217156534L;
-	private JButton calcRoute, calcDist, addLocation, removeLocation, addUser, removeUser;
+	private JButton calcRoute, calcDist, addLocation, removeLocation, addUser,
+					removeUser, logout, edit;
 	private JLabel welcomeMsg,availMsg;
-	private JTextArea textArea;
+	private JList<String> list;
 	private JScrollPane scroller;
 	private boolean isAdmin;
-	private JPanel p1, p2, p3, p4, p5;
+	private JPanel p1, p2, p3, p4, p5, p6, p7;
 	private DatabaseManager dbm;
 	private String currentUser;
 	
@@ -46,6 +52,7 @@ public class MenuPanel extends JPanel {
 		p1 = new JPanel();
 		p2 = new JPanel();
 		p3 = new JPanel();
+		p6 = new JPanel();
 		
 		//Create these components if the user is an administrator
 		if (isAdmin)
@@ -54,33 +61,38 @@ public class MenuPanel extends JPanel {
 			removeLocation = new JButton("Remove Location");			
 			addUser = new JButton("Add User");
 			removeUser = new JButton("Remove User");
+			edit = new JButton("Edit Location");
 			
 			p2.add(addLocation);
 			p2.add(removeLocation);
 			p3.add(addUser);
 			p3.add(removeUser);
+			p6.add(edit);
 			
 			addLocation.addActionListener(new AddLocListener());
 			removeLocation.addActionListener(new RemLocListener());
 			addUser.addActionListener(new AddUserListener());
 			removeUser.addActionListener(new RemUserListener());
-			
+			edit.addActionListener(new EditListener());
 		}
 		
 		//Instantiate GUI components
 		welcomeMsg = new JLabel("Welcome back, " + user + "!");
 		p1.add(welcomeMsg);
 		availMsg = new JLabel("Available Locations");
-		textArea = new JTextArea(5, 20);
-		textArea.setEditable(false);
-		scroller = new JScrollPane(textArea);
+		list = new JList<String>();
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scroller = new JScrollPane(list);
 		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		calcRoute = new JButton("Calculate Route");
 		calcDist = new JButton("Calculate Distance");
+		logout = new JButton("Log Out");
 		
+		list.addListSelectionListener(new ListSelListener());
 		calcRoute.addActionListener(new RouteListener());
 		calcDist.addActionListener(new DistListener());
+		logout.addActionListener(new LogoutListener());
 		
 		p4 = new JPanel();
 		p4.add(availMsg);
@@ -88,26 +100,10 @@ public class MenuPanel extends JPanel {
 		p5 = new JPanel();
 		p5.add(calcRoute);
 		p5.add(calcDist);
+		p7 = new JPanel();
+		p7.add(logout);
 	
-		try 
-		{
-			//Fill textArea with the waypoint names for user to see
-			LinkedList<Waypoint> waypoints = dbm.getWaypoints();
-			String locations = "";
-			for (Waypoint wp: waypoints)
-			{
-				locations += wp.getName() + "\n";
-			}
-			locations = locations.trim();
-			textArea.setText(locations);
-			textArea.setCaretPosition(0);
-		} 
-		catch (SQLException e)
-		{
-			JOptionPane.showMessageDialog(null, "Database Error. Exiting Program.", "Error", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-			System.exit(0);
-		}
+		updateJList();
 	}
 	
 	/**
@@ -123,10 +119,38 @@ public class MenuPanel extends JPanel {
 		{
 			add(p2);
 			add(p3);
+			add(p6);
 		}
 		
 		add(p4);
 		add(p5);
+		add(p7);
+	}
+	
+	/**
+	 * Update list of waypoints for changes with edits, adding and removing
+	 */
+	public void updateJList()
+
+	{
+		try 
+		{
+			//Update JList with the new waypoint names
+			LinkedList<Waypoint> dbWaypoints = dbm.getWaypoints();
+			Vector<String> listData = new Vector<String>();
+			for (Waypoint wp: dbWaypoints)
+			{
+				listData.add(wp.getName());
+			}
+			list.setListData(listData);
+		}
+		catch (Exception e)
+		{
+			JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", "Error",
+					JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+			System.exit(0);
+		}
 	}
 	
 	private class AddLocListener implements ActionListener
@@ -194,24 +218,29 @@ public class MenuPanel extends JPanel {
 				
 				try
 				{
-					dbm.addLocation(wLat, wLong, wName, det);
-					JOptionPane.showMessageDialog(null, "The location \"" + wName + "\" has been added.", 
-							"Location Added", JOptionPane.INFORMATION_MESSAGE);
-
-					//Update textArea with the new waypoint names
-					LinkedList<Waypoint> waypoints = dbm.getWaypoints();
-					String locations = "";
-					for (Waypoint wp: waypoints)
+					System.out.println(wLat + " " + wLong+ " "+ wName+" " + det);
+					boolean added;
+					added = dbm.addLocation(wLat, wLong, wName, det);
+					System.out.println(added);
+					
+					if (!added)
 					{
-						locations += wp.getName() + "\n";
+						JOptionPane.showMessageDialog(null, "The location \"" + wName 
+								+ "\" has not been added successfully.", "Location Not Added", 
+								JOptionPane.ERROR_MESSAGE);
+						return;
 					}
-					locations = locations.trim();
-					textArea.setText(locations);
-					textArea.setCaretPosition(0);
+					
+					JOptionPane.showMessageDialog(null, "The location \"" + wName 
+							+ "\" has been added.", "Location Added", 
+							JOptionPane.INFORMATION_MESSAGE);
+
+					updateJList();
 				}
 				catch (SQLException e)
 				{
-					JOptionPane.showMessageDialog(null, "Database Error. Exiting Program.", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Database Error. Exiting Program.",
+							"Error", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 					System.exit(0);
 				}
@@ -235,7 +264,8 @@ public class MenuPanel extends JPanel {
 			}
 			catch (Exception e)
 			{
-				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", "Error",
+						JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 				System.exit(0);
 			}
@@ -246,7 +276,9 @@ public class MenuPanel extends JPanel {
 			//Error message for empty list
 			if (waypointNames.length == 0)
 			{
-				JOptionPane.showMessageDialog(null, "Unable to remove any locations. Must first have locations available");
+				JOptionPane.showMessageDialog(null,
+						"Unable to remove any locations. Must first have locations available", 
+						"Remove Cancelled", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			
@@ -256,23 +288,29 @@ public class MenuPanel extends JPanel {
 				waypointNames[i] = waypoints.get(i).getName();
 			}
 			
-			String remLoc = (String) JOptionPane.showInputDialog(null, "Select a location to remove:",
-					"Remove Location", JOptionPane.QUESTION_MESSAGE, null, waypointNames, waypointNames[0]);
+			String remLoc = (String) JOptionPane.showInputDialog(null, 
+					"Select a location to remove:",
+					"Remove Location", JOptionPane.QUESTION_MESSAGE, null, waypointNames, 
+					waypointNames[0]);
 			
 			//Notification if user clicks cancel button
 			if (remLoc == null)
 			{
-				JOptionPane.showMessageDialog(null, "No locations will be removed from the list.", "Remove Cancelled", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "No locations will be removed from the list.",
+						"Remove Cancelled", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 			
 			//User confirmation of remove
-			int sel = JOptionPane.showConfirmDialog(null, "Are you sure you want to remove \"" + remLoc + "\"?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+			int sel = JOptionPane.showConfirmDialog(null, "Are you sure you want to remove \"" +
+			remLoc + "\"?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
 			
 			//Message when user clicks "no" button
 			if (sel == JOptionPane.NO_OPTION)
 			{
-				JOptionPane.showMessageDialog(null, "\"" + remLoc + "\" will not be removed from the list.", "Remove Cancelled", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "\"" + remLoc +
+						"\" will not be removed from the list.", "Remove Cancelled",
+						JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 		
@@ -280,35 +318,20 @@ public class MenuPanel extends JPanel {
 			{
 				//Remove waypoint
 				dbm.removeLocation(remLoc);
-				JOptionPane.showMessageDialog(null, "\"" + remLoc + "\" has been removed from the list successfully.", "Location Removed", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "\"" + remLoc + 
+						"\" has been removed from the list successfully.", "Location Removed", 
+						JOptionPane.INFORMATION_MESSAGE);
 				
 			}
 			catch (Exception e)
 			{
-				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", "Error", 
+						JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 				System.exit(0);
 			}
 			
-			try 
-			{
-				waypoints = dbm.getWaypoints();
-				//Update textArea
-				String locations = "";
-				for (Waypoint wp: waypoints)
-				{
-					locations += wp.getName() + "\n";
-				}
-				locations = locations.trim();
-				textArea.setText(locations);
-				textArea.setCaretPosition(0);
-			}
-			catch (Exception e)
-			{
-				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", "Error", JOptionPane.ERROR_MESSAGE);
-				e.printStackTrace();
-				System.exit(0);
-			}
+			updateJList();
 		}
 	}
 	
@@ -324,24 +347,32 @@ public class MenuPanel extends JPanel {
 			//Prompt for username and password
 			JTextField nameField = new JTextField();
 			JPasswordField passField =  new JPasswordField();
-			Object[] message = {"Enter the New Username", nameField, "Enter the New Password", passField};
-			int option = JOptionPane.showConfirmDialog(null, message, "Enter Details for New User", JOptionPane.OK_CANCEL_OPTION);
+			Object[] message = {
+					"Enter the New Username",
+					nameField, 
+					"Enter the New Password", 
+					passField};
+			int option = JOptionPane.showConfirmDialog(null, message, 
+					"Enter Details for New User", JOptionPane.OK_CANCEL_OPTION);
 			String newName = nameField.getText();
 			char[] passChars = passField.getPassword();
 			
 			//Check for valid data
-			if ((option == JOptionPane.OK_OPTION) && (!newName.equals("")) && (passChars.length > 0))
+			if ((option == JOptionPane.OK_OPTION) && (!newName.equals(""))&&(passChars.length > 0))
 			{
 				boolean admin = false;
 				
 				//Prompt for new user privlege level
 				Object[] opts = {"Administrator", "Normal User"};
-				String selection = (String) JOptionPane.showInputDialog(null, "Select User Privilege Level", "User Privilege", JOptionPane.QUESTION_MESSAGE, null, opts, "Administrator");
+				String selection = (String) JOptionPane.showInputDialog(null, 
+						"Select User Privilege Level", "User Privilege", 
+						JOptionPane.QUESTION_MESSAGE, null, opts, "Administrator");
 				
 				if (selection == null)
 				{
 					//Inform user that the new user has not been added
-					JOptionPane.showMessageDialog(null, "The New User Has Not Been Added.", "User Not Added", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "The New User Has Not Been Added.",
+							"User Not Added", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				
@@ -371,11 +402,13 @@ public class MenuPanel extends JPanel {
 					
 					//Add user to database
 					dbm.addUser(newName, password, admin);
-					JOptionPane.showMessageDialog(null, addMsg, "Added User", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, addMsg, "Added User",
+							JOptionPane.INFORMATION_MESSAGE);
 				}
 				catch (SQLException e)
 				{
-					JOptionPane.showMessageDialog(null, "Database Error. Exiting Program.", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Database Error. Exiting Program.", 
+							"Error", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 					System.exit(0);
 				}
@@ -384,8 +417,9 @@ public class MenuPanel extends JPanel {
 			else
 			{
 				//User is not added if "cancel" is pressed
+				JOptionPane.showMessageDialog(null, "The New User Has Not Been Added.",
+						"User Not Added", JOptionPane.ERROR_MESSAGE);
 				return;
-				//JOptionPane.showMessageDialog(null, "The New User Has Not Been Added.", "User Not Added", JOptionPane.ERROR_MESSAGE);
 			}
 		
 		}
@@ -401,37 +435,45 @@ public class MenuPanel extends JPanel {
 		public void actionPerformed(ActionEvent ae) {
 			
 			//Prompt for user name
-			String name = JOptionPane.showInputDialog(null, "Enter the name of the user.", "Remove User", JOptionPane.QUESTION_MESSAGE);
+			String name = JOptionPane.showInputDialog(null, "Enter the name of the user.", 
+					"Remove User", JOptionPane.QUESTION_MESSAGE);
 			if (name == null)
 			{
-				JOptionPane.showMessageDialog(null, "No users have been removed from the database.", "User Not Removed", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null,"No users have been removed from the database.",
+						"User Not Removed", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			
 			// Validation if removing the current user
 			if (currentUser.equals(name))
 			{
-				JOptionPane.showMessageDialog(null, "Cannot remove current users. Log in as another administrator first.", "Cannot Remove User", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, 
+						"Cannot remove current users. Log in as another administrator first.",
+						"Cannot Remove User", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 
-			int sel = JOptionPane.showConfirmDialog(null, "Are you sure you want to remove user \"" + name + "\"?", "Confirm Remove User", JOptionPane.YES_NO_OPTION);
+			int sel = JOptionPane.showConfirmDialog(null, "Are you sure you want to remove user \""
+			+ name + "\"?", "Confirm Remove User", JOptionPane.YES_NO_OPTION);
 			
 			// Cancel operation if No option is clicked
 			if (sel == JOptionPane.NO_OPTION)
 			{
-				JOptionPane.showMessageDialog(null, "No users have been removed.", "User Not Removed", JOptionPane.PLAIN_MESSAGE);
+				JOptionPane.showMessageDialog(null, "No users have been removed.", 
+						"User Not Removed", JOptionPane.PLAIN_MESSAGE);
 				return;
 			}
 			
 			try 
 			{
 				dbm.removeUser(name);
-				JOptionPane.showMessageDialog(null, "The user \"" + name + "\" has been successfully removed.");
+				JOptionPane.showMessageDialog(null, "The user \"" + name + 
+						"\" has been successfully removed.");
 			} 
 			catch (SQLException e)
 			{
-				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program.", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program.", "Error", 
+						JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 				System.exit(0);
 			}
@@ -456,7 +498,8 @@ public class MenuPanel extends JPanel {
 			}
 			catch (Exception e)
 			{
-				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", 
+						"Error", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 				System.exit(0);
 			}
@@ -464,7 +507,9 @@ public class MenuPanel extends JPanel {
 			//Validation for fewer than two available locations
 			if (waypoints.size() < 2)
 			{
-				JOptionPane.showMessageDialog(null, "There must be two locations available to find the shortest route", "Need More Locations", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, 
+						"There must be two locations available to find the shortest route",
+						"Need More Locations", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			
@@ -476,11 +521,15 @@ public class MenuPanel extends JPanel {
 			{
 				firstPts[i] = waypoints.get(i).getName();
 			}
-			String startPoint = (String) JOptionPane.showInputDialog(null, "Select the starting location:","Select Starting Point", JOptionPane.PLAIN_MESSAGE, null, firstPts, firstPts[0]);
+			String startPoint = (String) JOptionPane.showInputDialog(null, 
+					"Select the starting location:","Select Starting Point", 
+					JOptionPane.PLAIN_MESSAGE, null, firstPts, firstPts[0]);
 			
 			if (startPoint == null)
 			{
-				JOptionPane.showMessageDialog(null, "The operation to calculate route has been cancelled.", "Operation Cancelled", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null,
+						"The operation to calculate route has been cancelled.",
+						"Operation Cancelled", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 			
@@ -500,11 +549,15 @@ public class MenuPanel extends JPanel {
 				secondPts[i] = secondList.get(i);
 			}
 			
-			String endPoint = (String) JOptionPane.showInputDialog(null, "Select the ending location:","Select Ending Point", JOptionPane.PLAIN_MESSAGE, null, secondPts, secondPts[0]);
+			String endPoint = (String) JOptionPane.showInputDialog(null,
+					"Select the ending location:","Select Ending Point", 
+					JOptionPane.PLAIN_MESSAGE, null, secondPts, secondPts[0]);
 
 			if (endPoint == null)
 			{
-				JOptionPane.showMessageDialog(null, "The operation to calculate route has been cancelled.", "Operation Cancelled", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null,
+						"The operation to calculate route has been cancelled.", 
+						"Operation Cancelled", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 			
@@ -528,7 +581,8 @@ public class MenuPanel extends JPanel {
 				
 				if (ptA == null || ptB == null)
 				{
-					JOptionPane.showMessageDialog(null, "Database Error. Exiting Operation.", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Database Error. Exiting Operation.",
+							"Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				
@@ -537,11 +591,13 @@ public class MenuPanel extends JPanel {
 				GoogleEarthPath path = new GoogleEarthPath(routeWaypoints);
 				GoogleEarthManager gem = new GoogleEarthManager();
 				String result = gem.Path2KML(path);
-				JOptionPane.showMessageDialog(null, result, "Route", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, result, "Route", 
+											  JOptionPane.INFORMATION_MESSAGE);
 			}
 			catch (SQLException e)
 			{
-				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program.", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program.", "Error", 
+						JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 				System.exit(0);
 			}
@@ -567,7 +623,8 @@ public class MenuPanel extends JPanel {
 			}
 			catch (Exception e1)
 			{
-				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", "Error",
+						JOptionPane.ERROR_MESSAGE);
 				e1.printStackTrace();
 				System.exit(0);
 			}
@@ -575,7 +632,9 @@ public class MenuPanel extends JPanel {
 			//Validation for fewer than two available locations
 			if (waypoints.size() < 2)
 			{
-				JOptionPane.showMessageDialog(null, "There must be two locations available to find the shortest route", "Need More Locations", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, 
+						"There must be two locations available to find the shortest route", 
+						"Need More Locations", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			
@@ -587,11 +646,15 @@ public class MenuPanel extends JPanel {
 			{
 				firstPts[i] = waypoints.get(i).getName();
 			}
-			String startPoint = (String) JOptionPane.showInputDialog(null, "Select the starting location:","Select Starting Point", JOptionPane.PLAIN_MESSAGE, null, firstPts, firstPts[0]);
+			String startPoint = (String) JOptionPane.showInputDialog(null, 
+					"Select the starting location:","Select Starting Point",
+					JOptionPane.PLAIN_MESSAGE, null, firstPts, firstPts[0]);
 			
 			if (startPoint == null)
 			{
-				JOptionPane.showMessageDialog(null, "The operation to calculate route has been cancelled.", "Operation Cancelled", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null,
+						"The operation to calculate route has been cancelled.",
+						"Operation Cancelled", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 			
@@ -611,11 +674,15 @@ public class MenuPanel extends JPanel {
 				secondPts[i] = secondList.get(i);
 			}
 			
-			String endPoint = (String) JOptionPane.showInputDialog(null, "Select the ending location:","Select Ending Point", JOptionPane.PLAIN_MESSAGE, null, secondPts, secondPts[0]);
+			String endPoint = (String) JOptionPane.showInputDialog(null,
+					"Select the ending location:","Select Ending Point",
+					JOptionPane.PLAIN_MESSAGE, null, secondPts, secondPts[0]);
 
 			if (endPoint == null)
 			{
-				JOptionPane.showMessageDialog(null, "The operation to calculate route has been cancelled.", "Operation Cancelled", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null,
+						"The operation to calculate route has been cancelled.",
+						"Operation Cancelled", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 			
@@ -639,13 +706,15 @@ public class MenuPanel extends JPanel {
 				
 				if (ptA == null || ptB == null)
 				{
-					JOptionPane.showMessageDialog(null, "Database Error. Exiting Operation.", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Database Error. Exiting Operation.",
+							"Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 			}
 			catch (Exception e1)
 			{
-				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program",
+						"Error", JOptionPane.ERROR_MESSAGE);
 				e1.printStackTrace();
 				System.exit(0);
 			}
@@ -654,13 +723,333 @@ public class MenuPanel extends JPanel {
 			ArrayList<Waypoint> rt = DistCalcDriver.shortDistAlgorithm(points, ptA, ptB);
 			double dist = DistCalcDriver.totalDistance(rt);
 			
-			String distMsg = String.format("The total distance between all points, starting from \"" + startPoint +
+			String distMsg = String.format(
+					"The shortest distance between all points, starting from \"" + startPoint +
 					"\" and ending at\n \"" + endPoint + "\", is %.2f miles.", dist);
 			
-			JOptionPane.showMessageDialog(null, distMsg, "Total Distance", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, distMsg, "Total Distance",
+					JOptionPane.INFORMATION_MESSAGE);
 			
-			//KML Methods here----------------------------------------------------------------
 		}
 		
+	}
+	
+	private class ListSelListener implements ListSelectionListener
+
+	{
+
+		public void valueChanged(ListSelectionEvent e) 
+		{
+			//Check if selection is changing due to mouse click
+			boolean valAdjusting = e.getValueIsAdjusting();
+			
+			if (!valAdjusting)
+			{
+				//Get the selection
+				String selection = list.getSelectedValue();
+				Waypoint selectedWaypoint = null;
+				LinkedList<Waypoint> points = null;
+				try 
+				{
+					points = dbm.getWaypoints();
+					
+					if (points == null)
+						throw new SQLException("No waypoints found.");
+				} 
+				catch (SQLException e1)
+				{
+					JOptionPane.showMessageDialog(null, "Database Error. Exiting Program",
+							"Error", JOptionPane.ERROR_MESSAGE);
+					e1.printStackTrace();
+					System.exit(0);
+				}
+				
+				//ASSUMES no duplicate waypoint names
+				for (Waypoint wp: points)
+				{
+					if (wp.getName().equals(selection))
+						selectedWaypoint = wp;
+				}
+				
+				//Error if waypoint cannot be found
+				if (selectedWaypoint == null)
+				{
+					//Exit operation if list has no items selected
+					if (list.isSelectionEmpty())
+						return;
+					
+					JOptionPane.showMessageDialog(null, "Database Error. Exiting Operation",
+							"Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				//Split waypoint details into separate sentences for formatting
+				String[] wpDetails = selectedWaypoint.getDescription().split("\\.");
+				String wpDet = " ";
+				for (int i = 0; i < wpDetails.length; i++)
+				{
+					//Fix for java.lang.String.format percent escape
+					if (wpDetails[i].contains("%"))
+						wpDet += wpDetails[i].replace("%", "%%") + ".\n\t";
+					else
+						wpDet += wpDetails[i] + ".\n\t";
+				}
+								
+				String waypointDetails = String.format(
+						"Here are the details of this location:\n\n"+
+						"Name:\t " + selectedWaypoint.getName() + "\n" +
+						"Latitude:\t %.3f\u00B0 \n" +
+						"Longitude:\t %.3f\u00B0 \n" +
+						"Additional information:\n\t" + wpDet,
+						selectedWaypoint.getLatitude(), selectedWaypoint.getLongitude() 
+						);
+				
+				JOptionPane.showMessageDialog(null, new JTextArea(waypointDetails), "Location Details",
+						JOptionPane.INFORMATION_MESSAGE);
+				
+				list.clearSelection();
+				return;
+			}
+		}
+		
+	}
+	
+	private class EditListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+
+			LinkedList<Waypoint> waypoints = null;
+			try 
+			{
+				waypoints = dbm.getWaypoints();
+			}
+			catch (Exception e1)
+			{
+				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", "Error",
+						JOptionPane.ERROR_MESSAGE);
+				e1.printStackTrace();
+				System.exit(0);
+			}
+			
+			//Initialize array of editable waypoint names
+			String[] waypointNames = new String[waypoints.size()];
+			
+			//Error message for empty list
+			if (waypointNames.length == 0)
+			{
+				JOptionPane.showMessageDialog(null,
+						"Unable to edit any locations. Must first have locations available",
+						"Edit Cancelled", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
+			//Create array for use in JOptionPane
+			for (int i = 0; i < waypoints.size(); i++)
+			{
+				waypointNames[i] = waypoints.get(i).getName();
+			}
+			
+			String editLoc = (String) JOptionPane.showInputDialog(null, 
+					"Select a location to edit:",
+					"Edit Location", JOptionPane.QUESTION_MESSAGE, null, waypointNames, 
+					waypointNames[0]);
+			
+			//Notification if user clicks cancel button
+			if (editLoc == null)
+			{
+				JOptionPane.showMessageDialog(null, "No locations from the list will be edited.",
+						"Edit Cancelled", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			
+			//Prompt for edit type
+			Object[] options = {"Name", "Coordinates", "Description", "Cancel"};
+			int sel = JOptionPane.showOptionDialog(null, "What would you like to edit for \"" +
+					editLoc + "\"?", "Edit Options", JOptionPane.YES_NO_CANCEL_OPTION, 
+					JOptionPane.QUESTION_MESSAGE, null, options, options[3]);
+			
+			//Edit Name
+			if (sel == 0)
+			{
+				String newName = JOptionPane.showInputDialog(null,
+						"Enter the new name for \"" + editLoc +"\"",
+						"Edit Name", JOptionPane.QUESTION_MESSAGE);
+				
+				//Exit operation if cancelled
+				if (newName == null)
+				{
+					JOptionPane.showMessageDialog(null, "The edit name operation has been cancelled.",
+							"Edit Name Cancelled", JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
+				
+				//Loop for empty field
+				while (newName == null || newName.equals(""))
+				{
+					JOptionPane.showMessageDialog(null, "Please enter a new name.", "Enter Name",
+							JOptionPane.WARNING_MESSAGE);
+					
+					newName = JOptionPane.showInputDialog(null,
+							"Enter the new name for \"" + editLoc +"\"",
+							"Edit Name", JOptionPane.QUESTION_MESSAGE);
+					
+					//Exit operation if cancelled
+					if (newName == null)
+					{
+						JOptionPane.showMessageDialog(null, "The edit name operation has been cancelled.",
+								"Edit Name Cancelled", JOptionPane.INFORMATION_MESSAGE);
+						return;
+					}
+				}
+				
+				dbm.setWaypointName(editLoc, newName);
+				JOptionPane.showMessageDialog(null,
+						"\""+ editLoc + "\" has been changed to \"" + newName + "\" successfully.",
+						"Name Edited", JOptionPane.INFORMATION_MESSAGE);
+				
+				updateJList();
+			}
+			//Edit coordinates
+			else if (sel == 1)
+			{
+				//Prompt for latitude and longitude
+				JTextField latField = new JTextField();
+				JTextField longField =  new JTextField();
+				Object[] message = {
+						"Enter the new latitude",
+						latField, 
+						"Enter the new longitude", 
+						longField};
+				int option = JOptionPane.showConfirmDialog(null, message, 
+						"Enter New Coordinates", JOptionPane.OK_CANCEL_OPTION);
+				
+				if (option == JOptionPane.CANCEL_OPTION)
+				{
+					JOptionPane.showMessageDialog(null, 
+							"The edit coordinates operation has been cancelled.",
+							"Edit Coordinates Cancelled", JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
+				
+				float newLat;
+				float newLong;
+				
+				try
+				{
+					newLat = Float.parseFloat(latField.getText());
+					newLong = Float.parseFloat(longField.getText());
+				}
+				catch (NumberFormatException ne)
+				{
+					JOptionPane.showMessageDialog(null, 
+							"Latitude and longitude must only be numeric values", "Invalid Values",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				//Validation for latitude and longitude values
+				while (newLat < -90 || newLat > 90 || newLong < -180 || newLong > 180)
+				{
+
+					String msg = "Latitude can only range from -90 degrees to +90 degrees.\n" +
+							"Longitude can only range from -180 degrees to +180 degrees.";
+					JOptionPane.showMessageDialog(null, msg,
+							"Invalid Values", JOptionPane.ERROR_MESSAGE);
+		
+					Object[] message1 = {
+							"Enter the new latitude",
+							latField, 
+							"Enter the new longitude", 
+							longField};
+					int option1 = JOptionPane.showConfirmDialog(null, message1, 
+							"Enter New Coordinates", JOptionPane.OK_CANCEL_OPTION);
+					
+					if (option1 == JOptionPane.CANCEL_OPTION)
+					{
+						JOptionPane.showMessageDialog(null, 
+								"The edit coordinates operation has been cancelled.",
+								"Edit Coordinates Cancelled", JOptionPane.INFORMATION_MESSAGE);
+						return;
+					}
+					
+					try
+					{
+						newLat = Float.parseFloat(latField.getText());
+						newLong = Float.parseFloat(longField.getText());
+					}
+					catch (NumberFormatException ne)
+					{
+						JOptionPane.showMessageDialog(null, 
+								"Latitude and longitude must only be numeric values", "Invalid Values",
+								JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+		
+				}
+				
+				dbm.setWaypointLatLong(editLoc, newLat, newLong);
+				JOptionPane.showMessageDialog(null, "\""+ editLoc
+						+ "\"'s coordinates have been updated successfully", "Coordinates Edited",
+						JOptionPane.INFORMATION_MESSAGE);
+				
+				updateJList();
+			}
+			//Edit Description
+			else if (sel == 2)
+			{
+				String newDesc = JOptionPane.showInputDialog(null, 
+						"Enter the new description for \"" + editLoc + "\"",
+						"Edit Description", JOptionPane.PLAIN_MESSAGE);
+				
+				if (newDesc == null)
+				{
+					JOptionPane.showMessageDialog(null, 
+							"The edit description operation has been cancelled",
+							"Edit Description Cancelled", JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
+				
+				while (newDesc == null || newDesc.equals(""))
+				{
+
+					if (newDesc == null)
+					{
+						JOptionPane.showMessageDialog(null, 
+								"The edit description operation has been cancelled",
+								"Edit Description Cancelled", JOptionPane.INFORMATION_MESSAGE);
+						return;
+					}
+					
+					JOptionPane.showMessageDialog(null, "Enter a new description" ,
+							"Enter Description", JOptionPane.ERROR_MESSAGE);
+					
+					newDesc = JOptionPane.showInputDialog(null, 
+							"Enter the new description for \"" + editLoc + "\"",
+							"Edit Description", JOptionPane.PLAIN_MESSAGE);
+					
+				}
+				
+				dbm.setWaypointDescription(editLoc, newDesc);
+				JOptionPane.showMessageDialog(null,
+						"\"" + editLoc + "\"'s description has been edited successfully",
+						"Description Edited", JOptionPane.INFORMATION_MESSAGE);
+			}
+			//Cancel
+			else
+			{
+				JOptionPane.showMessageDialog(null, "\"" + editLoc + "\" will not be edited.",
+						"Edit Cancelled", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+		}
+	}
+	
+	private class LogoutListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			
+		}
 	}
 }

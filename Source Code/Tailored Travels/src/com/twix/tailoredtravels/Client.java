@@ -14,8 +14,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.LinkedList;
-
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -112,7 +110,8 @@ public class Client{
 				} 
 				catch (SQLException e1)
 				{
-					JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Database Error. Exiting Program",
+							"Error", JOptionPane.ERROR_MESSAGE);
 					e1.printStackTrace();
 					System.exit(0);
 				}
@@ -147,7 +146,8 @@ public class Client{
 				} 
 				catch (SQLException e1)
 				{
-					JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", 
+												  "Error", JOptionPane.ERROR_MESSAGE);
 					e1.printStackTrace();
 					System.exit(0);
 				}
@@ -168,17 +168,20 @@ public class Client{
 
 		frame.dispose();
 		mainMenu = new MenuPanel(dbm, userName, admin);
-		/*
+
 		try
 		{
-			Process googleEarth = Runtime.getRuntime().exec("C:\\Program Files (x86)\\Google\\Google Earth\\client\\googleearth.exe");
+			Process googleEarth = Runtime.getRuntime().exec(
+					"C:\\Program Files (x86)\\Google\\Google Earth\\client\\googleearth.exe");
 		}
 		catch (IOException e1) //Not sure if necessary for requirements (feature creep?)
 		{
 			//Install Google Earth or verify location of googleearth.exe
 			String[] options = {"Install", "Browse", "Exit"};
-			int option = JOptionPane.showOptionDialog(null, "Google Earth could not be found. Would you like locate or install it?", 
-					"Can't Find Google Earth", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE, null, options, options[0]);
+			int option = JOptionPane.showOptionDialog(null,
+					"Google Earth could not be found. Would you like locate or install it?", 
+					"Can't Find Google Earth", JOptionPane.YES_NO_CANCEL_OPTION,
+					JOptionPane.ERROR_MESSAGE, null, options, options[0]);
 			if (option == 2)
 			{
 				System.exit(0);
@@ -192,14 +195,15 @@ public class Client{
 				//Install GE
 			}
 		}
-		*/
 		
-		JFrame frame2 = new JFrame("Tailored Travels");
-		mainMenu.addComponents();
-		frame2.setContentPane(mainMenu);
-		frame2.setVisible(true);
-		frame2.pack();
-		frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+			JFrame frame2 = new JFrame("Tailored Travels");
+			mainMenu.addComponents();
+			frame2.setContentPane(mainMenu);
+			frame2.setVisible(true);
+			frame2.pack();
+			frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 	}
 
 }
