@@ -39,6 +39,14 @@ public class Waypoint {
 		this.wName = _name;
 	}
 	
+	public Waypoint(float _lat, float _long)
+	{
+		
+		this.wLongitude = _long
+		this.wLatitude = _lat
+		
+	}
+	
 	/**
 	 * Noarg constructor
 	 */

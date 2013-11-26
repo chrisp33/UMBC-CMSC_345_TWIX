@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * start and end points. 
  * 
  * @author Mariama Barr-Dallas & Michael Tang
- * @version 1.0
+ * @version 2.0
  */
 
 public class DistCalcDriver {
@@ -23,7 +23,7 @@ public class DistCalcDriver {
 	 */
 	public static double dist(ArrayList<Waypoint> list){
 		double distance = 0;
-		Point  start = list.remove(0);
+		Waypoint  start = list.remove(0);
 		
 		while(!list.isEmpty()){
 			distance += start.distance(list.get(0));
