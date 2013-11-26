@@ -43,8 +43,6 @@ public class DistCalcDriver {
 	 * list should come with the start point as the first index, and the last index as the end point
 	 * 
 	 * @param list	list of parks that the user wants to go to
-	 * @param destA 	the coordinate the user starts at
-	 * @param destG		the coordinate the user ends at
 	 * @return ArrayList<Waypoint> sorted arraylist of all waypoints
 	 */
 	public static ArrayList<Waypoint> shortDistAlgorithm(ArrayList<Waypoint> list){

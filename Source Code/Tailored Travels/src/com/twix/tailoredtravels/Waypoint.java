@@ -105,7 +105,14 @@ public class Waypoint {
 		return 3961 * c;
 	}
 	
-	
+	public boolean equals(Waypoint other){
+		
+		if(other == null){
+			return false;
+		}
+		
+		return (other.getLatitude() == this.getLatitude() && other.getLongitude() == this.getLongitude());
+	}
 	
 	
 	/**
