@@ -111,6 +111,7 @@ public class DatabaseManager {
 			_connect.close();
 			return false;
 		}
+		_connect.close();
 		
 		//if user is unique then add the user
 		String query = "";
@@ -150,6 +151,7 @@ public class DatabaseManager {
 			_connect.close();
 			return false;
 		}
+		_connect.close();
 		success = executeQuery("INSERT into db_waypoints " +
 				"(name, latitude, longitude, description)  values " +
 				"('" + name + "', " + latitude + 
@@ -180,6 +182,7 @@ public class DatabaseManager {
 			_connect.close();
 			return false;
 		}
+		_connect.close();
 		//if user is unique then add the user
 
 		//if the new person added is admin then give them admin privileges
@@ -241,7 +244,11 @@ public class DatabaseManager {
 		ResultSet _r = executeQueryForResult("SELECT * FROM db_waypoints " +
 				" WHERE upper(name) LIKE upper('%"+oldName+"%')");
 		if (!_r.isBeforeFirst())
+		{
+			_connect.close();
 			return false;
+		}
+		_connect.close();
 		
 		String query = "UPDATE db_waypoints SET " +
 				"name='"+newName+"' WHERE upper(name) LIKE upper('%"+oldName+"%')";
@@ -258,6 +265,7 @@ public class DatabaseManager {
 			_connect.close();
 			return false;
 		}
+		_connect.close();
 		String query = "UPDATE db_waypoints SET " +
 				"description='"+newDescription+"' WHERE upper(name) LIKE upper('%"+name+"%')";
 		
@@ -273,6 +281,7 @@ public class DatabaseManager {
 			_connect.close();
 			return false;
 		}
+		_connect.close();
 		String query = "UPDATE db_waypoints SET " +
 				"latitude="+newLat+", longitude="+newLong+" WHERE upper(name) LIKE upper('%"+name+"%')";
 		
