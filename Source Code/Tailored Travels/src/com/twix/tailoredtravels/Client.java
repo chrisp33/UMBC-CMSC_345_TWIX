@@ -10,11 +10,17 @@ package com.twix.tailoredtravels;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.sql.SQLException;
+
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,10 +28,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class Client{
 
-	private static JPanel panel, p, p1, p2, p3, p4;
+	/**
+	 * Components for login
+	 */
+	private static JPanel panel, p, p1, p2, p3, p4, imgPanel;
 	private static JFrame frame;
 	private static JButton login;
 	private static JTextField nameField;
@@ -33,27 +44,50 @@ public class Client{
 	private static MenuPanel mainMenu;
 	
 	/**
-	 * @param args
+	 * Main method
+	 * @param args no arguments used
+	 * @throws UnsupportedLookAndFeelException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws ClassNotFoundException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args){
+		
+		//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		frame = new JFrame("Tailored Travels");
 		
-		// cleanup/make better later
 		panel = new JPanel();
 		p = new JPanel();
 		p1 = new JPanel();
 		p2 = new JPanel();
 		p3 = new JPanel();
 		p4 = new JPanel();
+		imgPanel = new JPanel();
 		login = new JButton("Login");
-		
+
+		panel.setBackground(new Color(0,91,255));
+		imgPanel.setBackground(new Color(0,91,255));
 		p.setBackground(new Color(0,91,255));
 		p1.setBackground(new Color(0,91,255));
 		p2.setBackground(new Color(0,91,255));
 		p3.setBackground(new Color(0,91,255));
 		p4.setBackground(new Color(0,91,255));
 
-		p.add(new JLabel("Tailored Travels"));
+		p.add(new JLabel("Welcome to Tailored Travels!"));
+		
+		//Add logo, then resize and realign
+		ImageIcon teamLogo = new ImageIcon("Second_Draft_of_logo.jpg");
+		Image img = teamLogo.getImage();
+		int width = img.getWidth(null);
+		int height = img.getHeight(null);
+		int resizeW = width/3;
+		int resizeH = height/3;
+		Image resizedImg = img.getScaledInstance(resizeW, resizeH, Image.SCALE_SMOOTH);
+		teamLogo = new ImageIcon(resizedImg);
+		
+		frame.setIconImage(img);
+		JLabel logo = new JLabel(teamLogo);
+		imgPanel.add(logo);
 		p1.add(new JLabel ("Enter your username and password"));
 		p2.add(new JLabel("Username"));
 		nameField = new JTextField(25);
@@ -64,16 +98,16 @@ public class Client{
 		String bullet = "\u2022";
 		passField.setEchoChar(bullet.charAt(0));
 		p3.add(passField);
-		
 		p4.add(login);
 		
 		panel.add(p);
+		panel.add(imgPanel);
 		panel.add(p1);
 		panel.add(p2);
 		panel.add(p3);
 		panel.add(p4);
 		
-		panel.setPreferredSize(new Dimension(600,300));
+		panel.setPreferredSize(new Dimension(500,400));
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
@@ -141,7 +175,7 @@ public class Client{
 					} 
 					else 
 					{
-						openGE(dbm, userName, admin);
+						showMainMenu(dbm, userName, admin);
 					}
 				} 
 				catch (SQLException e1)
@@ -163,13 +197,14 @@ public class Client{
 	 * @param admin whether or not a user is an administrator
 	 * @param locations the list of waypoints
 	 */
-	public static void openGE(DatabaseManager dbm, String userName, boolean admin)
+	public static void showMainMenu(DatabaseManager dbm, String userName, boolean admin)
 	{
 
 		frame.dispose();
 		mainMenu = new MenuPanel(dbm, userName, admin);
 		
 		JFrame frame2 = new JFrame("Tailored Travels");
+		frame2.setIconImage(new ImageIcon("Second_Draft_of_logo.jpg").getImage());
 		mainMenu.addComponents();
 		frame2.setContentPane(mainMenu);
 		frame2.setVisible(true);

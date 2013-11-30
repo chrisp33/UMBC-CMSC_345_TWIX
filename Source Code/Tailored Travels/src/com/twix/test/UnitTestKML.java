@@ -35,7 +35,7 @@ public class UnitTestKML {
 		
 
 		ArrayList<Waypoint> endList = new ArrayList<Waypoint>();
-		endList = DistCalcDriver.shortDistAlgorithm(list, wayA, wayG);
+		endList = DistCalcDriver.shortDistAlgorithm(list);
 		
 		GoogleEarthPath GEP = new GoogleEarthPath(endList);
 		GoogleEarthManager GEM = new GoogleEarthManager();

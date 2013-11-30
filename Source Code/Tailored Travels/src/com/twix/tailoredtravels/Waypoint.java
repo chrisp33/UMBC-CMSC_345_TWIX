@@ -42,8 +42,8 @@ public class Waypoint {
 	public Waypoint(float _lat, float _long)
 	{
 		
-		this.wLongitude = _long
-		this.wLatitude = _lat
+		this.wLongitude = _long;
+		this.wLatitude = _lat;
 		
 	}
 	
