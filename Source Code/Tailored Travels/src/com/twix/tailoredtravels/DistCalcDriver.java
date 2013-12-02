@@ -67,45 +67,45 @@ public class DistCalcDriver {
 	 * @param list
 	 * @return
 	 */
-//	public static ArrayList<Waypoint> shortDistAlgorithm(ArrayList<Waypoint> list){
-//		if (list == null || list.size() == 0){
-//			return null;
-//		}
-//
-//		//remove the start and ending Waypoint
-//		Waypoint start = list.remove(0);
-//		Waypoint end = list.remove(list.size() - 1);
-//
-//		//get all possible permutation of the remaining list
-//		List<List<Waypoint>> temp = generatePermP(list);
-//
-//		//get the first one
-//		List<Waypoint> path1 = temp.get(0);
-//		path1.add(end);
-//		path1.add(0, start);
-//
-//		//get the current distance
-//		double curr_dis = dist(path1);
-//
-//		for (int i = 1; i < temp.size(); i++){
-//
-//			List<Waypoint> curr = temp.get(i);
-//			curr.add(end);
-//			curr.add(0, start);
-//
-//			double d = dist(curr);
-//
-//			if (curr_dis > d){
-//				path1 = curr;
-//				curr_dis = d;
-//			}
-//		}
-//		ArrayList<Waypoint> lis = new ArrayList<Waypoint>();
-//
-//		for(int i = 0; i < path1.size(); i++)
-//			lis.add(path1.get(i));
-//		return lis;
-//	}
+	//	public static ArrayList<Waypoint> shortDistAlgorithm(ArrayList<Waypoint> list){
+	//		if (list == null || list.size() == 0){
+	//			return null;
+	//		}
+	//
+	//		//remove the start and ending Waypoint
+	//		Waypoint start = list.remove(0);
+	//		Waypoint end = list.remove(list.size() - 1);
+	//
+	//		//get all possible permutation of the remaining list
+	//		List<List<Waypoint>> temp = generatePermP(list);
+	//
+	//		//get the first one
+	//		List<Waypoint> path1 = temp.get(0);
+	//		path1.add(end);
+	//		path1.add(0, start);
+	//
+	//		//get the current distance
+	//		double curr_dis = dist(path1);
+	//
+	//		for (int i = 1; i < temp.size(); i++){
+	//
+	//			List<Waypoint> curr = temp.get(i);
+	//			curr.add(end);
+	//			curr.add(0, start);
+	//
+	//			double d = dist(curr);
+	//
+	//			if (curr_dis > d){
+	//				path1 = curr;
+	//				curr_dis = d;
+	//			}
+	//		}
+	//		ArrayList<Waypoint> lis = new ArrayList<Waypoint>();
+	//
+	//		for(int i = 0; i < path1.size(); i++)
+	//			lis.add(path1.get(i));
+	//		return lis;
+	//	}
 
 	/**
 	 * @author - Herman Kontcho
@@ -172,6 +172,14 @@ public class DistCalcDriver {
 		Waypoint p3 = new Waypoint(34,55);
 		Waypoint p4 = new Waypoint(111,676);
 		Waypoint p5 = new Waypoint(1,34);
+		Waypoint p6 = new Waypoint(11,76);
+		Waypoint p7 = new Waypoint(1,1);
+		Waypoint p8 = new Waypoint(18,46);
+		Waypoint p9 = new Waypoint(70,44);
+		Waypoint p10 = new Waypoint(96,676);
+		Waypoint p11 = new Waypoint(3,4);
+		Waypoint p12 = new Waypoint(11,60);
+		Waypoint p13 = new Waypoint(6,16);
 
 		ArrayList<Waypoint> list = new ArrayList<Waypoint>();
 		list.add(p1);
@@ -179,9 +187,17 @@ public class DistCalcDriver {
 		list.add(p3);
 		list.add(p4);
 		list.add(p5);
+		list.add(p6);
+		list.add(p7);
+		list.add(p8);
+		list.add(p9);
+		list.add(p10);
+		list.add(p11);
+		list.add(p12);
+		list.add(p13);
 
 		ArrayList<Waypoint> path = shortDistAlgorithm(list);
-//		ArrayList<Waypoint> path = searchCity(list);
+		//		ArrayList<Waypoint> path = searchCity(list);
 		for (Waypoint p: path){
 			System.out.println(p);
 		}
@@ -219,7 +235,8 @@ public class DistCalcDriver {
 	 */
 	public static ArrayList<Waypoint> shortDistAlgorithm(ArrayList<Waypoint> cities)
 	{
-
+		distance = 0;
+		shortestWaypoint = new ArrayList<Waypoint>();
 		ArrayList<Waypoint> path = new ArrayList<Waypoint>();
 		Waypoint beginning = cities.remove(0);
 		Waypoint end = cities.remove(cities.size() - 1);
@@ -246,13 +263,17 @@ public class DistCalcDriver {
 		}
 		for(int i = 0; i < waypointNotSelected.size(); i++)
 		{
+			if(path.size() != 0 &&totalDistance(path) > distance && distance != 0)
+			{
+				break;
+			}
 			Waypoint next = waypointNotSelected.remove(i);
 			path.add(next);
+
 			searchCity(path, waypointNotSelected, beginning, end, shortestRoute);
 
 			path.remove(next);
 			waypointNotSelected.add(i, next);
 		}
-
 	}
 }
