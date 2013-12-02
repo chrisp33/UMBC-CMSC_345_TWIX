@@ -55,6 +55,8 @@ public class Client{
 		
 		//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		frame = new JFrame("Tailored Travels");
+		Color bgcolor = new Color(74,138,255); //Background color for login screen
+
 		
 		panel = new JPanel();
 		p = new JPanel();
@@ -65,13 +67,13 @@ public class Client{
 		imgPanel = new JPanel();
 		login = new JButton("Login");
 
-		panel.setBackground(new Color(0,91,255));
-		imgPanel.setBackground(new Color(0,91,255));
-		p.setBackground(new Color(0,91,255));
-		p1.setBackground(new Color(0,91,255));
-		p2.setBackground(new Color(0,91,255));
-		p3.setBackground(new Color(0,91,255));
-		p4.setBackground(new Color(0,91,255));
+		panel.setBackground(bgcolor);
+		imgPanel.setBackground(bgcolor);
+		p.setBackground(bgcolor);
+		p1.setBackground(bgcolor);
+		p2.setBackground(bgcolor);
+		p3.setBackground(bgcolor);
+		p4.setBackground(bgcolor);
 
 		p.add(new JLabel("Welcome to Tailored Travels!"));
 		
