@@ -72,13 +72,13 @@ public class DistCalcDriver {
 	
 	public static void main(String[] args){
 		
-		Coordinate destA = new Coordinate("Destination A",1,1);
-		Coordinate destB = new Coordinate("Destination B",200,200);
-		Coordinate destC = new Coordinate("Destination C",5,5);
+		Coordinate destA = new Coordinate("Destination A",282,269);
+		Coordinate destB = new Coordinate("Destination B",366,331);
+		Coordinate destC = new Coordinate("Destination C",189,455);
 		Coordinate destD = new Coordinate("Destination D",56,34);
-		Coordinate destE = new Coordinate("Destination E",100,100);
-		Coordinate destF = new Coordinate("Destination F",0,0);
-		Coordinate destG = new Coordinate("Destination G",20,20);
+		Coordinate destE = new Coordinate("Destination E",375,238);
+		Coordinate destF = new Coordinate("Destination F",206,282);
+		Coordinate destG = new Coordinate("Destination G",1,418);
 		
 		ArrayList<Coordinate> list = new ArrayList<Coordinate>();
 		list.add(destA);

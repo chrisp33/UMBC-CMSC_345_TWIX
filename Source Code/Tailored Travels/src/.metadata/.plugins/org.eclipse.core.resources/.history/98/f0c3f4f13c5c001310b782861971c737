@@ -73,7 +73,7 @@ public class DistCalcDriver {
 	public static void main(String[] args){
 		
 		Coordinate destA = new Coordinate("Destination A",1,1);
-		Coordinate destB = new Coordinate("Destination B",200,200);
+		Coordinate destB = new Coordinate("Destination B",200,331);
 		Coordinate destC = new Coordinate("Destination C",5,5);
 		Coordinate destD = new Coordinate("Destination D",56,34);
 		Coordinate destE = new Coordinate("Destination E",100,100);
