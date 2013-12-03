@@ -8,7 +8,6 @@
 			<attribute name="javadoc_location" value="file:/Users/Stephen/UMBC-CMSC_345_TWIX/Source Code/libs/apidocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="derby.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Christopher/Documents/GitHub/UMBC-CMSC_345_TWIX/Source Code/libs/jaxb-ri-2.2.7.zip"/>
 	<classpathentry kind="lib" path="C:/Users/Christopher/Documents/GitHub/UMBC-CMSC_345_TWIX/Source Code/libs/jaxb-ri-2.2.7/lib/jaxb-api.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Christopher/Documents/GitHub/UMBC-CMSC_345_TWIX/Source Code/libs/jaxb-ri-2.2.7/lib/jaxb-core.jar"/>
@@ -19,5 +18,6 @@
 	<classpathentry kind="lib" path="C:/Users/Christopher/Documents/GitHub/UMBC-CMSC_345_TWIX/Source Code/libs/jaxb-ri-2.2.7/lib/jaxb-jxc-javadoc.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Christopher/Documents/GitHub/UMBC-CMSC_345_TWIX/Source Code/libs/jaxb-ri-2.2.7/lib/jaxb-xjc.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Christopher/Documents/GitHub/UMBC-CMSC_345_TWIX/Source Code/libs/jaxb-ri-2.2.7/lib/jaxb-xjc-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Christopher/Documents/GitHub/UMBC-CMSC_345_TWIX/Source Code/libs/derby.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

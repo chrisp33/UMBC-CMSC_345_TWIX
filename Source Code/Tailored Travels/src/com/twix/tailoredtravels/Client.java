@@ -36,13 +36,13 @@ public class Client{
 	/**
 	 * Components for login
 	 */
-	private static JPanel panel, p, p1, p2, p3, p4, imgPanel;
+	private static JPanel panel, welcome, lmsg, lName, lPassword, enter, imgPanel;
 	private static JFrame frame;
 	private static JButton login;
 	private static JTextField nameField;
 	private static JPasswordField passField;
 	private static MenuPanel mainMenu;
-	
+	private static String logoName;
 	/**
 	 * Main method
 	 * @param args no arguments used
@@ -53,32 +53,34 @@ public class Client{
 	 */
 	public static void main(String[] args){
 		
+		// To get the same look and feel of the system the program is run on
 		//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		frame = new JFrame("Tailored Travels");
 		Color bgcolor = new Color(74,138,255); //Background color for login screen
 
 		
 		panel = new JPanel();
-		p = new JPanel();
-		p1 = new JPanel();
-		p2 = new JPanel();
-		p3 = new JPanel();
-		p4 = new JPanel();
+		welcome = new JPanel();
+		lmsg = new JPanel();
+		lName = new JPanel();
+		lPassword = new JPanel();
+		enter = new JPanel();
 		imgPanel = new JPanel();
 		login = new JButton("Login");
 
 		panel.setBackground(bgcolor);
 		imgPanel.setBackground(bgcolor);
-		p.setBackground(bgcolor);
-		p1.setBackground(bgcolor);
-		p2.setBackground(bgcolor);
-		p3.setBackground(bgcolor);
-		p4.setBackground(bgcolor);
+		welcome.setBackground(bgcolor);
+		lmsg.setBackground(bgcolor);
+		lName.setBackground(bgcolor);
+		lPassword.setBackground(bgcolor);
+		enter.setBackground(bgcolor);
 
-		p.add(new JLabel("Welcome to Tailored Travels!"));
+		welcome.add(new JLabel("Welcome to Tailored Travels!"));
 		
 		//Add logo, then resize and realign
-		ImageIcon teamLogo = new ImageIcon("Second_Draft_of_logo.jpg");
+		logoName = "Final Draft of Logo.jpg";
+		ImageIcon teamLogo = new ImageIcon(logoName);
 		Image img = teamLogo.getImage();
 		int width = img.getWidth(null);
 		int height = img.getHeight(null);
@@ -90,24 +92,24 @@ public class Client{
 		frame.setIconImage(img);
 		JLabel logo = new JLabel(teamLogo);
 		imgPanel.add(logo);
-		p1.add(new JLabel ("Enter your username and password"));
-		p2.add(new JLabel("Username"));
+		lmsg.add(new JLabel ("Enter your username and password"));
+		lName.add(new JLabel("Username"));
 		nameField = new JTextField(25);
-		p2.add(nameField);
+		lName.add(nameField);
 		
-		p3.add(new JLabel("Password"));
+		lPassword.add(new JLabel("Password"));
 		passField = new JPasswordField(25);
 		String bullet = "\u2022";
 		passField.setEchoChar(bullet.charAt(0));
-		p3.add(passField);
-		p4.add(login);
+		lPassword.add(passField);
+		enter.add(login);
 		
-		panel.add(p);
+		panel.add(welcome);
 		panel.add(imgPanel);
-		panel.add(p1);
-		panel.add(p2);
-		panel.add(p3);
-		panel.add(p4);
+		panel.add(lmsg);
+		panel.add(lName);
+		panel.add(lPassword);
+		panel.add(enter);
 		
 		panel.setPreferredSize(new Dimension(500,400));
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -206,7 +208,7 @@ public class Client{
 		mainMenu = new MenuPanel(dbm, userName, admin);
 		
 		JFrame frame2 = new JFrame("Tailored Travels");
-		frame2.setIconImage(new ImageIcon("Second_Draft_of_logo.jpg").getImage());
+		frame2.setIconImage(new ImageIcon(logoName).getImage());
 		mainMenu.addComponents();
 		frame2.setContentPane(mainMenu);
 		frame2.setVisible(true);
