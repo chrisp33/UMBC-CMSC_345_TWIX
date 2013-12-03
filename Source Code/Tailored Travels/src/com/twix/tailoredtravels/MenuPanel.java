@@ -40,25 +40,19 @@ public class MenuPanel extends JPanel {
 	private JList<String> list;
 	private JScrollPane scroller;
 	private JPanel p1, p2, p3, p4, p5, p6, p7;
-	
-	
+	final int REQUIRED_NUM = 2;
 	/**
 	 * The current user's username
 	 */
 	private String currentUser;
-	
-	
 	/**
 	 * To test if the current user is an administrator
 	 */
 	private boolean isAdmin;
-	
-	
 	/**
 	 * Instance for all database manipulations
 	 */
 	private DatabaseManager dbm;
-	
 	
 	/**
 	 * Constructor for main menu
@@ -72,7 +66,6 @@ public class MenuPanel extends JPanel {
 		this.dbm = dbm;
 		isAdmin = admin;
 		currentUser = user;
-		Color bgColor = new Color(48,235,71);
 		
 		p1 = new JPanel();
 		p2 = new JPanel();
@@ -104,7 +97,7 @@ public class MenuPanel extends JPanel {
 		//Instantiate GUI components
 		welcomeMsg = new JLabel("Welcome back, " + user + "!");
 		p1.add(welcomeMsg);
-		availMsg = new JLabel("<html>Available Locations:<br>Select for Info</html>");
+		availMsg = new JLabel("Available Locations");
 		list = new JList<String>();
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scroller = new JScrollPane(list);
@@ -128,14 +121,14 @@ public class MenuPanel extends JPanel {
 		p7 = new JPanel();
 		p7.add(logout);
 	
-		setBackground(bgColor);
-		p1.setBackground(bgColor);
-		p2.setBackground(bgColor);
-		p3.setBackground(bgColor);
-		p4.setBackground(bgColor);
-		p5.setBackground(bgColor);
-		p6.setBackground(bgColor);
-		p7.setBackground(bgColor);
+		setBackground(new Color(0, 255,0));
+		p1.setBackground(new Color(0, 255,0));
+		p2.setBackground(new Color(0, 255,0));
+		p3.setBackground(new Color(0, 255,0));
+		p4.setBackground(new Color(0, 255,0));
+		p5.setBackground(new Color(0, 255,0));
+		p6.setBackground(new Color(0, 255,0));
+		p7.setBackground(new Color(0, 255,0));
 
 		
 		updateJList();
@@ -1018,9 +1011,8 @@ public class MenuPanel extends JPanel {
 				int indexB = remainingPoints.indexOf(ptB);
 				remainingPoints.remove(indexB);
 				
-				final int REQUIRED_NUM = 20;
 				
-				if (remainingPoints.size() > (REQUIRED_NUM - 2))
+				if (remainingPoints.size() >= (REQUIRED_NUM - 2))
 				{
 					for (Waypoint wp : remainingPoints)
 						remainingNames.add(wp.getName());
@@ -1028,7 +1020,7 @@ public class MenuPanel extends JPanel {
 					JScrollPane sp = new JScrollPane(names);
 					names.setListData(remainingNames);
 					names.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-					Object[] msg = {"Select all other route locations\nControl- or Shift-click to select multiple.", sp};
+					Object[] msg = {"What other points are in the route?", sp};
 					int op = JOptionPane.showConfirmDialog(null, msg, "Select Other Points",
 							JOptionPane.OK_CANCEL_OPTION);
 					
@@ -1220,9 +1212,8 @@ public class MenuPanel extends JPanel {
 				int indexB = remainingPoints.indexOf(ptB);
 				remainingPoints.remove(indexB);
 				
-				final int REQUIRED_NUM = 20;
 				
-				if (remainingPoints.size() > (REQUIRED_NUM - 2))
+				if (remainingPoints.size() >= (REQUIRED_NUM - 2))
 				{
 					for (Waypoint wp : remainingPoints)
 						remainingNames.add(wp.getName());
