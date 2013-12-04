@@ -46,7 +46,7 @@ public class MenuPanel extends JPanel {
 	private JScrollPane scroller;
 	private JPanel welcome, addRmLoc, addRmUser, waypointsList, calculations, edits, exit, 
 					adminPanel;
-	final int REQUIRED_NUM = 20;
+	final int REQUIRED_NUM = 12;
 	
 	/**
 	 * The current user's username
@@ -81,11 +81,11 @@ public class MenuPanel extends JPanel {
 		addRmLoc = new JPanel();
 		addRmUser = new JPanel();
 		edits = new JPanel();
+		adminPanel = new JPanel();
 		
 		//Create these components if the user is an administrator
 		if (isAdmin)
 		{
-			adminPanel = new JPanel();
 			adminPanel.setLayout(new BoxLayout(adminPanel, BoxLayout.Y_AXIS));
 			adminBorder.setBorder(b);
 			adminPanel.setBorder(adminBorder);
@@ -364,7 +364,7 @@ public class MenuPanel extends JPanel {
 			remLoc + "\"?", "Confirm Deletion",JOptionPane.WARNING_MESSAGE);
 			
 			//Message when user clicks "no" button
-			if (sel == JOptionPane.NO_OPTION)
+			if (sel == JOptionPane.CANCEL_OPTION)
 			{
 				JOptionPane.showMessageDialog(null, "\"" + remLoc +
 						"\" will not be removed from the list.", "Remove Cancelled",
@@ -771,8 +771,8 @@ public class MenuPanel extends JPanel {
 				try
 				{
 					dbm.setWaypointLatLong(editLoc, newLat, newLong);
-					JOptionPane.showMessageDialog(null, "\""+ editLoc
-							+ "\"'s coordinates have been updated successfully.", 
+					JOptionPane.showMessageDialog(null, "\"" + editLoc
+							+ "\"s coordinates have been updated successfully.", 
 							"Coordinates Edited", JOptionPane.INFORMATION_MESSAGE);
 				} 
 				catch (SQLException e1) 
@@ -913,7 +913,10 @@ public class MenuPanel extends JPanel {
 						selectedWaypoint.getLatitude(), selectedWaypoint.getLongitude() 
 						);
 				
-				JOptionPane.showMessageDialog(null, new JTextArea(waypointDetails),
+				JTextArea details = new JTextArea(waypointDetails);
+				details.setEditable(false);
+				
+				JOptionPane.showMessageDialog(null, details,
 						"Location Details", JOptionPane.INFORMATION_MESSAGE);
 				
 				list.clearSelection();
@@ -1105,7 +1108,7 @@ public class MenuPanel extends JPanel {
 							return;
 						}
 					}
-					//Error for points < 20
+					//Error for points < 13
 					else {
 						JOptionPane
 								.showMessageDialog(
@@ -1341,7 +1344,7 @@ public class MenuPanel extends JPanel {
 							return;
 						}
 					}
-					//Error for points < 20
+					//Error for points < 13
 					else {
 						JOptionPane
 								.showMessageDialog(
