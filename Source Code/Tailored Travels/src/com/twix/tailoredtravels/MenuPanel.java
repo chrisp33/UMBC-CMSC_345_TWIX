@@ -7,8 +7,11 @@
 package com.twix.tailoredtravels;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -17,6 +20,7 @@ import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListSelectionModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -40,12 +44,12 @@ public class MenuPanel extends JPanel {
 	 */
 	private static final long serialVersionUID = 3359477065217156534L;
 	private JButton calcRoute, calcDist, addLocation, removeLocation, addUser,
-					removeUser, logout, edit;
+					removeUser, logout, edit, help;
 	private JLabel welcomeMsg,availMsg;
 	private JList<String> list;
 	private JScrollPane scroller;
 	private JPanel welcome, addRmLoc, addRmUser, waypointsList, calculations, edits, exit, 
-					adminPanel;
+					adminPanel, helpp;
 	final int REQUIRED_NUM = 12;
 	
 	/**
@@ -76,12 +80,34 @@ public class MenuPanel extends JPanel {
 		Color bgColor = new Color(48,235,71);
 		TitledBorder adminBorder = BorderFactory.createTitledBorder("Administrative Controls");
 		Border b = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
-		
+		helpp = new JPanel();
 		welcome = new JPanel();
 		addRmLoc = new JPanel();
 		addRmUser = new JPanel();
 		edits = new JPanel();
 		adminPanel = new JPanel();
+		
+
+		ImageIcon helpimg = new ImageIcon("help.png");
+		help = new JButton(helpimg);
+		help.setToolTipText("Click here for help.");
+		help.setBorder(BorderFactory.createEmptyBorder());
+		help.addActionListener(new ActionListener(){public void actionPerformed (ActionEvent e)
+		{
+			if (Desktop.isDesktopSupported()) {
+			    try {
+			        File myFile = new File("Tailored Travels Help.pdf");
+			        Desktop.getDesktop().open(myFile);
+			    } catch (IOException ex) {
+			        // no application registered for PDFs
+			    }
+			}
+		}});
+		helpp.add(help);
+		helpp.setBackground(bgColor);
+		help.setBackground(bgColor);
+		
+		
 		
 		//Create these components if the user is an administrator
 		if (isAdmin)
@@ -164,7 +190,7 @@ public class MenuPanel extends JPanel {
 	public void addComponents()
 	{
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
+		add(helpp);
 		add(welcome);
 		
 		if(isAdmin)

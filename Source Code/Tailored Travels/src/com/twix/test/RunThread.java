@@ -1,4 +1,4 @@
-package test;
+package com.twix.test;
 
 public class RunThread {
 public static void main(String[] args)

@@ -9,6 +9,7 @@
 package com.twix.tailoredtravels;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -16,9 +17,11 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -36,9 +39,9 @@ public class Client{
 	/**
 	 * Components for login
 	 */
-	private static JPanel panel, welcome, lmsg, lName, lPassword, enter, imgPanel;
+	private static JPanel helpp,panel, welcome, lmsg, lName, lPassword, enter, imgPanel;
 	private static JFrame frame;
-	private static JButton login;
+	private static JButton login, help;
 	private static JTextField nameField;
 	private static JPasswordField passField;
 	private static MenuPanel mainMenu;
@@ -60,6 +63,7 @@ public class Client{
 
 		
 		panel = new JPanel();
+		helpp = new JPanel();
 		welcome = new JPanel();
 		lmsg = new JPanel();
 		lName = new JPanel();
@@ -104,6 +108,25 @@ public class Client{
 		lPassword.add(passField);
 		enter.add(login);
 		
+		ImageIcon helpimg = new ImageIcon("help.png");
+		JButton help = new JButton(helpimg);
+		help.setToolTipText("Click here for help.");
+		help.setBorder(BorderFactory.createEmptyBorder());
+		help.addActionListener(new ActionListener(){public void actionPerformed (ActionEvent e)
+		{
+			if (Desktop.isDesktopSupported()) {
+			    try {
+			        File myFile = new File("Tailored Travels Help.pdf");
+			        Desktop.getDesktop().open(myFile);
+			    } catch (IOException ex) {
+			        // no application registered for PDFs
+			    }
+			}
+		}});
+		helpp.add(help);
+		helpp.setBackground(bgcolor);
+		help.setBackground(bgcolor);
+		panel.add(helpp);
 		panel.add(welcome);
 		panel.add(imgPanel);
 		panel.add(lmsg);
@@ -111,7 +134,7 @@ public class Client{
 		panel.add(lPassword);
 		panel.add(enter);
 		
-		panel.setPreferredSize(new Dimension(500,400));
+		panel.setPreferredSize(new Dimension(500,425));
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
