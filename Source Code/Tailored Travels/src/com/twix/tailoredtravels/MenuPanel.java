@@ -364,7 +364,7 @@ public class MenuPanel extends JPanel {
 			remLoc + "\"?", "Confirm Deletion",JOptionPane.WARNING_MESSAGE);
 			
 			//Message when user clicks "no" button
-			if (sel == JOptionPane.NO_OPTION)
+			if (sel == JOptionPane.CANCEL_OPTION)
 			{
 				JOptionPane.showMessageDialog(null, "\"" + remLoc +
 						"\" will not be removed from the list.", "Remove Cancelled",
