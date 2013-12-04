@@ -771,8 +771,8 @@ public class MenuPanel extends JPanel {
 				try
 				{
 					dbm.setWaypointLatLong(editLoc, newLat, newLong);
-					JOptionPane.showMessageDialog(null, "\""+ editLoc
-							+ "\"'s coordinates have been updated successfully.", 
+					JOptionPane.showMessageDialog(null, "\"" + editLoc
+							+ "\"s coordinates have been updated successfully.", 
 							"Coordinates Edited", JOptionPane.INFORMATION_MESSAGE);
 				} 
 				catch (SQLException e1) 

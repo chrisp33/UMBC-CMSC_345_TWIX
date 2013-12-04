@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Wed Dec 04 00:06:49 EST 2013:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.2.2 - (1181258): instance a816c00e-0142-bc00-5acb-000006724598 
+Wed Dec 04 01:54:06 EST 2013:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.2.2 - (1181258): instance a816c00e-0142-bc62-95d8-000006f0e4d8 
 on database directory C:\Users\Christopher\Documents\GitHub\UMBC-CMSC_345_TWIX\Source Code\Tailored Travels\Database  with class loader sun.misc.Launcher$AppClassLoader@76bcfa38 
 Loaded from file:/C:/Users/Christopher/Documents/GitHub/UMBC-CMSC_345_TWIX/Source%20Code/libs/derby.jar
 java.vendor=Oracle Corporation
