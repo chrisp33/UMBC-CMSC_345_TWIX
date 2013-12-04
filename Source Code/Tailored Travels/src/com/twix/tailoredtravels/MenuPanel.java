@@ -46,7 +46,7 @@ public class MenuPanel extends JPanel {
 	private JScrollPane scroller;
 	private JPanel welcome, addRmLoc, addRmUser, waypointsList, calculations, edits, exit, 
 					adminPanel;
-	final int REQUIRED_NUM = 20;
+	final int REQUIRED_NUM = 13;
 	
 	/**
 	 * The current user's username
@@ -1105,7 +1105,7 @@ public class MenuPanel extends JPanel {
 							return;
 						}
 					}
-					//Error for points < 20
+					//Error for points < 13
 					else {
 						JOptionPane
 								.showMessageDialog(
@@ -1341,7 +1341,7 @@ public class MenuPanel extends JPanel {
 							return;
 						}
 					}
-					//Error for points < 20
+					//Error for points < 13
 					else {
 						JOptionPane
 								.showMessageDialog(
