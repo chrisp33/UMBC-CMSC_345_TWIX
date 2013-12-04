@@ -913,7 +913,10 @@ public class MenuPanel extends JPanel {
 						selectedWaypoint.getLatitude(), selectedWaypoint.getLongitude() 
 						);
 				
-				JOptionPane.showMessageDialog(null, new JTextArea(waypointDetails),
+				JTextArea details = new JTextArea(waypointDetails);
+				details.setEditable(false);
+				
+				JOptionPane.showMessageDialog(null, details,
 						"Location Details", JOptionPane.INFORMATION_MESSAGE);
 				
 				list.clearSelection();
