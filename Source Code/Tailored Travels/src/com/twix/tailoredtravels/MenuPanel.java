@@ -46,7 +46,7 @@ public class MenuPanel extends JPanel {
 	private JScrollPane scroller;
 	private JPanel welcome, addRmLoc, addRmUser, waypointsList, calculations, edits, exit, 
 					adminPanel;
-	final int REQUIRED_NUM = 13;
+	final int REQUIRED_NUM = 12;
 	
 	/**
 	 * The current user's username
