@@ -81,11 +81,11 @@ public class MenuPanel extends JPanel {
 		addRmLoc = new JPanel();
 		addRmUser = new JPanel();
 		edits = new JPanel();
+		adminPanel = new JPanel();
 		
 		//Create these components if the user is an administrator
 		if (isAdmin)
 		{
-			adminPanel = new JPanel();
 			adminPanel.setLayout(new BoxLayout(adminPanel, BoxLayout.Y_AXIS));
 			adminBorder.setBorder(b);
 			adminPanel.setBorder(adminBorder);
