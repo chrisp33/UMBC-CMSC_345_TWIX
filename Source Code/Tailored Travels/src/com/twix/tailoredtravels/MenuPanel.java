@@ -22,6 +22,7 @@ import javax.swing.BoxLayout;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -36,6 +37,10 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import com.twix.test.ProgressBar;
+import com.twix.test.Waypoint;
+import com.twix.test.MenuPanel.runProgress;
 
 public class MenuPanel extends JPanel {
 
@@ -1414,8 +1419,12 @@ public class MenuPanel extends JPanel {
 				System.exit(0);
 			}
 			
-			//Calculate the distance
+			runProgress progress = new runProgress();
+			Thread newThread = new Thread(progress);
+			newThread.start();
 			ArrayList<Waypoint> rt = DistCalcDriver.shortDistAlgorithm(selectedPoints);
+			progress.close();
+			
 			double dist = DistCalcDriver.totalDistance(rt);
 			
 			String distMsg = String.format(
@@ -1428,7 +1437,39 @@ public class MenuPanel extends JPanel {
 		}
 		
 	}
-	
+	private class runProgress implements Runnable
+	{
+		final JDialog dialog = new JDialog();
+		
+		@Override
+		public void run() {
+			ProgressBar bar = new ProgressBar();
+			Thread progressThread = new Thread(bar);
+			JOptionPane pane = new JOptionPane();
+			pane.add(bar);
+			pane.setSize(300, 600);
+			
+			progressThread.start();// TODO Auto-generated method stub
+//			dialog.add(pane);
+//			JOptionPane pane = new JOptionPane(bar, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
+//			JOptionPane pane1 = new JOptionPane();
+			dialog.setTitle("Message");
+			dialog.setModal(true);
+//			dialog.add(bar);
+			dialog.setContentPane(pane);
+
+			dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+			dialog.setSize(300, 600);
+			dialog.pack();
+			dialog.setVisible(true);			
+		}
+		public void close()
+		{
+			dialog.setVisible(false);
+			dialog.dispose();
+		}
+		
+	}
 	/**
 	 * Action listener for "Log Out" button
 	 */
