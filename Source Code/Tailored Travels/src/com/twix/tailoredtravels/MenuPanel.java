@@ -100,6 +100,8 @@ public class MenuPanel extends JPanel {
 			        Desktop.getDesktop().open(myFile);
 			    } catch (IOException ex) {
 			        // no application registered for PDFs
+			    	JOptionPane.showMessageDialog(null, "A PDF viewer is needed to view the help"
+			    			+ " file.", "Cannot Show Help", JOptionPane.ERROR_MESSAGE);
 			    }
 			}
 		}});
