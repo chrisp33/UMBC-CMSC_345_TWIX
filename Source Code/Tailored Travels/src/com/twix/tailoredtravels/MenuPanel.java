@@ -8,10 +8,8 @@
 
 package com.twix.tailoredtravels;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -1514,6 +1512,7 @@ public class MenuPanel extends JPanel {
 	/**
 	 * Swingworker for calculating the route
 	 */
+	@SuppressWarnings("unused")
 	private class DoRoute extends SwingWorker<String, Void>
 	{
 
