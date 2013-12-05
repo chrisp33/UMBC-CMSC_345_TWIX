@@ -8,8 +8,10 @@
 
 package com.twix.tailoredtravels;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -63,7 +65,8 @@ public class MenuPanel extends JPanel {
 	private JScrollPane scroller;
 	private JPanel welcome, addRmLoc, addRmUser, waypointsList, calculations, edits, exit, 
 	adminPanel, helpPanel, progress;
-	final int REQUIRED_NUM = 12;
+	final int REQUIRED_NUM = 3;
+	final int REQUIRED_MAX = 12;
 	private JProgressBar bar;
 	private JDialog dialog;
 	
@@ -1112,7 +1115,7 @@ public class MenuPanel extends JPanel {
 				ArrayList<Waypoint> selectedPoints = new ArrayList<Waypoint>();
 
 				//Number of required points in route is greater than 2
-				if (REQUIRED_NUM > 2) 
+				if (REQUIRED_NUM >= 2) 
 				{
 					//Remove the starting and end points for other popup
 					ArrayList<Waypoint> remainingPoints = points;
@@ -1164,15 +1167,12 @@ public class MenuPanel extends JPanel {
 
 						int selectedNum = names.getSelectedIndices().length;
 
-						if (selectedNum < (REQUIRED_NUM - 2)) {
+						if (selectedNum < (REQUIRED_NUM - 2)|| (selectedNum + 2) > REQUIRED_MAX) {
 							JOptionPane
 							.showMessageDialog(
 									null,
-									"There must be a total of "
-									+ REQUIRED_NUM
-									+ " points in the route, so "
-									+ (REQUIRED_NUM - 2)
-									+ " points, besides the start and end, must be selected.",
+									"There must be between "+(REQUIRED_NUM -2)+" and "+(REQUIRED_MAX-2)+
+									"waypoints choosen , besides the start and end, must be selected.",
 									"More Selections Required",
 									JOptionPane.ERROR_MESSAGE);
 							return;
@@ -1337,7 +1337,7 @@ public class MenuPanel extends JPanel {
 					return;
 				}
 
-				if (REQUIRED_NUM > 2) 
+				if (REQUIRED_NUM >= 2) 
 				{
 					//Remove the starting and end points for other popup
 					ArrayList<Waypoint> remainingPoints = points;
@@ -1389,15 +1389,12 @@ public class MenuPanel extends JPanel {
 
 						int selectedNum = names.getSelectedIndices().length;
 
-						if (selectedNum < (REQUIRED_NUM - 2)) {
+						if (selectedNum < (REQUIRED_NUM - 2) || (selectedNum + 2) > REQUIRED_MAX) {
 							JOptionPane
 							.showMessageDialog(
 									null,
-									"There must be a total of "
-									+ REQUIRED_NUM
-									+ " points in the route, so "
-									+ (REQUIRED_NUM - 2)
-									+ " points, besides the start and end, must be selected.",
+									"There must be between "+(REQUIRED_NUM -2)+" and "+(REQUIRED_MAX-2)+
+									"waypoints choosen , besides the start and end, must be selected.",
 									"More Selections Required",
 									JOptionPane.ERROR_MESSAGE);
 							return;
@@ -1517,7 +1514,6 @@ public class MenuPanel extends JPanel {
 	/**
 	 * Swingworker for calculating the route
 	 */
-	@SuppressWarnings("unused")
 	private class DoRoute extends SwingWorker<String, Void>
 	{
 
