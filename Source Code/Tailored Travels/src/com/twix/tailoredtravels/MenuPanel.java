@@ -1,5 +1,7 @@
 /**
- * Panel for main menu
+ * Panel containing the main menu and most administrator and user functions. 
+ * Only logged in users will be able to access this window. 
+ * 
  * @author Christopher Pagan
  * @version 1.0
  */
@@ -23,7 +25,6 @@ import javax.swing.DefaultListSelectionModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -34,7 +35,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
@@ -55,26 +55,35 @@ public class MenuPanel extends JPanel
 	private JList<String> list;
 	private JScrollPane scroller;
 	private JPanel welcome, addRmLoc, addRmUser, waypointsList, calculations, edits, exit, 
-					adminPanel, helpp, progress;
+					adminPanel, helpPanel, progress;
 	final int REQUIRED_NUM = 12;
 	private JProgressBar bar;
 	private JDialog dialog;
 	
-	/**
-	 * The current user's username
-	 */
-	private String currentUser;
-	/**
-	 * To test if the current user is an administrator
-	 */
-	private boolean isAdmin;
-	/**
-	 * Instance for all database manipulations
-	 */
-	private DatabaseManager dbm;
+    /**
+     * Filenames
+     */
+    private static File helpFile;
+    private static ImageIcon helpimg;
+    
+    /**
+     * The current user's username
+     */
+    private String currentUser;
+    
+    /**
+     * Is the current user an admin
+     */
+    private boolean isAdmin;
+    
+    /**
+     * Database instance
+     */
+    private DatabaseManager dbm;
 	
 	/**
 	 * Constructor for main menu
+	 * 
 	 * @param dbm the database manager
 	 * @param user the user's username
 	 * @param admin whether or not the user is an administrator
@@ -82,32 +91,36 @@ public class MenuPanel extends JPanel
 	public MenuPanel(DatabaseManager dbm,String user, boolean admin)
 	{
 		
-		this.dbm = dbm;
-		isAdmin = admin;
-		currentUser = user;
-		Color bgColor = new Color(48,235,71);
-		TitledBorder adminBorder = BorderFactory.createTitledBorder("Administrative Controls");
-		Border b = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
-		helpp = new JPanel();
-		welcome = new JPanel();
-		addRmLoc = new JPanel();
-		addRmUser = new JPanel();
-		edits = new JPanel();
-		adminPanel = new JPanel();
-		bar = new JProgressBar();
-		bar.setIndeterminate(true);
+        //Assign variables
+        this.dbm = dbm;
+        isAdmin = admin;
+        currentUser = user;
+        Color bgColor = new Color(48,235,71); //Color for menuPanel background
+        TitledBorder adminBorder = BorderFactory.createTitledBorder("Administrative Controls");
+        Border b = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
+        
+        //Create main menu panels
+        helpPanel = new JPanel();
+        welcome = new JPanel();
+        addRmLoc = new JPanel();
+        addRmUser = new JPanel();
+        edits = new JPanel();
+        adminPanel = new JPanel();
 		
 
-		ImageIcon helpimg = new ImageIcon("help.png");
+        //Create help button
+        helpimg = new ImageIcon("help.png");
 		help = new JButton(helpimg);
 		help.setToolTipText("Click here for help.");
 		help.setBorder(BorderFactory.createEmptyBorder());
+		
+        //When user interacts with help button, load and open the help pdf file
 		help.addActionListener(new ActionListener(){public void actionPerformed (ActionEvent e)
 		{
 			if (Desktop.isDesktopSupported()) {
 			    try {
-			        File myFile = new File("Tailored Travels Help.pdf");
-			        Desktop.getDesktop().open(myFile);
+			        helpFile = new File("Tailored Travels Help.pdf");
+			        Desktop.getDesktop().open(helpFile);
 			    } catch (IOException ex) {
 			        // no application registered for PDFs
 			    	JOptionPane.showMessageDialog(null, "A PDF viewer is needed to view the help"
@@ -115,25 +128,27 @@ public class MenuPanel extends JPanel
 			    }
 			}
 		}});
-		helpp.add(help);
-		helpp.setBackground(bgColor);
+		helpPanel.add(help);
+		helpPanel.setBackground(bgColor);
 		help.setBackground(bgColor);
-		
 		
 		
 		//Create these components if the user is an administrator
 		if (isAdmin)
 		{
+            //Admin section
 			adminPanel.setLayout(new BoxLayout(adminPanel, BoxLayout.Y_AXIS));
 			adminBorder.setBorder(b);
 			adminPanel.setBorder(adminBorder);
 			
+            //Add/Remove/Edit User/Location buttons
 			addLocation = new JButton("Add Location");
 			removeLocation = new JButton("Remove Location");			
 			addUser = new JButton("Add User");
 			removeUser = new JButton("Remove User");
 			edit = new JButton("Edit Location");
 			
+            //Add all buttons to panel
 			addRmLoc.add(addLocation);
 			addRmLoc.add(removeLocation);
 			addRmUser.add(addUser);
@@ -144,6 +159,7 @@ public class MenuPanel extends JPanel
 			adminPanel.add(addRmUser);
 			adminPanel.add(edits);
 			
+            //Add ActionListeners to buttons
 			addLocation.addActionListener(new AddLocListener());
 			removeLocation.addActionListener(new RemLocListener());
 			addUser.addActionListener(new AddUserListener());
@@ -166,11 +182,13 @@ public class MenuPanel extends JPanel
 		calcDist = new JButton("Calculate Distance");
 		logout = new JButton("Log Out");
 		
+        //Add ActionListeners for normal user buttons
 		list.addListSelectionListener(new ListSelListener());
 		calcRoute.addActionListener(new RouteListener());
 		calcDist.addActionListener(new DistListener());
 		logout.addActionListener(new LogoutListener());
 		
+        //Add list of waypoints
 		waypointsList = new JPanel();
 		waypointsList.add(availMsg);
 		waypointsList.add(scroller);
@@ -181,6 +199,7 @@ public class MenuPanel extends JPanel
 		exit = new JPanel();
 		exit.add(logout);
 	
+        //Set uniform background color for all components
 		setBackground(bgColor);
 		adminPanel.setBackground(bgColor);
 		welcome.setBackground(bgColor);
@@ -202,7 +221,7 @@ public class MenuPanel extends JPanel
 	public void addComponents()
 	{
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		add(helpp);
+		add(helpPanel);
 		add(welcome);
 		
 		if(isAdmin)
@@ -251,6 +270,7 @@ public class MenuPanel extends JPanel
 			/**
 			 * Overwritten method for ActionListener class. 
 			 * Prompts for waypoint data and adds it to the system.
+			 * 
 			 * @param ae An ActionEvent is created when the user clicks the "Add Location" button
 			 */
 			public void actionPerformed(ActionEvent ae) 
@@ -349,6 +369,7 @@ public class MenuPanel extends JPanel
 		/**
 		 * Overwritten method for ActionListener class. 
 		 * Prompts for waypoint data and removes it from the system.
+		 * 
 		 * @param ae An ActionEvent is created when the user clicks the "Remove Location" button
 		 */
 		public void actionPerformed(ActionEvent ae) 
@@ -440,6 +461,7 @@ public class MenuPanel extends JPanel
 		/**
 		 * Overwritten method for ActionListener class. 
 		 * Prompts for user data and adds it to the system.
+		 * 
 		 * @param ae An ActionEvent is created when the user clicks the "Add User" button
 		 */
 		public void actionPerformed(ActionEvent ae) 
@@ -544,6 +566,7 @@ public class MenuPanel extends JPanel
 		/**
 		 * Overwritten method for ActionListener class. 
 		 * Prompts for user data and removes it from the system.
+		 * 
 		 * @param ae An ActionEvent is created when the user clicks the "Remove User" button
 		 */
 		public void actionPerformed(ActionEvent ae) 
@@ -621,6 +644,7 @@ public class MenuPanel extends JPanel
 		/**
 		 * Overwritten method for ActionListener class. 
 		 * Prompts for which type of data is edited for the waypoint
+		 * 
 		 * @param ae An ActionEvent is created when the user clicks the "Edit Location" button
 		 */
 		public void actionPerformed(ActionEvent e)
@@ -973,6 +997,7 @@ public class MenuPanel extends JPanel
 		/**
 		 * Overwritten method for ActionListener class. 
 		 * Calculates the route given the waypoints the user has selected.
+		 * 
 		 * @param ae An ActionEvent is created when the user clicks the "Calculate Route" button
 		 */
 		public void actionPerformed(ActionEvent arg0) 
@@ -1189,6 +1214,7 @@ public class MenuPanel extends JPanel
 		/**
 		 * Overwritten method for ActionListener class. 
 		 * Prompts for starting and ending waypoint data and finds the distance between them.
+		 * 
 		 * @param ae An ActionEvent is created when the user clicks the "Calculate Distance" button
 		 */
 		public void actionPerformed(ActionEvent e) 
