@@ -7,7 +7,7 @@ import java.util.List;
  * Handle calculation of shortest distance between given
  * start and end Waypoints. 
  * 
- * @author Mariama Barr-Dallas & Michael Tang
+ * @author Mariama Barr-Dallas & Michael Tang with contributions from Keith Cheng
  * @version 2.0
  */
 
@@ -34,6 +34,7 @@ public class DistCalcDriver {
 
 	/**
 	 * @author - Herman Kontcho
+	 * 
 	 * @param list
 	 * @return
 	 */
@@ -103,6 +104,7 @@ public class DistCalcDriver {
 	}
 	private static ArrayList<Waypoint> shortestWaypoint = new ArrayList<Waypoint>();
 	private static double distance = 0;
+	
 	/*
 	 * ap is the cities not used
 	 */

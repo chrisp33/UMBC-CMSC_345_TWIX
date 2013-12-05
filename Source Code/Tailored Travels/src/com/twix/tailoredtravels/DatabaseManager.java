@@ -46,8 +46,8 @@ public class DatabaseManager {
 	 * 
 	 * precondition: name / password are not null
 	 * 
-	 * @param 	name of the person logging in
-	 * 			password of the person logging in
+	 * @param name of the person logging in
+	 * @param password of the person logging in
 	 * @return	login
 	 * 			--true if the person is logged in
 	 * 			--false if there are no one with that username / password
@@ -95,9 +95,9 @@ public class DatabaseManager {
 	 * 
 	 * precondition: admin is not null
 	 * 
-	 * @param	name of user
-	 * 			password of user
-	 * 			isAdmin - is the user an admin
+	 * @param name of user
+	 * @param password of user
+	 * @param isAdmin - is the user an admin
 	 * 
 	 * @return true
 	 * 
@@ -130,17 +130,14 @@ public class DatabaseManager {
 	/**
 	 * add new location to file and update the location file
 	 * 
-	 * @param	latitude	
-	 * 			longitude
-	 * 			name of location
-	 * 			description for location
+	 * @param latitude	
+	 * @param longitude
+	 * @param name of location
+	 * @param description for location
 	 * 
-	 * output:	true if the user add a location
-	 *			false if the user cannot add a location
+	 * @return true if the user add a location, false if the user cannot add a location
 	 *
-	 *@return true
-	 *
-	 *@throws SQLException
+	 * @throws SQLException
 	 */
 	public boolean addLocation(float latitude, float longitude ,String name,  String description) throws SQLException
 	{
@@ -288,8 +285,8 @@ public class DatabaseManager {
 	 * 
 	 * precondition - ResultSet exists / userName is not null
 	 * 
-	 * @param  result (ResultSet)
-	 * 			userName name of user
+	 * @param result (ResultSet)
+	 * @param userName name of user
 	 * 
 	 * @return true if user exists, false otherwise
 	 * 
@@ -310,8 +307,8 @@ public class DatabaseManager {
 	 * 
 	 * precondition - ResultSet exist / locationName is not null
 	 * 
-	 * @param  result (ResultSet)
-	 * 			userName name of user
+	 * @param result (ResultSet)
+	 * @param userName name of user
 	 * 
 	 * @return - boolean of whether the location exist or not
 	 * 
@@ -332,8 +329,8 @@ public class DatabaseManager {
 	 * 
 	 * postcondition - waypoint name is changed
 	 * 
-	 * @param	oldName for waypoint
-	 * 			newName for waypoint
+	 * @param oldName for waypoint
+	 * @param newName for waypoint
 	 * 
 	 * @return true if name change was successful, false otherwise
 	 * 
@@ -364,8 +361,8 @@ public class DatabaseManager {
 	 * 
 	 * postcondition - waypoint description is changed
 	 * 
-	 * @param	oldDescription for waypoint
-	 * 			newDescription for waypoint
+	 * @param oldDescription for waypoint
+	 * @param newDescription for waypoint
 	 * 
 	 * @return true if description change was successful, false otherwise
 	 * 
@@ -395,9 +392,9 @@ public class DatabaseManager {
 	 * 
 	 * postcondition - waypoint latitude and longitude is changed
 	 * 
-	 * @param	name of waypoint
-	 * 			oldDescription for waypoint
-	 * 			newDescription for waypoint
+	 * @param name of waypoint
+	 * @param oldDescription for waypoint
+	 * @param newDescription for waypoint
 	 * 
 	 * @return true if description change was successful, false otherwise
 	 * 
