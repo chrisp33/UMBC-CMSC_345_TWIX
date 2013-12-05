@@ -4,33 +4,24 @@ package com.twix.tailoredtravels;
  * A class that acts as the template for KML 
  * objects correlating to locations.
  * 
- * @author Stephen Moore, Justin Tavares
- * Distance function @authors Mariama Barr-Dallas, Michael Tang
+ * @author Stephen Moore & Justin Tavares with distance function by Mariama Barr-Dallas, Michael Tang
  *
  */
 public class Waypoint {
 
-	private String wName;
-	private String wDescription;
-	
-	public void setwName(String wName) {
-		this.wName = wName;
-	}
-
-	public void setwDescription(String wDescription) {
-		this.wDescription = wDescription;
-	}
-
-	public void setwLongitude(float wLongitude) {
-		this.wLongitude = wLongitude;
-	}
-
-	public void setwLatitude(float wLatitude) {
-		this.wLatitude = wLatitude;
-	}
+	private String wName; //Waypoint name
+	private String wDescription; //Waypoint description
 	private float wLongitude;
 	private float wLatitude;
-	
+
+	/**
+	 * Float constructor, creates waypoint with name, latitude, longitude, description given in input
+	 * 
+	 * @param _name name of waypoint
+	 * @param _lat latitude of waypoint
+	 * @param _long longitude of waypoint
+	 * @param _desc description of waypoint
+	 */
 	public Waypoint(String _name, float _lat, float _long, String _desc)
 	{
 		this.wLatitude = _lat;
@@ -39,6 +30,12 @@ public class Waypoint {
 		this.wName = _name;
 	}
 	
+	/**
+	 * No name/desc constructor for Waypoint, creates a nameless waypoint with given latitude/longitude
+	 * 
+	 * @param _lat latitude of waypoint
+	 * @param _long longitude of waypoint
+	 */
 	public Waypoint(float _lat, float _long)
 	{
 		
@@ -50,12 +47,9 @@ public class Waypoint {
 	/**
 	 * Noarg constructor
 	 */
-	public Waypoint()
-	{
-		
-	}
+	public Waypoint(){}
 	
-	//Accessors (comments added for automated documentation)-------------
+	//Accessors
 	/**
 	 * getLongitude 
 	 * @return wLongitude
@@ -92,17 +86,52 @@ public class Waypoint {
 		return this.wDescription;
 	}
 	
+	//Mutators for local variables
 	/**
-	 * @category function
-	 * @param other
-	 * @return double containing distance between 2 coordinates
-	 * 
-	 * This function calculates the distance between 2 coordinates in miles
+	 * setwName
+	 * @param wName new name
+	 */
+	public void setwName(String wName) {
+		this.wName = wName;
+	}
+
+	/**
+	 * setwDescription
+	 * @param wDescription new description
+	 */
+	public void setwDescription(String wDescription) {
+		this.wDescription = wDescription;
+	}
+
+	/**
+	 * setwLongitude
+	 * @param wLongitude new longitude
+	 */
+	public void setwLongitude(float wLongitude) {
+		this.wLongitude = wLongitude;
+	}
+
+	/**
+	 * setwLatitude
+	 * @param wLatitude new latitude
+	 */
+	public void setwLatitude(float wLatitude) {
+		this.wLatitude = wLatitude;
+	}
+	
+	/**
+	 * Calculates the distance between 2 coordinates in miles
+	 * Equation for calculation:
 	 * dlon = lon2 - lon1
 	 * dlat = lat2 - lat1
 	 * a = (sin(dlat/2))^2 + cos(lat1) * cos(lat2) * (sin(dlon/2))^2
 	 * c = 2 * atan2( sqrt(a), sqrt(1-a) )
 	 * d = R * c (where R is the radius of the Earth) 
+	 * 
+	 * @param other other waypoint for distance calculation
+	 * 
+	 * @return double containing distance between 2 coordinates
+	 * 
 	 */
 	public double distance(Waypoint other)
 	{
@@ -113,6 +142,12 @@ public class Waypoint {
 		return 3961 * c;
 	}
 	
+	/**
+	 * Determines if this waypoint is the same as a given waypoint
+	 * 
+	 * @param other other waypoint for distance calculation
+	 * @return true if waypoints are the same, false otherwise
+	 */
 	public boolean equals(Waypoint other){
 		
 		if(other == null){
