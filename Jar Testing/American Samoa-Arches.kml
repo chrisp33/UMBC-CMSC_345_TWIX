@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:xal="urn:oasis:names:tc:ciq:xsdschema:xAL:2.0">
+    <Document>
+        <name>TailoredTravel: American Samoa to Arches</name>
+        <open>1</open>
+        <Document/>
+        <Placemark>
+            <name>Your Tailored Travel!</name>
+            <description>The shortest path between all known points.</description>
+            <LineString>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>-170.67999267578125,-14.25 -112.18000030517578,37.56999969482422 -109.93000030517578,38.20000076293945 -107.72000122070312,38.56999969482422 -109.56999969482422,38.68000030517578</coordinates>
+            </LineString>
+        </Placemark>
+        <Placemark>
+            <name>American Samoa</name>
+            <description>The southernmost national park is on three Samoan islands and protects coral reefs, rainforests, volcanic mountains, and white beaches. The area is also home to flying foxes, brown boobies, sea turtles, and 900 species of fish</description>
+            <Point>
+                <coordinates>-170.67999267578125,-14.25</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>Bryce Canyon</name>
+            <description>Bryce Canyon is a giant natural amphitheatre along the Paunsaugunt Plateau. The unique area has hundreds of tall hoodoos formed by erosion. The region was originally settled by Native Americans and later by Mormon pioneers.</description>
+            <Point>
+                <coordinates>-112.18000030517578,37.56999969482422</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>Canyonlands</name>
+            <description>This landscape was eroded into canyons, buttes, and mesas by the Colorado River, Green River, and their tributaries, which divide the park into three districts. There are rock pinnacles and other naturally sculpted rock, as well as artifacts from Ancient Pueblo Peoples.</description>
+            <Point>
+                <coordinates>-109.93000030517578,38.20000076293945</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>Black Canyon of Guinnson</name>
+            <description>The park protects a quarter of the Gunnison River, which has dark canyon walls from the Precambrian era. The canyon has very steep descents, and it is a site for river rafting and rock climbing. The narrow, steep canyon, made of gneiss and schist, is often in shadow, appearing black.</description>
+            <Point>
+                <coordinates>-107.72000122070312,38.56999969482422</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark>
+            <name>Arches</name>
+            <description>This site features more than 2,000 natural sandstone arches, including the Delicate Arch. In a desert climate millions of years of erosion have led to these structures, and the arid ground has life-sustaining soil crust and potholes, natural water-collecting basins. Other geologic formations are stone columns, spires, fins, and towers</description>
+            <Point>
+                <coordinates>-109.56999969482422,38.68000030517578</coordinates>
+            </Point>
+        </Placemark>
+    </Document>
+</kml>
