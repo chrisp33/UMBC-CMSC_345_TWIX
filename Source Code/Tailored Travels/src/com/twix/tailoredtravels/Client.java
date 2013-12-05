@@ -37,7 +37,7 @@ public class Client{
 	 */
 	private static JPanel helpPanel, mainPanel, welcome, lmsg, lName, lPassword, enter, imgPanel;
 	private static JFrame frame;
-	private static JButton login, help;
+	private static JButton login;
 	private static JTextField nameField;
 	private static JPasswordField passField;
 	private static MenuPanel mainMenu;
