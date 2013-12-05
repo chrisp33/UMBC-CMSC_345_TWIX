@@ -4,332 +4,57 @@
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a5fd81387462021f3a2c234596d7e669f}{Database\-Manager} ()  throws Class\-Not\-Found\-Exception, S\-Q\-L\-Exception 	
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a7ad514c70febbb99b14d8a4dab1b24a6}{boolean {\bfseries login} (String name, String password)  throws S\-Q\-L\-Exception }\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a7ad514c70febbb99b14d8a4dab1b24a6}
+
 \item 
-boolean \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a7ad514c70febbb99b14d8a4dab1b24a6}{login} (String name, String password)  throws S\-Q\-L\-Exception 	
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a3fe7ef841c1340941920745cc00a39ab}{void {\bfseries logout} ()}\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a3fe7ef841c1340941920745cc00a39ab}
+
 \item 
-void \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a3fe7ef841c1340941920745cc00a39ab}{logout} ()
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_ab60c1da42acf1d6ecc8955aa58da3803}{boolean {\bfseries add\-User} (String name, String password, boolean is\-Admin)  throws S\-Q\-L\-Exception }\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_ab60c1da42acf1d6ecc8955aa58da3803}
+
 \item 
-boolean \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_ab60c1da42acf1d6ecc8955aa58da3803}{add\-User} (String name, String password, boolean is\-Admin)  throws S\-Q\-L\-Exception 	
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a19c56c261a486a909936cf7c97334360}{boolean {\bfseries add\-Location} (float latitude, float longitude, String name, String description)  throws S\-Q\-L\-Exception }\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a19c56c261a486a909936cf7c97334360}
+
 \item 
-boolean \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a19c56c261a486a909936cf7c97334360}{add\-Location} (float latitude, float longitude, String name, String description)  throws S\-Q\-L\-Exception 	
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a73d155c07d2ed41e8c596323184da135}{boolean {\bfseries remove\-User} (String name)  throws S\-Q\-L\-Exception }\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a73d155c07d2ed41e8c596323184da135}
+
 \item 
-boolean \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a73d155c07d2ed41e8c596323184da135}{remove\-User} (String name)  throws S\-Q\-L\-Exception 	
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_ac60ff9d81a074ef84eb0f6ced1fa7fde}{boolean {\bfseries remove\-Location} (String name)  throws S\-Q\-L\-Exception }\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_ac60ff9d81a074ef84eb0f6ced1fa7fde}
+
 \item 
-boolean \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_ac60ff9d81a074ef84eb0f6ced1fa7fde}{remove\-Location} (String name)  throws S\-Q\-L\-Exception 	
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a4c8078e19441474ebb02fd67dfe9d3b4}{boolean {\bfseries set\-Waypoint\-Name} (String old\-Name, String new\-Name)  throws S\-Q\-L\-Exception }\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a4c8078e19441474ebb02fd67dfe9d3b4}
+
 \item 
-boolean \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a4c8078e19441474ebb02fd67dfe9d3b4}{set\-Waypoint\-Name} (String old\-Name, String new\-Name)  throws S\-Q\-L\-Exception 	
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a2edac01eb48ca205568421c1aeaef677}{boolean {\bfseries set\-Waypoint\-Description} (String name, String new\-Description)  throws S\-Q\-L\-Exception }\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a2edac01eb48ca205568421c1aeaef677}
+
 \item 
-boolean \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_aa8c98a1bfb16ebdbd8d3eeb6e9d80a73}{set\-Waypoint\-Description} (String old\-Description, String new\-Description)  throws S\-Q\-L\-Exception 	
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a0b8a3295e6857761b89a8db4d048d5a4}{boolean {\bfseries set\-Waypoint\-Lat\-Long} (String name, float new\-Lat, float new\-Long)  throws S\-Q\-L\-Exception }\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a0b8a3295e6857761b89a8db4d048d5a4}
+
 \item 
-boolean \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a0b8a3295e6857761b89a8db4d048d5a4}{set\-Waypoint\-Lat\-Long} (String name, float new\-Lat, float new\-Long)  throws S\-Q\-L\-Exception 	
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a2ccf63adbc938676d9bafbf43667261a}{boolean {\bfseries is\-User\-Admin} ()}\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a2ccf63adbc938676d9bafbf43667261a}
+
 \item 
-boolean \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a2ccf63adbc938676d9bafbf43667261a}{is\-User\-Admin} ()
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a4e594f8a6f845de1fe5ab29e5430ba9e}{Linked\-List$<$ \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint}{Waypoint} $>$ {\bfseries get\-Waypoints} ()  throws S\-Q\-L\-Exception }\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a4e594f8a6f845de1fe5ab29e5430ba9e}
+
 \item 
-Linked\-List$<$ \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint}{Waypoint} $>$ \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a4e594f8a6f845de1fe5ab29e5430ba9e}{get\-Waypoints} ()  throws S\-Q\-L\-Exception 	
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_ac69a6164612bb086c72c54440d32f3de}{void {\bfseries print\-Waypoints} ()}\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_ac69a6164612bb086c72c54440d32f3de}
+
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
 \item 
-void \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_ac69a6164612bb086c72c54440d32f3de}{print\-Waypoints} ()
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a016f5dba5721c561485b5ef4d3219bc8}{static void {\bfseries main} (String\mbox{[}$\,$\mbox{]} args)  throws Class\-Not\-Found\-Exception, 			\-S\-Q\-L\-Exception }\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a016f5dba5721c561485b5ef4d3219bc8}
+
 \end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
-There M\-U\-S\-T be a derby embeddeddriver loaded in plugins The database must exist 
-
-\subsection{Constructor \& Destructor Documentation}
-\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a5fd81387462021f3a2c234596d7e669f}{\index{com\-::twix\-::tailoredtravels\-::\-Database\-Manager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}!Database\-Manager@{Database\-Manager}}
-\index{Database\-Manager@{Database\-Manager}!com::twix::tailoredtravels::DatabaseManager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}}
-\subsubsection[{Database\-Manager}]{\setlength{\rightskip}{0pt plus 5cm}com.\-twix.\-tailoredtravels.\-Database\-Manager.\-Database\-Manager (
-\begin{DoxyParamCaption}
-{}
-\end{DoxyParamCaption}
-) throws Class\-Not\-Found\-Exception, S\-Q\-L\-Exception}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a5fd81387462021f3a2c234596d7e669f}
-Constructor that starts this file reader reads the location file and user file to have data
-
-precondition\-: org.\-apache.\-derby.\-jdbc.\-Embedded\-Driver must exist in eclipse plugin postcondition\-: sets current\-User to 0 to mean no user at this time sets login to false
 
 
-\begin{DoxyExceptions}{Exceptions}
-{\em Class\-Not\-Fount\-Exception} & \\
-\hline
-{\em S\-Q\-L\-Exception} & \\
-\hline
-\end{DoxyExceptions}
+Definition at line 17 of file Database\-Manager.\-java.
 
-
-\subsection{Member Function Documentation}
-\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a19c56c261a486a909936cf7c97334360}{\index{com\-::twix\-::tailoredtravels\-::\-Database\-Manager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}!add\-Location@{add\-Location}}
-\index{add\-Location@{add\-Location}!com::twix::tailoredtravels::DatabaseManager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}}
-\subsubsection[{add\-Location}]{\setlength{\rightskip}{0pt plus 5cm}boolean com.\-twix.\-tailoredtravels.\-Database\-Manager.\-add\-Location (
-\begin{DoxyParamCaption}
-\item[{float}]{latitude, }
-\item[{float}]{longitude, }
-\item[{String}]{name, }
-\item[{String}]{description}
-\end{DoxyParamCaption}
-) throws S\-Q\-L\-Exception}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a19c56c261a486a909936cf7c97334360}
-add new location to file and update the location file
-
-
-\begin{DoxyParams}{Parameters}
-{\em latitude} & \\
-\hline
-{\em longitude} & \\
-\hline
-{\em name} & of location \\
-\hline
-{\em description} & for location\\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-true if the user add a location, false if the user cannot add a location
-\end{DoxyReturn}
-
-\begin{DoxyExceptions}{Exceptions}
-{\em S\-Q\-L\-Exception} & \\
-\hline
-\end{DoxyExceptions}
-\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_ab60c1da42acf1d6ecc8955aa58da3803}{\index{com\-::twix\-::tailoredtravels\-::\-Database\-Manager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}!add\-User@{add\-User}}
-\index{add\-User@{add\-User}!com::twix::tailoredtravels::DatabaseManager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}}
-\subsubsection[{add\-User}]{\setlength{\rightskip}{0pt plus 5cm}boolean com.\-twix.\-tailoredtravels.\-Database\-Manager.\-add\-User (
-\begin{DoxyParamCaption}
-\item[{String}]{name, }
-\item[{String}]{password, }
-\item[{boolean}]{is\-Admin}
-\end{DoxyParamCaption}
-) throws S\-Q\-L\-Exception}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_ab60c1da42acf1d6ecc8955aa58da3803}
-add user locations and then update the user table
-
-precondition\-: admin is not null
-
-
-\begin{DoxyParams}{Parameters}
-{\em name} & of user \\
-\hline
-{\em password} & of user \\
-\hline
-{\em is\-Admin} & -\/ is the user an admin\\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-true
-\end{DoxyReturn}
-
-\begin{DoxyExceptions}{Exceptions}
-{\em S\-Q\-L\-Exception} & \\
-\hline
-\end{DoxyExceptions}
-\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a4e594f8a6f845de1fe5ab29e5430ba9e}{\index{com\-::twix\-::tailoredtravels\-::\-Database\-Manager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}!get\-Waypoints@{get\-Waypoints}}
-\index{get\-Waypoints@{get\-Waypoints}!com::twix::tailoredtravels::DatabaseManager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}}
-\subsubsection[{get\-Waypoints}]{\setlength{\rightskip}{0pt plus 5cm}Linked\-List$<${\bf Waypoint}$>$ com.\-twix.\-tailoredtravels.\-Database\-Manager.\-get\-Waypoints (
-\begin{DoxyParamCaption}
-{}
-\end{DoxyParamCaption}
-) throws S\-Q\-L\-Exception}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a4e594f8a6f845de1fe5ab29e5430ba9e}
-Get and return a Linked\-List containing all waypoints
-
-precondition\-: database exists
-
-\begin{DoxyReturn}{Returns}
-linked list of all waypoints
-\end{DoxyReturn}
-
-\begin{DoxyExceptions}{Exceptions}
-{\em S\-Q\-L\-Exception} & \\
-\hline
-\end{DoxyExceptions}
-\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a2ccf63adbc938676d9bafbf43667261a}{\index{com\-::twix\-::tailoredtravels\-::\-Database\-Manager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}!is\-User\-Admin@{is\-User\-Admin}}
-\index{is\-User\-Admin@{is\-User\-Admin}!com::twix::tailoredtravels::DatabaseManager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}}
-\subsubsection[{is\-User\-Admin}]{\setlength{\rightskip}{0pt plus 5cm}boolean com.\-twix.\-tailoredtravels.\-Database\-Manager.\-is\-User\-Admin (
-\begin{DoxyParamCaption}
-{}
-\end{DoxyParamCaption}
-)}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a2ccf63adbc938676d9bafbf43667261a}
-Check if the user is an admin
-
-precondition\-: admin contains the appropriate value
-
-\begin{DoxyReturn}{Returns}
-admin -\/ true if user is admin, false otherwise 
-\end{DoxyReturn}
-\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a7ad514c70febbb99b14d8a4dab1b24a6}{\index{com\-::twix\-::tailoredtravels\-::\-Database\-Manager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}!login@{login}}
-\index{login@{login}!com::twix::tailoredtravels::DatabaseManager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}}
-\subsubsection[{login}]{\setlength{\rightskip}{0pt plus 5cm}boolean com.\-twix.\-tailoredtravels.\-Database\-Manager.\-login (
-\begin{DoxyParamCaption}
-\item[{String}]{name, }
-\item[{String}]{password}
-\end{DoxyParamCaption}
-) throws S\-Q\-L\-Exception}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a7ad514c70febbb99b14d8a4dab1b24a6}
-allows the user to log in and sets the user
-
-precondition\-: name / password are not null
-
-
-\begin{DoxyParams}{Parameters}
-{\em name} & of the person logging in \\
-\hline
-{\em password} & of the person logging in \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-login --true if the person is logged in --false if there are no one with that username / password
-\end{DoxyReturn}
-
-\begin{DoxyExceptions}{Exceptions}
-{\em S\-Q\-L\-Exception} & \\
-\hline
-\end{DoxyExceptions}
-\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a3fe7ef841c1340941920745cc00a39ab}{\index{com\-::twix\-::tailoredtravels\-::\-Database\-Manager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}!logout@{logout}}
-\index{logout@{logout}!com::twix::tailoredtravels::DatabaseManager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}}
-\subsubsection[{logout}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-twix.\-tailoredtravels.\-Database\-Manager.\-logout (
-\begin{DoxyParamCaption}
-{}
-\end{DoxyParamCaption}
-)}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a3fe7ef841c1340941920745cc00a39ab}
-logs the user out
-
-postcondition\-: admin status set to false waypoint list cleared \hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_ac69a6164612bb086c72c54440d32f3de}{\index{com\-::twix\-::tailoredtravels\-::\-Database\-Manager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}!print\-Waypoints@{print\-Waypoints}}
-\index{print\-Waypoints@{print\-Waypoints}!com::twix::tailoredtravels::DatabaseManager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}}
-\subsubsection[{print\-Waypoints}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-twix.\-tailoredtravels.\-Database\-Manager.\-print\-Waypoints (
-\begin{DoxyParamCaption}
-{}
-\end{DoxyParamCaption}
-)}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_ac69a6164612bb086c72c54440d32f3de}
-Print all waypoints
-
-precondition\-: db\-\_\-waypoints is not null \hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_ac60ff9d81a074ef84eb0f6ced1fa7fde}{\index{com\-::twix\-::tailoredtravels\-::\-Database\-Manager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}!remove\-Location@{remove\-Location}}
-\index{remove\-Location@{remove\-Location}!com::twix::tailoredtravels::DatabaseManager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}}
-\subsubsection[{remove\-Location}]{\setlength{\rightskip}{0pt plus 5cm}boolean com.\-twix.\-tailoredtravels.\-Database\-Manager.\-remove\-Location (
-\begin{DoxyParamCaption}
-\item[{String}]{name}
-\end{DoxyParamCaption}
-) throws S\-Q\-L\-Exception}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_ac60ff9d81a074ef84eb0f6ced1fa7fde}
-Remove a location from the database
-
-precondition\-: location is in the database postcondition\-: a location is removed from the database
-
-
-\begin{DoxyParams}{Parameters}
-{\em name} & being removed\\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-true if the location exists and is removed, false otherwise
-\end{DoxyReturn}
-
-\begin{DoxyExceptions}{Exceptions}
-{\em S\-Q\-L\-Exception} & \\
-\hline
-\end{DoxyExceptions}
-\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a73d155c07d2ed41e8c596323184da135}{\index{com\-::twix\-::tailoredtravels\-::\-Database\-Manager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}!remove\-User@{remove\-User}}
-\index{remove\-User@{remove\-User}!com::twix::tailoredtravels::DatabaseManager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}}
-\subsubsection[{remove\-User}]{\setlength{\rightskip}{0pt plus 5cm}boolean com.\-twix.\-tailoredtravels.\-Database\-Manager.\-remove\-User (
-\begin{DoxyParamCaption}
-\item[{String}]{name}
-\end{DoxyParamCaption}
-) throws S\-Q\-L\-Exception}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a73d155c07d2ed41e8c596323184da135}
-Remove a user from the database
-
-precondition\-: the user is in the database
-
-
-\begin{DoxyParams}{Parameters}
-{\em name} & of user being removed\\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-true if user exists and is removed, false otherwise
-\end{DoxyReturn}
-
-\begin{DoxyExceptions}{Exceptions}
-{\em S\-Q\-L\-Exception} & \\
-\hline
-\end{DoxyExceptions}
-\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_aa8c98a1bfb16ebdbd8d3eeb6e9d80a73}{\index{com\-::twix\-::tailoredtravels\-::\-Database\-Manager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}!set\-Waypoint\-Description@{set\-Waypoint\-Description}}
-\index{set\-Waypoint\-Description@{set\-Waypoint\-Description}!com::twix::tailoredtravels::DatabaseManager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}}
-\subsubsection[{set\-Waypoint\-Description}]{\setlength{\rightskip}{0pt plus 5cm}boolean com.\-twix.\-tailoredtravels.\-Database\-Manager.\-set\-Waypoint\-Description (
-\begin{DoxyParamCaption}
-\item[{String}]{old\-Description, }
-\item[{String}]{new\-Description}
-\end{DoxyParamCaption}
-) throws S\-Q\-L\-Exception}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_aa8c98a1bfb16ebdbd8d3eeb6e9d80a73}
-Change a waypoint's description
-
-postcondition -\/ waypoint description is changed
-
-
-\begin{DoxyParams}{Parameters}
-{\em old\-Description} & for waypoint \\
-\hline
-{\em new\-Description} & for waypoint\\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-true if description change was successful, false otherwise
-\end{DoxyReturn}
-
-\begin{DoxyExceptions}{Exceptions}
-{\em S\-Q\-L\-Exception} & \\
-\hline
-\end{DoxyExceptions}
-\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a0b8a3295e6857761b89a8db4d048d5a4}{\index{com\-::twix\-::tailoredtravels\-::\-Database\-Manager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}!set\-Waypoint\-Lat\-Long@{set\-Waypoint\-Lat\-Long}}
-\index{set\-Waypoint\-Lat\-Long@{set\-Waypoint\-Lat\-Long}!com::twix::tailoredtravels::DatabaseManager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}}
-\subsubsection[{set\-Waypoint\-Lat\-Long}]{\setlength{\rightskip}{0pt plus 5cm}boolean com.\-twix.\-tailoredtravels.\-Database\-Manager.\-set\-Waypoint\-Lat\-Long (
-\begin{DoxyParamCaption}
-\item[{String}]{name, }
-\item[{float}]{new\-Lat, }
-\item[{float}]{new\-Long}
-\end{DoxyParamCaption}
-) throws S\-Q\-L\-Exception}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a0b8a3295e6857761b89a8db4d048d5a4}
-Change a waypoint's latitude/longitude, by name
-
-postcondition -\/ waypoint latitude and longitude is changed
-
-
-\begin{DoxyParams}{Parameters}
-{\em name} & of waypoint \\
-\hline
-{\em old\-Description} & for waypoint \\
-\hline
-{\em new\-Description} & for waypoint\\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-true if description change was successful, false otherwise
-\end{DoxyReturn}
-
-\begin{DoxyExceptions}{Exceptions}
-{\em S\-Q\-L\-Exception} & \\
-\hline
-\end{DoxyExceptions}
-\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a4c8078e19441474ebb02fd67dfe9d3b4}{\index{com\-::twix\-::tailoredtravels\-::\-Database\-Manager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}!set\-Waypoint\-Name@{set\-Waypoint\-Name}}
-\index{set\-Waypoint\-Name@{set\-Waypoint\-Name}!com::twix::tailoredtravels::DatabaseManager@{com\-::twix\-::tailoredtravels\-::\-Database\-Manager}}
-\subsubsection[{set\-Waypoint\-Name}]{\setlength{\rightskip}{0pt plus 5cm}boolean com.\-twix.\-tailoredtravels.\-Database\-Manager.\-set\-Waypoint\-Name (
-\begin{DoxyParamCaption}
-\item[{String}]{old\-Name, }
-\item[{String}]{new\-Name}
-\end{DoxyParamCaption}
-) throws S\-Q\-L\-Exception}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_database_manager_a4c8078e19441474ebb02fd67dfe9d3b4}
-Change a waypoint's name
-
-postcondition -\/ waypoint name is changed
-
-
-\begin{DoxyParams}{Parameters}
-{\em old\-Name} & for waypoint \\
-\hline
-{\em new\-Name} & for waypoint\\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-true if name change was successful, false otherwise
-\end{DoxyReturn}
-
-\begin{DoxyExceptions}{Exceptions}
-{\em S\-Q\-L\-Exception} & \\
-\hline
-\end{DoxyExceptions}
 
 
 The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
 \item 
-C\-:/\-Users/\-Justin/workspace/\-Tailored Travels/src/com/twix/tailoredtravels/\hyperlink{_database_manager_8java}{Database\-Manager.\-java}\end{DoxyCompactItemize}
+C\-:/\-Users/\-Justin/workspace/\-Tailored Travels/src/com/twix/tailoredtravels/Database\-Manager.\-java\end{DoxyCompactItemize}

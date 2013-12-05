@@ -8,13 +8,6 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
-<link href="navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="resize.js"></script>
-<script type="text/javascript" src="navtree.js"></script>
-<script type="text/javascript">
-  $(document).ready(initResizable);
-  $(window).load(resizeHeight);
-</script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/search.js"></script>
 <script type="text/javascript">
@@ -31,7 +24,7 @@
   <td style="padding-left: 0.5em;">
    <div id="projectname">Tailored Travels
    </div>
-   <div id="projectbrief">Tailored Travels (TSP) by team TWIX for Professor Cain&#39;s CS345</div>
+   <div id="projectbrief">Tailored Travels by team TWIX for CS345</div>
   </td>
  </tr>
  </tbody>
@@ -74,27 +67,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
-</div><!-- top -->
-<div id="side-nav" class="ui-resizable side-nav-resizable">
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
-<script type="text/javascript">
-$(document).ready(function(){initNavTree('classcom_1_1twix_1_1tailoredtravels_1_1_database_manager.html','');});
-</script>
-<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -103,9 +81,15 @@ $(document).ready(function(){initNavTree('classcom_1_1twix_1_1tailoredtravels_1_
 </iframe>
 </div>
 
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><b>com</b></li><li class="navelem"><b>twix</b></li><li class="navelem"><a class="el" href="namespacecom_1_1twix_1_1tailoredtravels.html">tailoredtravels</a></li><li class="navelem"><a class="el" href="classcom_1_1twix_1_1tailoredtravels_1_1_database_manager.html">DatabaseManager</a></li>  </ul>
+</div>
+</div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classcom_1_1twix_1_1tailoredtravels_1_1_database_manager-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">com.twix.tailoredtravels.DatabaseManager Class Reference</div>  </div>
@@ -114,491 +98,61 @@ $(document).ready(function(){initNavTree('classcom_1_1twix_1_1tailoredtravels_1_
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5fd81387462021f3a2c234596d7e669f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1twix_1_1tailoredtravels_1_1_database_manager.html#a5fd81387462021f3a2c234596d7e669f">DatabaseManager</a> ()  throws ClassNotFoundException, SQLException 	</td></tr>
-<tr class="separator:a5fd81387462021f3a2c234596d7e669f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ad514c70febbb99b14d8a4dab1b24a6"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1twix_1_1tailoredtravels_1_1_database_manager.html#a7ad514c70febbb99b14d8a4dab1b24a6">login</a> (String name, String password)  throws SQLException 	</td></tr>
+<tr class="memitem:a7ad514c70febbb99b14d8a4dab1b24a6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7ad514c70febbb99b14d8a4dab1b24a6"></a>
+boolean&#160;</td><td class="memItemRight" valign="bottom"><b>login</b> (String name, String password)  throws SQLException </td></tr>
 <tr class="separator:a7ad514c70febbb99b14d8a4dab1b24a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3fe7ef841c1340941920745cc00a39ab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1twix_1_1tailoredtravels_1_1_database_manager.html#a3fe7ef841c1340941920745cc00a39ab">logout</a> ()</td></tr>
+<tr class="memitem:a3fe7ef841c1340941920745cc00a39ab"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3fe7ef841c1340941920745cc00a39ab"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>logout</b> ()</td></tr>
 <tr class="separator:a3fe7ef841c1340941920745cc00a39ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab60c1da42acf1d6ecc8955aa58da3803"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1twix_1_1tailoredtravels_1_1_database_manager.html#ab60c1da42acf1d6ecc8955aa58da3803">addUser</a> (String name, String password, boolean isAdmin)  throws SQLException 	</td></tr>
+<tr class="memitem:ab60c1da42acf1d6ecc8955aa58da3803"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab60c1da42acf1d6ecc8955aa58da3803"></a>
+boolean&#160;</td><td class="memItemRight" valign="bottom"><b>addUser</b> (String name, String password, boolean isAdmin)  throws SQLException </td></tr>
 <tr class="separator:ab60c1da42acf1d6ecc8955aa58da3803"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19c56c261a486a909936cf7c97334360"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1twix_1_1tailoredtravels_1_1_database_manager.html#a19c56c261a486a909936cf7c97334360">addLocation</a> (float latitude, float longitude, String name, String description)  throws SQLException 	</td></tr>
+<tr class="memitem:a19c56c261a486a909936cf7c97334360"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a19c56c261a486a909936cf7c97334360"></a>
+boolean&#160;</td><td class="memItemRight" valign="bottom"><b>addLocation</b> (float latitude, float longitude, String name, String description)  throws SQLException </td></tr>
 <tr class="separator:a19c56c261a486a909936cf7c97334360"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73d155c07d2ed41e8c596323184da135"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1twix_1_1tailoredtravels_1_1_database_manager.html#a73d155c07d2ed41e8c596323184da135">removeUser</a> (String name)  throws SQLException 	</td></tr>
+<tr class="memitem:a73d155c07d2ed41e8c596323184da135"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a73d155c07d2ed41e8c596323184da135"></a>
+boolean&#160;</td><td class="memItemRight" valign="bottom"><b>removeUser</b> (String name)  throws SQLException </td></tr>
 <tr class="separator:a73d155c07d2ed41e8c596323184da135"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac60ff9d81a074ef84eb0f6ced1fa7fde"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1twix_1_1tailoredtravels_1_1_database_manager.html#ac60ff9d81a074ef84eb0f6ced1fa7fde">removeLocation</a> (String name)  throws SQLException 	</td></tr>
+<tr class="memitem:ac60ff9d81a074ef84eb0f6ced1fa7fde"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac60ff9d81a074ef84eb0f6ced1fa7fde"></a>
+boolean&#160;</td><td class="memItemRight" valign="bottom"><b>removeLocation</b> (String name)  throws SQLException </td></tr>
 <tr class="separator:ac60ff9d81a074ef84eb0f6ced1fa7fde"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c8078e19441474ebb02fd67dfe9d3b4"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1twix_1_1tailoredtravels_1_1_database_manager.html#a4c8078e19441474ebb02fd67dfe9d3b4">setWaypointName</a> (String oldName, String newName)  throws SQLException 	</td></tr>
+<tr class="memitem:a4c8078e19441474ebb02fd67dfe9d3b4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4c8078e19441474ebb02fd67dfe9d3b4"></a>
+boolean&#160;</td><td class="memItemRight" valign="bottom"><b>setWaypointName</b> (String oldName, String newName)  throws SQLException </td></tr>
 <tr class="separator:a4c8078e19441474ebb02fd67dfe9d3b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8c98a1bfb16ebdbd8d3eeb6e9d80a73"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1twix_1_1tailoredtravels_1_1_database_manager.html#aa8c98a1bfb16ebdbd8d3eeb6e9d80a73">setWaypointDescription</a> (String oldDescription, String newDescription)  throws SQLException 	</td></tr>
-<tr class="separator:aa8c98a1bfb16ebdbd8d3eeb6e9d80a73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b8a3295e6857761b89a8db4d048d5a4"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1twix_1_1tailoredtravels_1_1_database_manager.html#a0b8a3295e6857761b89a8db4d048d5a4">setWaypointLatLong</a> (String name, float newLat, float newLong)  throws SQLException 	</td></tr>
+<tr class="memitem:a2edac01eb48ca205568421c1aeaef677"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2edac01eb48ca205568421c1aeaef677"></a>
+boolean&#160;</td><td class="memItemRight" valign="bottom"><b>setWaypointDescription</b> (String name, String newDescription)  throws SQLException </td></tr>
+<tr class="separator:a2edac01eb48ca205568421c1aeaef677"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b8a3295e6857761b89a8db4d048d5a4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0b8a3295e6857761b89a8db4d048d5a4"></a>
+boolean&#160;</td><td class="memItemRight" valign="bottom"><b>setWaypointLatLong</b> (String name, float newLat, float newLong)  throws SQLException </td></tr>
 <tr class="separator:a0b8a3295e6857761b89a8db4d048d5a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ccf63adbc938676d9bafbf43667261a"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1twix_1_1tailoredtravels_1_1_database_manager.html#a2ccf63adbc938676d9bafbf43667261a">isUserAdmin</a> ()</td></tr>
+<tr class="memitem:a2ccf63adbc938676d9bafbf43667261a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2ccf63adbc938676d9bafbf43667261a"></a>
+boolean&#160;</td><td class="memItemRight" valign="bottom"><b>isUserAdmin</b> ()</td></tr>
 <tr class="separator:a2ccf63adbc938676d9bafbf43667261a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e594f8a6f845de1fe5ab29e5430ba9e"><td class="memItemLeft" align="right" valign="top">LinkedList&lt; <a class="el" href="classcom_1_1twix_1_1tailoredtravels_1_1_waypoint.html">Waypoint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1twix_1_1tailoredtravels_1_1_database_manager.html#a4e594f8a6f845de1fe5ab29e5430ba9e">getWaypoints</a> ()  throws SQLException 	</td></tr>
+<tr class="memitem:a4e594f8a6f845de1fe5ab29e5430ba9e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4e594f8a6f845de1fe5ab29e5430ba9e"></a>
+LinkedList&lt; <a class="el" href="classcom_1_1twix_1_1tailoredtravels_1_1_waypoint.html">Waypoint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getWaypoints</b> ()  throws SQLException </td></tr>
 <tr class="separator:a4e594f8a6f845de1fe5ab29e5430ba9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac69a6164612bb086c72c54440d32f3de"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1twix_1_1tailoredtravels_1_1_database_manager.html#ac69a6164612bb086c72c54440d32f3de">printWaypoints</a> ()</td></tr>
+<tr class="memitem:ac69a6164612bb086c72c54440d32f3de"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac69a6164612bb086c72c54440d32f3de"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>printWaypoints</b> ()</td></tr>
 <tr class="separator:ac69a6164612bb086c72c54440d32f3de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a016f5dba5721c561485b5ef4d3219bc8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a016f5dba5721c561485b5ef4d3219bc8"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>main</b> (String[] args)  throws ClassNotFoundException, 			SQLException </td></tr>
+<tr class="separator:a016f5dba5721c561485b5ef4d3219bc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>There MUST be a derby embeddeddriver loaded in plugins The database must exist </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a5fd81387462021f3a2c234596d7e669f"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">com.twix.tailoredtravels.DatabaseManager.DatabaseManager </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> throws ClassNotFoundException, SQLException</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Constructor that starts this file reader reads the location file and user file to have data</p>
-<p>precondition: org.apache.derby.jdbc.EmbeddedDriver must exist in eclipse plugin postcondition: sets currentUser to 0 to mean no user at this time sets login to false</p>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">ClassNotFountException</td><td></td></tr>
-    <tr><td class="paramname">SQLException</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a19c56c261a486a909936cf7c97334360"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">boolean com.twix.tailoredtravels.DatabaseManager.addLocation </td>
-          <td>(</td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>latitude</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>longitude</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>description</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> throws SQLException</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>add new location to file and update the location file</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">latitude</td><td></td></tr>
-    <tr><td class="paramname">longitude</td><td></td></tr>
-    <tr><td class="paramname">name</td><td>of location </td></tr>
-    <tr><td class="paramname">description</td><td>for location</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>true if the user add a location, false if the user cannot add a location</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">SQLException</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="ab60c1da42acf1d6ecc8955aa58da3803"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">boolean com.twix.tailoredtravels.DatabaseManager.addUser </td>
-          <td>(</td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>password</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">boolean&#160;</td>
-          <td class="paramname"><em>isAdmin</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> throws SQLException</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>add user locations and then update the user table</p>
-<p>precondition: admin is not null</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">name</td><td>of user </td></tr>
-    <tr><td class="paramname">password</td><td>of user </td></tr>
-    <tr><td class="paramname">isAdmin</td><td>- is the user an admin</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>true</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">SQLException</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="a4e594f8a6f845de1fe5ab29e5430ba9e"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">LinkedList&lt;<a class="el" href="classcom_1_1twix_1_1tailoredtravels_1_1_waypoint.html">Waypoint</a>&gt; com.twix.tailoredtravels.DatabaseManager.getWaypoints </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> throws SQLException</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Get and return a LinkedList containing all waypoints</p>
-<p>precondition: database exists</p>
-<dl class="section return"><dt>Returns</dt><dd>linked list of all waypoints</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">SQLException</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="a2ccf63adbc938676d9bafbf43667261a"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">boolean com.twix.tailoredtravels.DatabaseManager.isUserAdmin </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Check if the user is an admin</p>
-<p>precondition: admin contains the appropriate value</p>
-<dl class="section return"><dt>Returns</dt><dd>admin - true if user is admin, false otherwise </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a7ad514c70febbb99b14d8a4dab1b24a6"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">boolean com.twix.tailoredtravels.DatabaseManager.login </td>
-          <td>(</td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>password</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> throws SQLException</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>allows the user to log in and sets the user</p>
-<p>precondition: name / password are not null</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">name</td><td>of the person logging in </td></tr>
-    <tr><td class="paramname">password</td><td>of the person logging in </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>login &ndash;true if the person is logged in &ndash;false if there are no one with that username / password</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">SQLException</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="a3fe7ef841c1340941920745cc00a39ab"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void com.twix.tailoredtravels.DatabaseManager.logout </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>logs the user out</p>
-<p>postcondition: admin status set to false waypoint list cleared </p>
-
-</div>
-</div>
-<a class="anchor" id="ac69a6164612bb086c72c54440d32f3de"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void com.twix.tailoredtravels.DatabaseManager.printWaypoints </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Print all waypoints</p>
-<p>precondition: db_waypoints is not null </p>
-
-</div>
-</div>
-<a class="anchor" id="ac60ff9d81a074ef84eb0f6ced1fa7fde"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">boolean com.twix.tailoredtravels.DatabaseManager.removeLocation </td>
-          <td>(</td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td> throws SQLException</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Remove a location from the database</p>
-<p>precondition: location is in the database postcondition: a location is removed from the database</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">name</td><td>being removed</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>true if the location exists and is removed, false otherwise</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">SQLException</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="a73d155c07d2ed41e8c596323184da135"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">boolean com.twix.tailoredtravels.DatabaseManager.removeUser </td>
-          <td>(</td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td> throws SQLException</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Remove a user from the database</p>
-<p>precondition: the user is in the database</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">name</td><td>of user being removed</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>true if user exists and is removed, false otherwise</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">SQLException</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="aa8c98a1bfb16ebdbd8d3eeb6e9d80a73"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">boolean com.twix.tailoredtravels.DatabaseManager.setWaypointDescription </td>
-          <td>(</td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>oldDescription</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>newDescription</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> throws SQLException</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Change a waypoint's description</p>
-<p>postcondition - waypoint description is changed</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">oldDescription</td><td>for waypoint </td></tr>
-    <tr><td class="paramname">newDescription</td><td>for waypoint</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>true if description change was successful, false otherwise</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">SQLException</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="a0b8a3295e6857761b89a8db4d048d5a4"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">boolean com.twix.tailoredtravels.DatabaseManager.setWaypointLatLong </td>
-          <td>(</td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>newLat</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>newLong</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> throws SQLException</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Change a waypoint's latitude/longitude, by name</p>
-<p>postcondition - waypoint latitude and longitude is changed</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">name</td><td>of waypoint </td></tr>
-    <tr><td class="paramname">oldDescription</td><td>for waypoint </td></tr>
-    <tr><td class="paramname">newDescription</td><td>for waypoint</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>true if description change was successful, false otherwise</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">SQLException</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="a4c8078e19441474ebb02fd67dfe9d3b4"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">boolean com.twix.tailoredtravels.DatabaseManager.setWaypointName </td>
-          <td>(</td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>oldName</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>newName</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> throws SQLException</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Change a waypoint's name</p>
-<p>postcondition - waypoint name is changed</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">oldName</td><td>for waypoint </td></tr>
-    <tr><td class="paramname">newName</td><td>for waypoint</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>true if name change was successful, false otherwise</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">SQLException</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following file:<ul>
-<li>C:/Users/Justin/workspace/Tailored Travels/src/com/twix/tailoredtravels/<a class="el" href="_database_manager_8java.html">DatabaseManager.java</a></li>
+<div class="textblock">
+<p>Definition at line <a class="el" href="_database_manager_8java_source.html#l00017">17</a> of file <a class="el" href="_database_manager_8java_source.html">DatabaseManager.java</a>.</p>
+</div><hr/>The documentation for this class was generated from the following file:<ul>
+<li>C:/Users/Justin/workspace/Tailored Travels/src/com/twix/tailoredtravels/<a class="el" href="_database_manager_8java_source.html">DatabaseManager.java</a></li>
 </ul>
 </div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="navelem"><a class="el" href="namespacecom.html">com</a></li><li class="navelem"><a class="el" href="namespacecom_1_1twix.html">twix</a></li><li class="navelem"><a class="el" href="namespacecom_1_1twix_1_1tailoredtravels.html">tailoredtravels</a></li><li class="navelem"><a class="el" href="classcom_1_1twix_1_1tailoredtravels_1_1_database_manager.html">DatabaseManager</a></li>
-    <li class="footer">Generated on Wed Dec 4 2013 22:23:41 for Tailored Travels by
-    <a href="http://www.doxygen.org/index.html">
-    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated on Thu Dec 5 2013 11:07:00 for Tailored Travels by &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.5
+</small></address>
 </body>
 </html>
