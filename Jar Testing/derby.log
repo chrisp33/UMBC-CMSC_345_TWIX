@@ -1,0 +1,10 @@
+----------------------------------------------------------------
+Thu Dec 05 08:43:13 EST 2013:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.2.2 - (1181258): instance a816c00e-0142-c2ff-804c-0000027cdcd8 
+on database directory /Users/Stephen/UMBC-CMSC_345_TWIX/Jar Testing/Database  with class loader java.net.URLClassLoader@20e5f01b 
+Loaded from jar:rsrc:derby.jar!/
+java.vendor=Oracle Corporation
+java.runtime.version=1.7.0_45-b18
+user.dir=/Users/Stephen/UMBC-CMSC_345_TWIX/Jar Testing
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
