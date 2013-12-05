@@ -6,8 +6,10 @@
 
 package com.twix.tailoredtravels;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -28,6 +30,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -38,9 +41,6 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.twix.test.ProgressBar;
-import com.twix.test.Waypoint;
-import com.twix.test.MenuPanel.runProgress;
 
 public class MenuPanel extends JPanel {
 
@@ -1439,30 +1439,24 @@ public class MenuPanel extends JPanel {
 	}
 	private class runProgress implements Runnable
 	{
-		final JDialog dialog = new JDialog();
+		JDialog dialog = new JDialog();
 		
 		@Override
 		public void run() {
-			ProgressBar bar = new ProgressBar();
-			Thread progressThread = new Thread(bar);
-			JOptionPane pane = new JOptionPane();
-			pane.add(bar);
-			pane.setSize(300, 600);
-			
-			progressThread.start();// TODO Auto-generated method stub
-//			dialog.add(pane);
-//			JOptionPane pane = new JOptionPane(bar, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
-//			JOptionPane pane1 = new JOptionPane();
-			dialog.setTitle("Message");
-			dialog.setModal(true);
-//			dialog.add(bar);
-			dialog.setContentPane(pane);
-
-			dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-			dialog.setSize(300, 600);
+			JProgressBar pb = new JProgressBar();
+			pb.setPreferredSize(new Dimension(175,20));
+			pb.setString("Working");
+			pb.setStringPainted(true);
+			pb.setIndeterminate(true);
+			JLabel label = new JLabel("Progress: ");
+			JPanel center_panel = new JPanel();
+			center_panel.add(label);
+			center_panel.add(pb);
+			dialog = new JDialog();
+			dialog.getContentPane().add(center_panel, BorderLayout.CENTER);
 			dialog.pack();
-			dialog.setVisible(true);			
-		}
+			dialog.setVisible(true);
+			}
 		public void close()
 		{
 			dialog.setVisible(false);
