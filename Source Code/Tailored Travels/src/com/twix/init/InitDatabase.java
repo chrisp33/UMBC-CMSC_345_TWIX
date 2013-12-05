@@ -7,14 +7,14 @@ import java.sql.SQLException;
 public class InitDatabase {
 	public static final String newDatabase = "org.apache.derby.jdbc.EmbeddedDriver";
 	public static final String url = "jdbc:derby:Database;create = true";
+	
 	/**
-	 * @param args
+	 * @param args none
 	 */
 	public static void main(String[] args) {
 		try {
 			CreateWaypointTable();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
 			// Already created
@@ -22,7 +22,6 @@ public class InitDatabase {
 		try {
 			CreateUserTable();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
 			// Already Created
