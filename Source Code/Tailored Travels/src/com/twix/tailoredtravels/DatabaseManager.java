@@ -1,7 +1,6 @@
 package com.twix.tailoredtravels;
-
 /**
- * @author Keith Cheng and Stephen Moore
+ * @author Keith Cheng / Steven  
  */
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,12 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
+//there must be the derby embeddeddriver loaded in plugins
+//the database must exist
 
-
-/**
- * There MUST be a derby embeddeddriver loaded in plugins
- * The database must exist
- */
 public class DatabaseManager {
 	private LinkedList<Waypoint> db_waypoints;
 	private boolean admin;
@@ -22,53 +18,63 @@ public class DatabaseManager {
 	private final String url = "jdbc:derby:Database;create = true";
 	private final String userTable = "db_users";
 	Connection _connect = null;
+	//	private Connection connect = null;
 
-	/**
+	/*
 	 * Constructor that starts this file reader
+	 * sets currentUser to 0 to mean no user at this time
+	 * set login to false
 	 * reads the location file and user file to have data
-	 * 
 	 * precondition: org.apache.derby.jdbc.EmbeddedDriver must exist in eclipse plugin
-	 * postcondition: sets currentUser to 0 to mean no user at this time
-	 * 				  sets login to false
-	 * 
-	 * @throws ClassNotFountException
-	 * @throws SQLException
+	 * input: none
+	 * output: none
 	 */
 	public DatabaseManager() throws ClassNotFoundException, SQLException
 	{
 		Class.forName(newDatabase);
-		db_waypoints = new LinkedList<Waypoint>();
+		db_waypoints = new LinkedList<Waypoint>();		
 		admin = false;
+		ResultSet _r = executeQueryForResult("SELECT * FROM " + userTable);
+		if (_r == null)
+		{			
+			_connect.close();
+			InitDatabase.CreateUserTable();
+		}else
+			_connect.close();
+		_r = executeQueryForResult("SELECT * FROM db_waypoints");
+		if (_r == null)
+		{
+			_connect.close();
+			InitDatabase.CreateWaypointTable();
+
+		}else
+			_connect.close();
+
 	}
-	
-	/**
+	/*
 	 * allows the user to log in and sets the user
-	 * 
 	 * precondition: name / password are not null
-	 * 
-	 * @param name of the person logging in
-	 * @param password of the person logging in
-	 * @return	login
-	 * 			--true if the person is logged in
-	 * 			--false if there are no one with that username / password
-	 * 
-	 * @throws SQLException
+	 * input:	String: name of the person logging in
+	 * 			String: password of the person logging in
+	 * output:	true if the person is logged in
+	 * 			false if there are no one with that username / password
 	 */
 	public boolean login(String name, String password) throws SQLException
 	{
 		if(name == null || password == null)
 			return false;
-		
+
 		boolean login = false;
 		ResultSet result = executeQueryForResult("SELECT * FROM " + userTable + 
 				" WHERE upper(name) LIKE upper('%"+name+"%')");
 		//while there is another item
 		while(result.next())
 		{
-			//check if the user name and password exist (username not case sensitive)
+			//check if the user name and password exist with name being case-insensitive
+			//and password being case sensitive
 			if(result.getString(3).equals(password))
 			{
-				//check if the person is an admin
+				//check if the person is a admin
 				if(result.getBoolean(4))
 					admin = true;
 				login = true;
@@ -77,31 +83,22 @@ public class DatabaseManager {
 		_connect.close();
 		return login;
 	}
-	
-	/**
-	 * logs the user out
-	 * 
-	 * postcondition: admin status set to false
-	 * 				  waypoint list cleared
+	/*
+	 * log the user out
+	 * switch admin to false;
 	 */
 	public void logout()
 	{
 		admin = false;
 		db_waypoints = new LinkedList<Waypoint>();
 	}
-	
-	/**
+	/*
 	 * add user locations and then update the user table
-	 * 
-	 * precondition: admin is not null
-	 * 
-	 * @param name of user
-	 * @param password of user
-	 * @param isAdmin - is the user an admin
-	 * 
-	 * @return true
-	 * 
-	 * @throws SQLException
+	 * precondition: name, password, admin is not null
+	 * input:	String of user name
+	 * 			String of password
+	 * 			Boolean of admin
+	 * output:	none
 	 */
 	public boolean addUser(String name, String password, boolean isAdmin) throws SQLException
 	{
@@ -117,27 +114,25 @@ public class DatabaseManager {
 			return false;
 		}
 		_connect.close();
-		
+
 		//if user is unique then add the user
 		String query = "";
 		//if the new person added is admin then give them admin privileges
 		query = "INSERT into " + userTable + " (name, password, admin) " +
-				"values ('"+name+"', '"+password+"', "+isAdmin+")";
+		"values ('"+name+"', '"+password+"', "+isAdmin+")";
 		executeQuery(query);
 		return true;
 	}
-	
-	/**
+	/*
 	 * add new location to file and update the location file
-	 * 
-	 * @param latitude	
-	 * @param longitude
-	 * @param name of location
-	 * @param description for location
-	 * 
-	 * @return true if the user add a location, false if the user cannot add a location
-	 *
-	 * @throws SQLException
+	 * precondition:	latitude / longitude is not 0
+	 * 					name / description is not null
+	 * input:	double latitude	
+	 * 			double longitude
+	 * 			string name of location
+	 * 			string description
+	 * output:	true if the user add a location
+	 *			false if the user cannot add a location
 	 */
 	public boolean addLocation(float latitude, float longitude ,String name,  String description) throws SQLException
 	{
@@ -145,7 +140,7 @@ public class DatabaseManager {
 			return false;
 		if(latitude > 90 || latitude < -90 || longitude > 180 || longitude < -180)
 			return false;
-		
+
 		if(!admin)
 			return false;
 
@@ -165,23 +160,20 @@ public class DatabaseManager {
 
 		return true;
 	}
-	
-	/**
-	 * Remove a user from the database
-	 * 
-	 * precondition: the user is in the database
-	 * 
-	 * @param	name of user being removed
-	 * 
-	 * @return true if user exists and is removed, false otherwise
-	 * 
-	 * @throws SQLException
+
+	/*
+	 * remove the user from the database
+	 * precondition:	name is not null
+	 * 					the user is in the database
+	 * input:	string of the user being removed
+	 * output:	true if user exist and removed
+	 * 			false otherwise
 	 */
 	public boolean removeUser(String name) throws SQLException
 	{
 		if(name == null || !admin)
 			return false;
-		
+
 		//check if the user already exist
 		ResultSet _r = executeQueryForResult("SELECT * FROM " + userTable + 
 				" WHERE upper(name) LIKE upper('%"+name+"%')");
@@ -195,28 +187,25 @@ public class DatabaseManager {
 
 		//if the new person added is admin then give them admin privileges
 		String query = "DELETE FROM " + userTable + 
-				" WHERE upper(name) LIKE upper('%"+name+"%')";
+		" WHERE upper(name) LIKE upper('%"+name+"%')";
 		executeQuery(query);
 		return true;
 	}
-	
-	/**
-	 * Remove a location from the database
-	 * 
-	 * precondition:	location is in the database
+	/*
+	 * precondition:	name is not null
+	 * 					the person logged in is a admin
+	 * 					location is in the database
 	 * postcondition:	a location is removed from the database
-	 * 
-	 * @param	name being removed
-	 * 
-	 * @return true if the location exists and is removed, false otherwise
-	 * 
-	 * @throws SQLException
+	 * remove the location being called
+	 * input:	name being removed
+	 * output:	true if the location exist
+	 * 			false otherwise
 	 */
 	public boolean removeLocation(String name) throws SQLException
 	{
 		if((!admin) || name == null)
 			return false;
-		
+
 		//calls the driver to call the database and query the location table
 		ResultSet _r = executeQueryForResult("SELECT * FROM db_waypoints " +
 				" WHERE upper(name) LIKE upper('%"+name+"%')");
@@ -231,15 +220,13 @@ public class DatabaseManager {
 		executeQuery("delete from db_waypoints where name = '"+name+"'");
 		return true;
 	}
-	
-	/**
+
+	/*
 	 * Execute a query for the resultSet
-	 * 
-	 * precondition: the database exists
-	 * 
-	 * @param query string
-	 * 
-	 * @return resultset populated with results from query
+	 * precondition - a database exist
+	 * postcondition - return the resultset
+	 * input -String of what is being queried
+	 * output - ResultSet
 	 */
 	private ResultSet executeQueryForResult(String query) {
 		Statement statement = null;
@@ -248,7 +235,7 @@ public class DatabaseManager {
 			//calls the driver to call the database and query the user table
 			_connect = DriverManager.getConnection(url);
 			statement = _connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, 
-	                ResultSet.CONCUR_UPDATABLE);
+					ResultSet.CONCUR_UPDATABLE);
 			result = statement.executeQuery(query);
 		}catch(SQLException e)
 		{
@@ -256,14 +243,12 @@ public class DatabaseManager {
 		}
 		return result;
 	}
-	
-	/**
-	 * Execute the query to execute the statement
-	 * 
-	 * precondition - database exists
-	 * postcondition - database is modified by given statement
-	 * 
-	 * @param	query string
+	/*
+	 * execute the query to execute the statement
+	 * precondition - database exist
+	 * postcondition - database is modified
+	 * input - String of the query
+	 * output - none
 	 */
 	private void executeQuery(String query)
 	{
@@ -279,18 +264,12 @@ public class DatabaseManager {
 			e.printStackTrace();
 		}
 	}
-	
-	/**
+	/*
 	 * Query the user table to check if it exist
-	 * 
-	 * precondition - ResultSet exists / userName is not null
-	 * 
-	 * @param result (ResultSet)
-	 * @param userName name of user
-	 * 
-	 * @return true if user exists, false otherwise
-	 * 
-	 * @throws SQLException
+	 * precondition - ResultSet exist / userName is not null
+	 * postcondition - returns whether the user is already in the database or not
+	 * input - ResultSet result / String userName
+	 * output - boolean of whether the user exist or not
 	 */
 	private boolean searchUserQuery(ResultSet result, String userName) throws SQLException
 	{
@@ -301,18 +280,12 @@ public class DatabaseManager {
 		}
 		return false;
 	}
-	
-	/**
-	 * Query the waypointdb table to check if it exists
-	 * 
+	/*
+	 * Query the waypointdb table to check if it exist
 	 * precondition - ResultSet exist / locationName is not null
-	 * 
-	 * @param result (ResultSet)
-	 * @param userName name of user
-	 * 
-	 * @return - boolean of whether the location exist or not
-	 * 
-	 * @throws SQLException
+	 * postcondition - returns whether the location is already in the database or not
+	 * input - ResultSet result / String locationName
+	 * output - boolean of whether the location exist or not
 	 */
 	private boolean searchLocationQuery(ResultSet result, String locationName) throws SQLException
 	{
@@ -323,18 +296,12 @@ public class DatabaseManager {
 		}
 		return false;
 	}
-	
-	/**
-	 * Change a waypoint's name
-	 * 
+	/*
+	 * change a waypoint name
+	 * precondition - String oldName / newName is not null
 	 * postcondition - waypoint name is changed
-	 * 
-	 * @param oldName for waypoint
-	 * @param newName for waypoint
-	 * 
-	 * @return true if name change was successful, false otherwise
-	 * 
-	 * @throws SQLException
+	 * input - String oldName / newName
+	 * output - boolean whether it suceeded or not
 	 */
 	public boolean setWaypointName(String oldName, String newName) throws SQLException
 	{
@@ -348,57 +315,45 @@ public class DatabaseManager {
 			return false;
 		}
 		_connect.close();
-		
+
 		String query = "UPDATE db_waypoints SET " +
-				"name='"+newName+"' WHERE upper(name) LIKE upper('%"+oldName+"%')";
-		
+		"name='"+newName+"' WHERE upper(name) LIKE upper('%"+oldName+"%')";
+
 		executeQuery(query);
+		//return executeQuery(query);
 		return true;
 	}
-	
-	/**
-	 * Change a waypoint's description
-	 * 
+	/*
+	 * change a waypoint description
+	 * precondition - String oldName / newDescription is not null
 	 * postcondition - waypoint description is changed
-	 * 
-	 * @param oldDescription for waypoint
-	 * @param newDescription for waypoint
-	 * 
-	 * @return true if description change was successful, false otherwise
-	 * 
-	 * @throws SQLException
-	 */
-	public boolean setWaypointDescription(String oldDescription, String newDescription) throws SQLException
+	 * input - String oldName / newDescription
+	 * output - boolean whether it suceeded or not
+	 */	
+	public boolean setWaypointDescription(String name, String newDescription) throws SQLException
 	{
-		if(oldDescription == null || newDescription == null)
+		if(name == null || newDescription == null)
 			return false;
 		ResultSet _r = executeQueryForResult("SELECT * FROM db_waypoints " +
-				" WHERE upper(name) LIKE upper('%"+oldDescription+"%')");
-		if (!_r.isBeforeFirst() || !searchLocationQuery(_r, oldDescription))
+				" WHERE upper(name) LIKE upper('%"+name+"%')");
+		if (!_r.isBeforeFirst() || !searchLocationQuery(_r, name))
 		{
 			_connect.close();
 			return false;
 		}
 		_connect.close();
 		String query = "UPDATE db_waypoints SET " +
-				"description='"+newDescription+"' WHERE upper(name) LIKE upper('%"+oldDescription+"%')";
+		"description='"+newDescription+"' WHERE upper(name) LIKE upper('%"+name+"%')";
 		executeQuery(query);
 		return true;
 	}
-	
 
-	/**
-	 * Change a waypoint's latitude/longitude, by name
-	 * 
-	 * postcondition - waypoint latitude and longitude is changed
-	 * 
-	 * @param name of waypoint
-	 * @param oldDescription for waypoint
-	 * @param newDescription for waypoint
-	 * 
-	 * @return true if description change was successful, false otherwise
-	 * 
-	 * @throws SQLException
+	/*
+	 * change a waypoint latitude / longitude
+	 * precondition - String oldName / is not null
+	 * postcondition - waypoint latitude / longitude is changed
+	 * input - String oldName / float newLat / float newLong
+	 * output - boolean whether it suceeded or not
 	 */
 	public boolean setWaypointLatLong(String name, float newLat, float newLong) throws SQLException
 	{
@@ -413,32 +368,22 @@ public class DatabaseManager {
 		}
 		_connect.close();
 		String query = "UPDATE db_waypoints SET " +
-				"latitude="+newLat+", longitude="+newLong+" WHERE upper(name) LIKE upper('%"+name+"%')";
-		
+		"latitude="+newLat+", longitude="+newLong+" WHERE upper(name) LIKE upper('%"+name+"%')";
+
 		executeQuery(query);
 		return true;
 	}
-	
-	/**
-	 * Check if the user is an admin
-	 * 
-	 * precondition: admin contains the appropriate value
-	 * 
-	 * @return admin - true if user is admin, false otherwise
-	 */
+
 	public boolean isUserAdmin()
 	{
 		return admin;
 	}
-	
-	/**
-	 * Get and return a LinkedList containing all waypoints
-	 * 
-	 * precondition: database exists
-	 * 
-	 * @return linked list of all waypoints
-	 * 
-	 * @throws SQLException
+	/*
+	 * get the locations from the database and return all the locations
+	 * precondition: none
+	 * postcondition: a linkedlist of waypoint is generated
+	 * input:	none
+	 * output:	linked list of location
 	 */
 	public LinkedList<Waypoint> getWaypoints() throws SQLException
 	{
@@ -449,7 +394,6 @@ public class DatabaseManager {
 			connect = DriverManager.getConnection(url);
 			statement = connect.createStatement();
 			ResultSet locationResult = statement.executeQuery("SELECT * FROM db_waypoints");
-			
 			//add the waypoints to the waypoint linked list for all possible locations
 			db_waypoints = new LinkedList<Waypoint>();
 			while(locationResult.next())
@@ -461,10 +405,11 @@ public class DatabaseManager {
 				db_waypoints.add(newWaypoint);
 			}
 		} catch (SQLException e) {
-			System.err.println("Could not access database");
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally
 		{
+			//cleans up the connection resources
 			if(statement != null)
 				statement.close();
 			if(connect != null)
@@ -472,17 +417,23 @@ public class DatabaseManager {
 		}
 		return db_waypoints;
 	}
-	
-	/**
-	 * Print all waypoints
-	 * 
-	 * precondition: db_waypoints is not null
-	 * 
-	 */
+
 	public void printWaypoints()
 	{
 		for(int i = 0; i < db_waypoints.size(); i++)
 			System.out.println(db_waypoints.get(i).toString());
 	}
-	
+	public static void main(String[] args) throws ClassNotFoundException, SQLException
+	{
+		DatabaseManager data = new DatabaseManager();
+		data.login("Keith", "password1");
+		//		data.addLocation((float)10, (float)41.12, "Maryland", "Description");
+		//		data.removeLocation("YellowStone");
+		//		data.removeUser("Stephen");
+		//		data.addLocation((float)13.13246, (float)12, "Heaven", "description1");
+		if(data.removeUser("Stephen"))
+			System.out.println("person removed");
+		else
+			System.out.println("person not removed");
+	}
 }
