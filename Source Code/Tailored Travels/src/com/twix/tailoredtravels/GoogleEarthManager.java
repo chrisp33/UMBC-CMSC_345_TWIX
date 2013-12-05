@@ -1,3 +1,11 @@
+/**
+ * A class used in handling all calls to 
+ * Google Earth and all KML manipulation.
+ * 
+ * @author Stephen Moore
+ *
+ */
+
 package com.twix.tailoredtravels;
 
 import java.io.File;
@@ -12,20 +20,11 @@ import de.micromata.opengis.kml.v_2_2_0.Kml;
 import de.micromata.opengis.kml.v_2_2_0.KmlFactory;
 import de.micromata.opengis.kml.v_2_2_0.LineString;
 import de.micromata.opengis.kml.v_2_2_0.Placemark;
-import de.micromata.opengis.kml.v_2_2_0.Point;
 
-/**
- * A class used in handling all calls to 
- * Google Earth and all KML manipulation.
- * 
- * @author Stephen Moore
- *
- */
+
 public class GoogleEarthManager {
 
-	public GoogleEarthManager()
-	{	
-	}
+	public GoogleEarthManager()	{}
 	
 	/**
 	 * Transforms a given path into a series of connected KML points.

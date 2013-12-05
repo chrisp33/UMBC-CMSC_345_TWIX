@@ -1,9 +1,3 @@
-package com.twix.tailoredtravels;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-
 /**
  * A class used to maintain an ordered list of 
  * Waypoints to send to Google Earth.
@@ -11,6 +5,13 @@ import java.util.LinkedList;
  * @author Stephen Moore
  *
  */
+
+package com.twix.tailoredtravels;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+
 public class GoogleEarthPath {
 
 	/**
@@ -21,7 +22,7 @@ public class GoogleEarthPath {
 	/**
 	 * Initiates a new Google Earth path to be translated into KML.
 	 * 
-	 * @param _start Thw beginning Waypoint
+	 * @param _start The beginning Waypoint
 	 * @param _end The final Waypoint
 	 */
 	public GoogleEarthPath(Waypoint _start, Waypoint _end)
@@ -37,12 +38,11 @@ public class GoogleEarthPath {
 	 * preconditions: sortedList is actually sorted to be a shortest path
 	 *  list of all waypoints
 	 * 
-	 * @param _start Thw beginning Waypoint
+	 * @param _start The beginning Waypoint
 	 * @param _end The final Waypoint
 	 */
 	public GoogleEarthPath(ArrayList<Waypoint> sortedList)
 	{
-		//Is this really the best way to handle the list
 		for(Waypoint w : sortedList)
 		{
 			wPath.add(w);
