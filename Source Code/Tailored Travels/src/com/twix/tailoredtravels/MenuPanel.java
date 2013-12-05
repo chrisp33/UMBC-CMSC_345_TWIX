@@ -177,7 +177,7 @@ public class MenuPanel extends JPanel {
 		//Instantiate GUI components
 		welcomeMsg = new JLabel("Welcome back, " + user + "!");
 		welcome.add(welcomeMsg);
-		availMsg = new JLabel("<html>Available Location<br>Select for info</html>");
+		availMsg = new JLabel("<html>Available Locations<br>Select for info</html>");
 		list = new JList<String>();
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scroller = new JScrollPane(list);
@@ -1200,14 +1200,17 @@ public class MenuPanel extends JPanel {
 					selectedPoints.add(ptB);
 				}
 
-				//Do calculations
-				ArrayList<Waypoint> routeWaypoints = DistCalcDriver.
-				shortDistAlgorithm(selectedPoints);
-				GoogleEarthPath path = new GoogleEarthPath(routeWaypoints);
-				GoogleEarthManager gem = new GoogleEarthManager();
-				String result = gem.Path2KML(path);
-				JOptionPane.showMessageDialog(null, result, "Route", 
-						JOptionPane.INFORMATION_MESSAGE);
+				//Progress bar
+				dialog = new JDialog();
+				progress = new JPanel();
+				progress.add(bar);
+				dialog.setContentPane(progress);
+				dialog.pack();
+				dialog.setVisible(true);
+				dialog.setTitle("Calculating...");
+				//perform background calcualations
+				DoRoute doRoute = new DoRoute(selectedPoints);
+				doRoute.execute();
 			}
 			catch (SQLException e)
 			{
@@ -1432,22 +1435,22 @@ public class MenuPanel extends JPanel {
 				e1.printStackTrace();
 				System.exit(0);
 			}
-
+			
+			//Progress bar
 			dialog = new JDialog();
 			progress = new JPanel();
 			progress.add(bar);
 			dialog.setContentPane(progress);
 			dialog.pack();
 			dialog.setVisible(true);
-			dialog.setTitle("Please Wait. Performing Calculations.");
+			dialog.setTitle("Calculating...");
+			//perform background calcualations
 			DoCalc doCalc = new DoCalc(selectedPoints);
 			doCalc.execute();
 
 		}
 
 	}
-
-
 
 	/**
 	 * Action listener for "Log Out" button
@@ -1467,6 +1470,8 @@ public class MenuPanel extends JPanel {
 			System.exit(0);
 		}
 	}
+	
+	
 	/**
 	 * Swingworker for calculating the route
 	 */
@@ -1509,10 +1514,10 @@ public class MenuPanel extends JPanel {
 
 		}
 	}
+	
 	/**
 	 * Swingworker for calculating the route
 	 */
-	@SuppressWarnings("unused")
 	private class DoRoute extends SwingWorker<String, Void>
 	{
 
