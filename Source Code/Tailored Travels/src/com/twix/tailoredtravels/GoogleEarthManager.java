@@ -21,25 +21,29 @@ import de.micromata.opengis.kml.v_2_2_0.KmlFactory;
 import de.micromata.opengis.kml.v_2_2_0.LineString;
 import de.micromata.opengis.kml.v_2_2_0.Placemark;
 
-
 public class GoogleEarthManager {
 
-	public GoogleEarthManager()	{}
-	
+	public GoogleEarthManager() {
+	}
+
 	/**
 	 * Transforms a given path into a series of connected KML points.
 	 * 
-	 * @param _path The created path of Waypoints in LinkedList<Waypoint> format
+	 * @param _path
+	 *            The created path of Waypoints in LinkedList<Waypoint> format
 	 * @return the generated KML
 	 */
-	public String Path2KML(GoogleEarthPath _path)
-	{
+	public String Path2KML(GoogleEarthPath _path) {
 		LinkedList<Waypoint> wPath = _path.getPath();
-		String filename = wPath.getFirst().getName() + "-" + wPath.getLast().getName() + ".kml";
+		String filename = wPath.getFirst().getName() + "-"
+				+ wPath.getLast().getName() + ".kml";
 		final Kml kml = KmlFactory.createKml();
-		final Document document = kml.createAndSetDocument()
-		.withName("TailoredTravel: " + wPath.getFirst().getName() + 
-				" to " + wPath.getLast().getName()).withOpen(true);
+		final Document document = kml
+				.createAndSetDocument()
+				.withName(
+						"TailoredTravel: " + wPath.getFirst().getName()
+								+ " to " + wPath.getLast().getName())
+				.withOpen(true);
 
 		document.createAndAddDocument();
 
@@ -50,17 +54,16 @@ public class GoogleEarthManager {
 				.withAltitudeMode(AltitudeMode.CLAMP_TO_GROUND)
 				.withTessellate(true);
 		List<Coordinate> coord = path.createAndSetCoordinates();
-		
-		for(Waypoint w : wPath) 
-		{
+
+		for (Waypoint w : wPath) {
 			final Placemark _placemark = document.createAndAddPlacemark()
-					.withName(w.getName())
-					.withDescription(w.getDescription());
-			List<Coordinate> _c = _placemark.createAndSetPoint().createAndSetCoordinates();
-			_c.add(new Coordinate(w.getLongitude(),w.getLatitude(),0));
-			coord.add(new Coordinate(w.getLongitude(),w.getLatitude(),0));
+					.withName(w.getName()).withDescription(w.getDescription());
+			List<Coordinate> _c = _placemark.createAndSetPoint()
+					.createAndSetCoordinates();
+			_c.add(new Coordinate(w.getLongitude(), w.getLatitude(), 0));
+			coord.add(new Coordinate(w.getLongitude(), w.getLatitude(), 0));
 		}
-		
+
 		try {
 			kml.marshal(new File(filename));
 			return "File Created: " + filename;
