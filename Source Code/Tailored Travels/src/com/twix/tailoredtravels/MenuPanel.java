@@ -1,17 +1,13 @@
 /**
- * Panel containing the main menu and most administrator and user functions. 
- * Only logged in users will be able to access this window. 
- * 
+ * Panel for main menu
  * @author Christopher Pagan
  * @version 1.0
  */
 
 package com.twix.tailoredtravels;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -27,6 +23,7 @@ import javax.swing.DefaultListSelectionModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -37,89 +34,80 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-
-public class MenuPanel extends JPanel {
-
-	private static final long serialVersionUID = 3359477065217156534L;
-	final int REQUIRED_NUM = 12; //Number of waypoints required
+public class MenuPanel extends JPanel 
+{
 
 	/**
 	 * Components to add to the panel
 	 */
-	
+	private static final long serialVersionUID = 3359477065217156534L;
 	private JButton calcRoute, calcDist, addLocation, removeLocation, addUser,
 					removeUser, logout, edit, help;
 	private JLabel welcomeMsg,availMsg;
 	private JList<String> list;
 	private JScrollPane scroller;
 	private JPanel welcome, addRmLoc, addRmUser, waypointsList, calculations, edits, exit, 
-					adminPanel, helpPanel;
-	
-	/**
-	 * Filenames
-	 */
-	private static File helpFile;
-	private static ImageIcon helpimg;
+					adminPanel, helpp, progress;
+	final int REQUIRED_NUM = 12;
+	private JProgressBar bar;
+	private JDialog dialog;
 	
 	/**
 	 * The current user's username
 	 */
 	private String currentUser;
-	
 	/**
-	 * Is the current user an admin
+	 * To test if the current user is an administrator
 	 */
 	private boolean isAdmin;
-	
 	/**
-	 * Database instance
+	 * Instance for all database manipulations
 	 */
 	private DatabaseManager dbm;
 	
 	/**
 	 * Constructor for main menu
-	 * 
 	 * @param dbm the database manager
 	 * @param user the user's username
 	 * @param admin whether or not the user is an administrator
 	 */
-	public MenuPanel(DatabaseManager dbm, String user, boolean admin)
+	public MenuPanel(DatabaseManager dbm,String user, boolean admin)
 	{
-		//Assign variables
+		
 		this.dbm = dbm;
 		isAdmin = admin;
 		currentUser = user;
-		Color bgColor = new Color(48,235,71); //Color for menuPanel background
+		Color bgColor = new Color(48,235,71);
 		TitledBorder adminBorder = BorderFactory.createTitledBorder("Administrative Controls");
 		Border b = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
-		
-		//Create main menu panels
-		helpPanel = new JPanel();
+		helpp = new JPanel();
 		welcome = new JPanel();
 		addRmLoc = new JPanel();
 		addRmUser = new JPanel();
 		edits = new JPanel();
 		adminPanel = new JPanel();
+		bar = new JProgressBar();
+		bar.setIndeterminate(true);
 		
-		//Create help button
-		helpimg = new ImageIcon("help.png");
+
+		ImageIcon helpimg = new ImageIcon("help.png");
 		help = new JButton(helpimg);
-		help.setToolTipText("Help");
+		help.setToolTipText("Click here for help.");
 		help.setBorder(BorderFactory.createEmptyBorder());
-		
-		//When user interacts with help button, load and open the help pdf file
 		help.addActionListener(new ActionListener(){public void actionPerformed (ActionEvent e)
 		{
 			if (Desktop.isDesktopSupported()) {
 			    try {
-			        helpFile = new File("Tailored Travels Help.pdf");
-			        Desktop.getDesktop().open(helpFile);
+			        File myFile = new File("Tailored Travels Help.pdf");
+			        Desktop.getDesktop().open(myFile);
 			    } catch (IOException ex) {
 			        // no application registered for PDFs
 			    	JOptionPane.showMessageDialog(null, "A PDF viewer is needed to view the help"
@@ -127,8 +115,8 @@ public class MenuPanel extends JPanel {
 			    }
 			}
 		}});
-		helpPanel.add(help);
-		helpPanel.setBackground(bgColor);
+		helpp.add(help);
+		helpp.setBackground(bgColor);
 		help.setBackground(bgColor);
 		
 		
@@ -136,29 +124,26 @@ public class MenuPanel extends JPanel {
 		//Create these components if the user is an administrator
 		if (isAdmin)
 		{
-			//Admin section
 			adminPanel.setLayout(new BoxLayout(adminPanel, BoxLayout.Y_AXIS));
 			adminBorder.setBorder(b);
 			adminPanel.setBorder(adminBorder);
 			
-			//Add/Remove/Edit User/Location buttons
 			addLocation = new JButton("Add Location");
 			removeLocation = new JButton("Remove Location");			
 			addUser = new JButton("Add User");
 			removeUser = new JButton("Remove User");
 			edit = new JButton("Edit Location");
 			
-			//Add all buttons to panel
 			addRmLoc.add(addLocation);
 			addRmLoc.add(removeLocation);
 			addRmUser.add(addUser);
 			addRmUser.add(removeUser);
 			edits.add(edit);
+			
 			adminPanel.add(addRmLoc);
 			adminPanel.add(addRmUser);
 			adminPanel.add(edits);
 			
-			//Add ActionListeners to buttons
 			addLocation.addActionListener(new AddLocListener());
 			removeLocation.addActionListener(new RemLocListener());
 			addUser.addActionListener(new AddUserListener());
@@ -169,7 +154,9 @@ public class MenuPanel extends JPanel {
 		//Instantiate GUI components
 		welcomeMsg = new JLabel("Welcome back, " + user + "!");
 		welcome.add(welcomeMsg);
-		availMsg = new JLabel("<html>Available Location<br>Select for info</html>");
+		availMsg = new JLabel("Available Locations");
+		String locToolTip = "Select a location for more info.";
+		availMsg.setToolTipText(locToolTip);
 		list = new JList<String>();
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scroller = new JScrollPane(list);
@@ -179,13 +166,11 @@ public class MenuPanel extends JPanel {
 		calcDist = new JButton("Calculate Distance");
 		logout = new JButton("Log Out");
 		
-		//Add ActionListeners for normal user buttons
 		list.addListSelectionListener(new ListSelListener());
 		calcRoute.addActionListener(new RouteListener());
 		calcDist.addActionListener(new DistListener());
 		logout.addActionListener(new LogoutListener());
 		
-		//Add list of waypoints
 		waypointsList = new JPanel();
 		waypointsList.add(availMsg);
 		waypointsList.add(scroller);
@@ -196,7 +181,6 @@ public class MenuPanel extends JPanel {
 		exit = new JPanel();
 		exit.add(logout);
 	
-		//Set uniform background color for all components
 		setBackground(bgColor);
 		adminPanel.setBackground(bgColor);
 		welcome.setBackground(bgColor);
@@ -218,7 +202,7 @@ public class MenuPanel extends JPanel {
 	public void addComponents()
 	{
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
+		add(helpp);
 		add(welcome);
 		
 		if(isAdmin)
@@ -229,7 +213,6 @@ public class MenuPanel extends JPanel {
 		add(waypointsList);
 		add(calculations);
 		add(exit);
-		add(helpPanel);
 	}
 	
 	/**
@@ -257,6 +240,8 @@ public class MenuPanel extends JPanel {
 		}
 	}
 	
+	
+	
 	/**
 	 * Action listener for "Add Location" button
 	 */
@@ -266,7 +251,6 @@ public class MenuPanel extends JPanel {
 			/**
 			 * Overwritten method for ActionListener class. 
 			 * Prompts for waypoint data and adds it to the system.
-			 * 
 			 * @param ae An ActionEvent is created when the user clicks the "Add Location" button
 			 */
 			public void actionPerformed(ActionEvent ae) 
@@ -282,7 +266,6 @@ public class MenuPanel extends JPanel {
 						"Enter the location's longitude position:", longitude,
 						"Enter some detail about the location:", details};
 
-				//Assign input to variables
 				int sel = JOptionPane.showConfirmDialog(null, message,
 						"Add Location", JOptionPane.OK_CANCEL_OPTION);
 				String wName = name.getText();
@@ -290,7 +273,6 @@ public class MenuPanel extends JPanel {
 				String lon = longitude.getText();
 				String det = details.getText();
 				
-				//If cancel is selected, confirm cancellation and exit add new location
 				if (sel == JOptionPane.CANCEL_OPTION)
 				{
 					JOptionPane.showMessageDialog(null,
@@ -299,7 +281,6 @@ public class MenuPanel extends JPanel {
 					return;
 				}
 				
-				//Check for blank entry
 				if (wName.equals("") || lat.equals("") || lon.equals("") || det.equals(""))
 				{
 					JOptionPane.showMessageDialog(null, "Cannot leave any fields blank.",
@@ -307,8 +288,8 @@ public class MenuPanel extends JPanel {
 					return;
 				}
 				
-				//float variables for latitude and longitude
 				float wLat, wLong;
+				
 				try
 				{
 					wLat = Float.parseFloat(lat);
@@ -321,7 +302,6 @@ public class MenuPanel extends JPanel {
 					return;
 				}
 				
-				//Latitude and Logitude validation
 				if (wLat < -90 || wLat > 90 || wLong < -180 || wLong > 180)
 				{
 					String msg = "Latitude can only range from -90 degrees to +90 degrees.\n" +
@@ -331,7 +311,6 @@ public class MenuPanel extends JPanel {
 					return;
 				}
 				
-				//Add new waypoint to database manager
 				try
 				{
 					boolean added;
@@ -370,7 +349,6 @@ public class MenuPanel extends JPanel {
 		/**
 		 * Overwritten method for ActionListener class. 
 		 * Prompts for waypoint data and removes it from the system.
-		 * 
 		 * @param ae An ActionEvent is created when the user clicks the "Remove Location" button
 		 */
 		public void actionPerformed(ActionEvent ae) 
@@ -462,7 +440,6 @@ public class MenuPanel extends JPanel {
 		/**
 		 * Overwritten method for ActionListener class. 
 		 * Prompts for user data and adds it to the system.
-		 * 
 		 * @param ae An ActionEvent is created when the user clicks the "Add User" button
 		 */
 		public void actionPerformed(ActionEvent ae) 
@@ -567,7 +544,6 @@ public class MenuPanel extends JPanel {
 		/**
 		 * Overwritten method for ActionListener class. 
 		 * Prompts for user data and removes it from the system.
-		 * 
 		 * @param ae An ActionEvent is created when the user clicks the "Remove User" button
 		 */
 		public void actionPerformed(ActionEvent ae) 
@@ -645,7 +621,6 @@ public class MenuPanel extends JPanel {
 		/**
 		 * Overwritten method for ActionListener class. 
 		 * Prompts for which type of data is edited for the waypoint
-		 * 
 		 * @param ae An ActionEvent is created when the user clicks the "Edit Location" button
 		 */
 		public void actionPerformed(ActionEvent e)
@@ -1104,105 +1079,94 @@ public class MenuPanel extends JPanel {
 				
 				ArrayList<Waypoint> selectedPoints = new ArrayList<Waypoint>();
 				
-				//Number of required points in route is greater than 2
-				if (REQUIRED_NUM > 2) 
-				{
-					//Remove the starting and end points for other popup
-					ArrayList<Waypoint> remainingPoints = points;
-					Vector<String> remainingNames = new Vector<String>();
-					JList<String> names;
-					int indexA = remainingPoints.indexOf(ptA);
-					remainingPoints.remove(indexA);
-					int indexB = remainingPoints.indexOf(ptB);
-					remainingPoints.remove(indexB);
-					if (remainingPoints.size() >= (REQUIRED_NUM - 2)) {
-						for (Waypoint wp : remainingPoints)
-							remainingNames.add(wp.getName());
-						names = new JList<String>();
-						JScrollPane sp = new JScrollPane(names);
-						names.setListData(remainingNames);
-						names.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+				//Remove the starting and end points for other popup
+				ArrayList<Waypoint> remainingPoints = points;
+				Vector<String> remainingNames = new Vector<String>();
+				JList<String> names = null;
+				int indexA = remainingPoints.indexOf(ptA);
+				remainingPoints.remove(indexA);
+				int indexB = remainingPoints.indexOf(ptB);
+				remainingPoints.remove(indexB);
+				
+				if (remainingPoints.size() >= (REQUIRED_NUM - 2)) {
+					for (Waypoint wp : remainingPoints)
+						remainingNames.add(wp.getName());
+					names = new JList<String>();
+					JScrollPane sp = new JScrollPane(names);
+					names.setListData(remainingNames);
+					names.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
-						//Set so multiple items are selected without the need to hold other keys.
-						//Taken from https://forums.oracle.com/thread/1360864
-						names.setSelectionModel(new DefaultListSelectionModel() {
-							private static final long serialVersionUID = 1L;
+					//Set so multiple items are selected without the need to hold other keys.
+					//Taken from https://forums.oracle.com/thread/1360864
+					names.setSelectionModel(new DefaultListSelectionModel() {
+						private static final long serialVersionUID = 1L;
 
-							public void setSelectionInterval(int index0,
-									int index1) {
-								if (isSelectedIndex(index0))
-									super.removeSelectionInterval(index0,
-											index1);
-								else
-									super.addSelectionInterval(index0, index1);
-							}
-						});
-
-						Object[] msg = { "What other points are in the route?",
-								sp };
-						int op = JOptionPane.showConfirmDialog(null, msg,
-								"Select Other Points",
-								JOptionPane.OK_CANCEL_OPTION);
-
-						//If cancelled
-						if (op == JOptionPane.CANCEL_OPTION) {
-							JOptionPane
-									.showMessageDialog(
-											null,
-											"The operation to calculate the route has been cancelled.",
-											"Operation Cancelled",
-											JOptionPane.INFORMATION_MESSAGE);
-							return;
+						public void setSelectionInterval(int index0,
+								int index1) {
+							if (isSelectedIndex(index0))
+								super.removeSelectionInterval(index0,
+										index1);
+							else
+								super.addSelectionInterval(index0, index1);
 						}
+					});
 
-						int selectedNum = names.getSelectedIndices().length;
+					Object[] msg = { "What other points are in the route?",
+							sp };
+					int op = JOptionPane.showConfirmDialog(null, msg,
+							"Select Other Points",
+							JOptionPane.OK_CANCEL_OPTION);
 
-						if (selectedNum < (REQUIRED_NUM - 2)) {
-							JOptionPane
-									.showMessageDialog(
-											null,
-											"There must be a total of "
-													+ REQUIRED_NUM
-													+ " points in the route, so "
-													+ (REQUIRED_NUM - 2)
-													+ " points, besides the start and end, must be selected.",
-											"More Selections Required",
-											JOptionPane.ERROR_MESSAGE);
-							return;
-						}
-					}
-					//Error for points < 13
-					else {
+					//If cancelled
+					if (op == JOptionPane.CANCEL_OPTION) {
 						JOptionPane
 								.showMessageDialog(
 										null,
-										"There must be a route containing at least "
-												+ REQUIRED_NUM
-												+ " points.\nAs an administrator, add more locations.",
-										"More Locations Needed",
-										JOptionPane.ERROR_MESSAGE);
+										"The operation to calculate the route has been cancelled.",
+										"Operation Cancelled",
+										JOptionPane.INFORMATION_MESSAGE);
 						return;
 					}
-					selectedPoints = new ArrayList<Waypoint>();
-					selectedPoints.add(ptA);
-					for (String wpName : names.getSelectedValuesList()) {
-						for (Waypoint wp : points) {
-							if (wp.getName().equals(wpName)) {
-								selectedPoints.add(wp);
-							}
-						}
-					}
-					selectedPoints.add(ptB);
+
+				
 				}
 				
+				//Error for points < 13
+				int selectedNum = names.getSelectedIndices().length;
+				if ((selectedNum + 2) > REQUIRED_NUM) {
+					JOptionPane
+							.showMessageDialog(
+									null,
+									"There must be a route containing at most "
+											+ REQUIRED_NUM
+											+ " points.\n add fewer locations.",
+									"Use Less Locations",
+									JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				selectedPoints = new ArrayList<Waypoint>();
+				selectedPoints.add(ptA);
+				for (String wpName : names.getSelectedValuesList()) {
+					for (Waypoint wp : points) {
+						if (wp.getName().equals(wpName)) {
+							selectedPoints.add(wp);
+						}
+					}
+				}
+				selectedPoints.add(ptB);
+				
 				//Do calculations
-				ArrayList<Waypoint> routeWaypoints = DistCalcDriver.
-						shortDistAlgorithm(selectedPoints);
-				GoogleEarthPath path = new GoogleEarthPath(routeWaypoints);
-				GoogleEarthManager gem = new GoogleEarthManager();
-				String result = gem.Path2KML(path);
-				JOptionPane.showMessageDialog(null, result, "Route", 
-											  JOptionPane.INFORMATION_MESSAGE);
+				dialog = new JDialog();
+				progress = new JPanel();
+				progress.add(bar);
+				dialog.setContentPane(progress);
+				dialog.pack();
+				dialog.setVisible(true);
+				dialog.setTitle("Please Wait. Performing Calculations.");
+				
+				DoRoute doRoute = new DoRoute(selectedPoints);
+				doRoute.execute();
+				
 			}
 			catch (SQLException e)
 			{
@@ -1330,98 +1294,80 @@ public class MenuPanel extends JPanel {
 					return;
 				}
 				
-				if (REQUIRED_NUM > 2) 
-				{
-					//Remove the starting and end points for other popup
-					ArrayList<Waypoint> remainingPoints = points;
-					Vector<String> remainingNames = new Vector<String>();
-					JList<String> names;
-					int indexA = remainingPoints.indexOf(ptA);
-					remainingPoints.remove(indexA);
-					int indexB = remainingPoints.indexOf(ptB);
-					remainingPoints.remove(indexB);
-					if (remainingPoints.size() >= (REQUIRED_NUM - 2)) {
-						for (Waypoint wp : remainingPoints)
-							remainingNames.add(wp.getName());
-						names = new JList<String>();
-						JScrollPane sp = new JScrollPane(names);
-						names.setListData(remainingNames);
-						names.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+				//Remove the starting and end points for other popup
+				ArrayList<Waypoint> remainingPoints = points;
+				Vector<String> remainingNames = new Vector<String>();
+				JList<String> names = null;
+				int indexA = remainingPoints.indexOf(ptA);
+				remainingPoints.remove(indexA);
+				int indexB = remainingPoints.indexOf(ptB);
+				remainingPoints.remove(indexB);
+				if (remainingPoints.size() < (REQUIRED_NUM - 2)) {
+					for (Waypoint wp : remainingPoints)
+						remainingNames.add(wp.getName());
+					names = new JList<String>();
+					JScrollPane sp = new JScrollPane(names);
+					names.setListData(remainingNames);
+					names.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
-						//Set so multiple items are selected without the need to hold other keys.
-						//Taken from https://forums.oracle.com/thread/1360864
-						names.setSelectionModel(new DefaultListSelectionModel() {
-							private static final long serialVersionUID = 1L;
+					//Set so multiple items are selected without the need to hold other keys.
+					//Taken from https://forums.oracle.com/thread/1360864
+					names.setSelectionModel(new DefaultListSelectionModel() {
+						private static final long serialVersionUID = 1L;
 
-							public void setSelectionInterval(int index0,
-									int index1) {
-								if (isSelectedIndex(index0))
-									super.removeSelectionInterval(index0,
-											index1);
-								else
-									super.addSelectionInterval(index0, index1);
-							}
-						});
-
-						Object[] msg = { "What other points are in the route?",
-								sp };
-						int op = JOptionPane.showConfirmDialog(null, msg,
-								"Select Other Points",
-								JOptionPane.OK_CANCEL_OPTION);
-
-						//If cancelled
-						if (op == JOptionPane.CANCEL_OPTION) {
-							JOptionPane
-									.showMessageDialog(
-											null,
-											"The operation to calculate the shortest route distance has been cancelled.",
-											"Operation Cancelled",
-											JOptionPane.INFORMATION_MESSAGE);
-							return;
+						public void setSelectionInterval(int index0,
+								int index1) {
+							if (isSelectedIndex(index0))
+								super.removeSelectionInterval(index0,
+										index1);
+							else
+								super.addSelectionInterval(index0, index1);
 						}
+					});
 
-						int selectedNum = names.getSelectedIndices().length;
+					Object[] msg = { "What other points are in the route?",
+							sp };
+					int op = JOptionPane.showConfirmDialog(null, msg,
+							"Select Other Points",
+							JOptionPane.OK_CANCEL_OPTION);
 
-						if (selectedNum < (REQUIRED_NUM - 2)) {
-							JOptionPane
-									.showMessageDialog(
-											null,
-											"There must be a total of "
-													+ REQUIRED_NUM
-													+ " points in the route, so "
-													+ (REQUIRED_NUM - 2)
-													+ " points, besides the start and end, must be selected.",
-											"More Selections Required",
-											JOptionPane.ERROR_MESSAGE);
-							return;
-						}
-					}
-					//Error for points < 13
-					else {
+					//If cancelled
+					if (op == JOptionPane.CANCEL_OPTION) {
 						JOptionPane
 								.showMessageDialog(
 										null,
-										"There must be a route containing at least "
-												+ REQUIRED_NUM
-												+ " points.\nAs an administrator, add more locations.",
-										"More Locations Needed",
-										JOptionPane.ERROR_MESSAGE);
+										"The operation to calculate the shortest route distance has been cancelled.",
+										"Operation Cancelled",
+										JOptionPane.INFORMATION_MESSAGE);
 						return;
 					}
-					selectedPoints.add(ptA);
-					for (String wpName : names.getSelectedValuesList()) {
-						for (Waypoint wp : points) {
-							if (wp.getName().equals(wpName)) {
-								selectedPoints.add(wp);
-							}
+
+
+				}
+				//Error for points < 13
+				int selectedNum = names.getSelectedIndices().length;
+
+				if (selectedNum > (REQUIRED_NUM - 2)) {
+					JOptionPane
+							.showMessageDialog(
+									null,
+									"There must be a route containing at most "
+											+ REQUIRED_NUM
+											+ " points.\nPlease add fewer locations.",
+									"Use Less Locations",
+									JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				selectedPoints.add(ptA);
+				for (String wpName : names.getSelectedValuesList()) {
+					for (Waypoint wp : points) {
+						if (wp.getName().equals(wpName)) {
+							selectedPoints.add(wp);
 						}
 					}
-					selectedPoints.add(ptB);
 				}
-
+				selectedPoints.add(ptB);
 			}
-			
-			
 			catch (SQLException e1)
 			{
 				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program.", "Error", 
@@ -1430,54 +1376,17 @@ public class MenuPanel extends JPanel {
 				System.exit(0);
 			}
 			
-			runProgress progress = new runProgress();
-			Thread newThread = new Thread(progress);
-			newThread.start();
-			ArrayList<Waypoint> rt = DistCalcDriver.shortDistAlgorithm(selectedPoints);
-			progress.close();
-			
-			double dist = DistCalcDriver.totalDistance(rt);
-			
-			String distMsg = String.format(
-					"The shortest distance between all points, starting from \"" + startPoint +
-					"\" and ending at\n \"" + endPoint + "\", is %.2f miles.", dist);
-			
-			JOptionPane.showMessageDialog(null, distMsg, "Total Distance",
-					JOptionPane.INFORMATION_MESSAGE);
-			
-		}
-		
-	}
-	
-	/**
-	 * Runnable for progress bar display. Work in progress.
-	 * 
-	 * @author Keith Chang
-	 */
-	private class runProgress implements Runnable
-	{
-		JDialog dialog = new JDialog();
-		
-		
-		public void run() {
-			JProgressBar pb = new JProgressBar();
-			pb.setPreferredSize(new Dimension(175,20));
-			pb.setString("Working");
-			pb.setStringPainted(true);
-			pb.setIndeterminate(true);
-			JLabel label = new JLabel("Progress: ");
-			JPanel center_panel = new JPanel();
-			center_panel.add(label);
-			center_panel.add(pb);
+			//Calculate the distance
 			dialog = new JDialog();
-			dialog.getContentPane().add(center_panel, BorderLayout.CENTER);
+			progress = new JPanel();
+			progress.add(bar);
+			dialog.setContentPane(progress);
 			dialog.pack();
 			dialog.setVisible(true);
-			}
-		public void close()
-		{
-			dialog.setVisible(false);
-			dialog.dispose();
+			dialog.setTitle("Please Wait. Performing Calculations.");
+			
+			DoCalc doCalcs = new DoCalc(selectedPoints);
+			doCalcs.execute();
 		}
 		
 	}
@@ -1498,6 +1407,87 @@ public class MenuPanel extends JPanel {
 					JOptionPane.INFORMATION_MESSAGE);
 			dbm.logout();
 			System.exit(0);
+		}
+	}
+	
+	/**
+	 * Swingworker for calculating the route
+	 */
+	private class DoCalc extends SwingWorker<Double, Void>
+	{
+
+		private ArrayList<Waypoint> selectedPoints;
+		private double dist;
+		
+		public DoCalc(ArrayList<Waypoint> wp)
+		{
+			selectedPoints = wp;
+		}
+		
+		/**
+		 * Perform calculation for the distance in the background
+		 */
+		protected Double doInBackground() throws Exception {
+			
+			ArrayList<Waypoint> rt = DistCalcDriver.shortDistAlgorithm(selectedPoints);
+			dist = DistCalcDriver.totalDistance(rt);
+			return dist;
+		}
+		
+		/**
+		 * Displays message after completed calculations
+		 */
+		public void done ()
+		{
+			dialog.dispose();
+			String startPoint = selectedPoints.get(0).getName();
+			String endPoint = selectedPoints.get(selectedPoints.size() -1).getName();
+			
+			String distMsg = String.format(
+					"The shortest distance between all points, starting from \"" + startPoint +
+					"\" and ending at\n \"" + endPoint + "\", is %.2f miles.", dist);
+			
+			JOptionPane.showMessageDialog(null, distMsg, "Total Distance",
+					JOptionPane.INFORMATION_MESSAGE);
+			
+		}
+	}
+	
+	/**
+	 * Swingworker for calculating the route
+	 */
+	private class DoRoute extends SwingWorker<String, Void>
+	{
+
+		private ArrayList<Waypoint> selectedPoints;
+		private String result;
+		
+		public DoRoute(ArrayList<Waypoint> wp)
+		{
+			selectedPoints = wp;
+		}
+		
+		/**
+		 * Perform calculation for the distance in the background
+		 */
+		 protected String doInBackground() throws Exception {
+			
+			ArrayList<Waypoint> routeWaypoints = DistCalcDriver.
+					shortDistAlgorithm(selectedPoints);
+			GoogleEarthPath path = new GoogleEarthPath(routeWaypoints);
+			GoogleEarthManager gem = new GoogleEarthManager();
+			result = gem.Path2KML(path);
+			return result;
+		}
+		
+		/**
+		 * Displays message after completed calculations
+		 */
+		public void done ()
+		{
+			dialog.dispose();
+			JOptionPane.showMessageDialog(null, result, "Route", 
+					  JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 }
