@@ -1,12 +1,21 @@
+/**
+ * Progress bad runnable JPanel
+ * 
+ * @author Keith Cheng with Christopher Pagan
+ */
+
 package com.twix.tailoredtravels;
 
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
 public class ProgressBar extends JPanel implements Runnable{
+	private static final long serialVersionUID = -3474647204199764046L;
+	
 	JProgressBar aJProgressBar;
 	boolean start = true;
-	@Override
+	
+	//When ProgressBar is run, call runbar() and sleep for 1000 as long as the progress bar is set to start
 	public void run() {
 		runBar();
 		while(start)
@@ -14,7 +23,6 @@ public class ProgressBar extends JPanel implements Runnable{
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -22,6 +30,7 @@ public class ProgressBar extends JPanel implements Runnable{
 	}
 	public void runBar()
 	{
+		//Set the size of this panel and add the progress bar
 		this.setSize(400, 100);
 		aJProgressBar = new JProgressBar(JProgressBar.HORIZONTAL);
 		aJProgressBar.setString("");
