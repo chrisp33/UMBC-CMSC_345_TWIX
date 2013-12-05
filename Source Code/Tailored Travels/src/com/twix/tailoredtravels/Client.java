@@ -141,13 +141,14 @@ public class Client{
 		help.setBackground(bgcolor);
 		
 		//Add all panels to the mainPanel in proper format
-		mainPanel.add(helpPanel);
 		mainPanel.add(welcome);
 		mainPanel.add(imgPanel);
 		mainPanel.add(lmsg);
 		mainPanel.add(lName);
 		mainPanel.add(lPassword);
 		mainPanel.add(enter);
+		mainPanel.add(helpPanel);
+
 		
 		//Set mainPanel and frame attributes
 		mainPanel.setPreferredSize(new Dimension(500,425));

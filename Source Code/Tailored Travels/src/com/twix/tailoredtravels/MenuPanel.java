@@ -221,7 +221,6 @@ public class MenuPanel extends JPanel
 	public void addComponents()
 	{
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		add(helpPanel);
 		add(welcome);
 		
 		if(isAdmin)
@@ -232,6 +231,8 @@ public class MenuPanel extends JPanel
 		add(waypointsList);
 		add(calculations);
 		add(exit);
+		add(helpPanel);
+
 	}
 	
 	/**
