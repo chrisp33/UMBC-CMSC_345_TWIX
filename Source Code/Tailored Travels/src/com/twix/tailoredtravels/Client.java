@@ -9,16 +9,16 @@
 package com.twix.tailoredtravels;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -28,47 +28,57 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-public class Client{
+public class Client {
 
 	/**
-	 * Components for login
+	 * Components for login screen
 	 */
-	private static JPanel panel, welcome, lmsg, lName, lPassword, enter, imgPanel;
+	private static JPanel helpPanel, mainPanel, welcome, lmsg, lName,
+			lPassword, enter, imgPanel;
 	private static JFrame frame;
 	private static JButton login;
 	private static JTextField nameField;
 	private static JPasswordField passField;
 	private static MenuPanel mainMenu;
-	private static String logoName;
-	/**
-	 * Main method
-	 * @param args no arguments used
-	 * @throws UnsupportedLookAndFeelException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 * @throws ClassNotFoundException 
-	 */
-	public static void main(String[] args){
-		
-		// To get the same look and feel of the system the program is run on
-		//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		frame = new JFrame("Tailored Travels");
-		Color bgcolor = new Color(74,138,255); //Background color for login screen
 
-		
-		panel = new JPanel();
+	/**
+	 * Filenames
+	 */
+	private static String logoFileName;
+	private static File helpFile;
+	private static ImageIcon helpimg;
+
+	/**
+	 * Main method - Creates login panel, handles login information
+	 * 
+	 * @param args
+	 *            no arguments used
+	 * @throws UnsupportedLookAndFeelException
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 * @throws ClassNotFoundException
+	 */
+	public static void main(String[] args) {
+
+		frame = new JFrame(Messages.getString("Client.0")); //$NON-NLS-1$
+		Color bgcolor = new Color(74, 138, 255); // Background color for login
+													// screen
+
+		// Create panels for login screen
+		mainPanel = new JPanel();
+		helpPanel = new JPanel();
 		welcome = new JPanel();
 		lmsg = new JPanel();
 		lName = new JPanel();
 		lPassword = new JPanel();
 		enter = new JPanel();
 		imgPanel = new JPanel();
-		login = new JButton("Login");
+		login = new JButton(Messages.getString("Client.1")); //$NON-NLS-1$
 
-		panel.setBackground(bgcolor);
+		// Set background of all panels in login screen to the same color
+		mainPanel.setBackground(bgcolor);
 		imgPanel.setBackground(bgcolor);
 		welcome.setBackground(bgcolor);
 		lmsg.setBackground(bgcolor);
@@ -76,145 +86,186 @@ public class Client{
 		lPassword.setBackground(bgcolor);
 		enter.setBackground(bgcolor);
 
-		welcome.add(new JLabel("Welcome to Tailored Travels!"));
-		
-		//Add logo, then resize and realign
-		logoName = "Final Draft of Logo.jpg";
-		ImageIcon teamLogo = new ImageIcon(logoName);
+		// Add label to top of login screen
+		welcome.add(new JLabel(Messages.getString("Client.2"))); //$NON-NLS-1$
+
+		// Add logo, then resize and realign
+		logoFileName = Messages.getString("Client.3"); //$NON-NLS-1$
+		ImageIcon teamLogo = new ImageIcon(logoFileName);
 		Image img = teamLogo.getImage();
 		int width = img.getWidth(null);
 		int height = img.getHeight(null);
-		int resizeW = width/3;
-		int resizeH = height/3;
-		Image resizedImg = img.getScaledInstance(resizeW, resizeH, Image.SCALE_SMOOTH);
+		int resizeW = width / 3;
+		int resizeH = height / 3;
+		Image resizedImg = img.getScaledInstance(resizeW, resizeH,
+				Image.SCALE_SMOOTH);
 		teamLogo = new ImageIcon(resizedImg);
-		
 		frame.setIconImage(img);
 		JLabel logo = new JLabel(teamLogo);
 		imgPanel.add(logo);
-		lmsg.add(new JLabel ("Enter your username and password"));
-		lName.add(new JLabel("Username"));
+
+		// Add username field and label
+		lmsg.add(new JLabel(Messages.getString("Client.4"))); //$NON-NLS-1$
+		lName.add(new JLabel(Messages.getString("Client.5"))); //$NON-NLS-1$
 		nameField = new JTextField(25);
 		lName.add(nameField);
-		
-		lPassword.add(new JLabel("Password"));
+
+		// Add password field and label
+		lPassword.add(new JLabel(Messages.getString("Client.6"))); //$NON-NLS-1$
 		passField = new JPasswordField(25);
-		String bullet = "\u2022";
-		passField.setEchoChar(bullet.charAt(0));
+		String bullet = Messages.getString("Client.7"); //$NON-NLS-1$
+		passField.setEchoChar(bullet.charAt(0)); // Blank out password field
 		lPassword.add(passField);
 		enter.add(login);
-		
-		panel.add(welcome);
-		panel.add(imgPanel);
-		panel.add(lmsg);
-		panel.add(lName);
-		panel.add(lPassword);
-		panel.add(enter);
-		
-		panel.setPreferredSize(new Dimension(500,400));
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+		// Create the help button
+		helpimg = new ImageIcon(Messages.getString("Client.8")); //$NON-NLS-1$
+		JButton help = new JButton(helpimg);
+		help.setToolTipText(Messages.getString("Client.9")); //$NON-NLS-1$
+		help.setBorder(BorderFactory.createEmptyBorder());
+
+		// When user interacts with help button, load and open the help pdf file
+		help.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (Desktop.isDesktopSupported()) {
+					try {
+						helpFile = new File(Messages.getString("Client.10")); //$NON-NLS-1$
+						Desktop.getDesktop().open(helpFile);
+					} catch (IOException ex) {
+						// no application registered for PDFs
+						JOptionPane.showMessageDialog(
+								null,
+								Messages.getString("Client.11") //$NON-NLS-1$
+										+ Messages.getString("Client.12"), Messages.getString("Client.13"), //$NON-NLS-1$ //$NON-NLS-2$
+								JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+		});
+
+		// Add help button to the main login screen
+		helpPanel.add(help);
+		helpPanel.setBackground(bgcolor);
+		help.setBackground(bgcolor);
+
+		// Add all panels to the mainPanel in proper format
+		mainPanel.add(welcome);
+		mainPanel.add(imgPanel);
+		mainPanel.add(lmsg);
+		mainPanel.add(lName);
+		mainPanel.add(lPassword);
+		mainPanel.add(enter);
+		mainPanel.add(helpPanel);
+
+		// Set mainPanel and frame attributes
+		mainPanel.setPreferredSize(new Dimension(500, 425));
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
-		frame.setContentPane(panel);
+		frame.setContentPane(mainPanel);
 		frame.pack();
-		
-// check login credentials here ------------------------------------------------------
-		login.addActionListener(new ActionListener()
-		{
-			
+
+		// Check login credentials when user interacts with login button
+		login.addActionListener(new ActionListener() {
+
 			/**
 			 * Overwritten method for ActionListener class. Verifies the user is
 			 * authorized to use the system.
-			 * @param e An ActionEvent is created when the user clicks the login button
+			 * 
+			 * @param e
+			 *            An ActionEvent is created when the user clicks the
+			 *            login button
 			 */
-			public void actionPerformed(ActionEvent e)
-			{
-				
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				// Get username and password, immediately blank out both fields
 				String userName = nameField.getText();
 				char[] password = passField.getPassword();
-				
+
 				nameField.setText(null);
 				passField.setText(null);
-				
+
+				// Try to instantiate DatabaseManager
 				DatabaseManager dbm = null;
-				
-				try 
-				{
+				try {
 					dbm = new DatabaseManager();
-				} 
-				catch (ClassNotFoundException e1) 
-				{
+				} catch (ClassNotFoundException e1) {
 					e1.printStackTrace();
-				} 
-				catch (SQLException e1)
-				{
-					JOptionPane.showMessageDialog(null, "Database Error. Exiting Program",
-							"Error", JOptionPane.ERROR_MESSAGE);
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(
+							null,
+							Messages.getString("Client.14"), Messages.getString("Client.15"), //$NON-NLS-1$ //$NON-NLS-2$
+							JOptionPane.ERROR_MESSAGE);
 					e1.printStackTrace();
 					System.exit(0);
 				}
-				
-				String passwd = "";
-				
-				//convert password to string
+
+				// convert password to string
+				String passwd = Messages.getString("Client.16"); //$NON-NLS-1$
 				for (int i = 0; i < password.length; i++)
 					passwd += password[i];
-					
-				try 
-				{
+
+				try {
+					// Is the user valid and in the database
 					boolean validUser = dbm.login(userName, passwd);
-					// Java documentation recommends clearing password array after use
+
+					// Java documentation recommends clearing password array
+					// after use
 					for (int i = 0; i < password.length; i++)
 						password[i] = ' ';
+
+					// Is the user an admin
 					boolean admin = dbm.isUserAdmin();
-					if (!validUser) 
-					{
-						JOptionPane
-								.showMessageDialog(
-										null,
-										"Username and password are incorrect, please try again.",
-										"Invalid User",
-										JOptionPane.ERROR_MESSAGE);
+					if (!validUser) {
+						JOptionPane.showMessageDialog(null,
+								Messages.getString("Client.17"), //$NON-NLS-1$
+								Messages.getString("Client.18"), //$NON-NLS-1$
+								JOptionPane.ERROR_MESSAGE);
 						return;
-					} 
-					else 
-					{
+					} else {
 						showMainMenu(dbm, userName, admin);
 					}
-				} 
-				catch (SQLException e1)
-				{
-					JOptionPane.showMessageDialog(null, "Database Error. Exiting Program", 
-												  "Error", JOptionPane.ERROR_MESSAGE);
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(
+							null,
+							Messages.getString("Client.19"), Messages.getString("Client.20"), //$NON-NLS-1$ //$NON-NLS-2$
+							JOptionPane.ERROR_MESSAGE);
 					e1.printStackTrace();
 					System.exit(0);
 				}
-				
+
 			}
 		});
 	}
-	
-	/**
-	 * Opens up the Google Earth application and displays menu options for the user
-	 * @param dbm the dbm that contains user and location information
-	 * @param userName the user's username
-	 * @param admin whether or not a user is an administrator
-	 * @param locations the list of waypoints
-	 */
-	public static void showMainMenu(DatabaseManager dbm, String userName, boolean admin)
-	{
 
+	/**
+	 * Opens up the main menu screen
+	 * 
+	 * @param dbm
+	 *            the dbm that contains user and location information
+	 * @param userName
+	 *            the user's username
+	 * @param admin
+	 *            whether or not a user is an administrator
+	 */
+	public static void showMainMenu(DatabaseManager dbm, String userName,
+			boolean admin) {
+
+		// Get rid of the login frame and create new menuPanel
 		frame.dispose();
 		mainMenu = new MenuPanel(dbm, userName, admin);
-		
-		JFrame frame2 = new JFrame("Tailored Travels");
-		frame2.setIconImage(new ImageIcon(logoName).getImage());
+
+		// Create new frame for menuPanel and add components
+		JFrame frame2 = new JFrame(Messages.getString("Client.21")); //$NON-NLS-1$
+		frame2.setIconImage(new ImageIcon(logoFileName).getImage());
 		mainMenu.addComponents();
 		frame2.setContentPane(mainMenu);
 		frame2.setVisible(true);
 		frame2.pack();
 		frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 	}
 
 }

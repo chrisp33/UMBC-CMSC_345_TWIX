@@ -1,0 +1,238 @@
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint}{\section{com.\-twix.\-tailoredtravels.\-Waypoint Class Reference}
+\label{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint}\index{com.\-twix.\-tailoredtravels.\-Waypoint@{com.\-twix.\-tailoredtravels.\-Waypoint}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_ac044cb6236cc8f91e403d5e397b0138c}{Waypoint} (String \-\_\-name, float \-\_\-lat, float \-\_\-long, String \-\_\-desc)
+\item 
+\hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a3cb2334fde8914ad02eca0daee98b052}{Waypoint} (float \-\_\-lat, float \-\_\-long)
+\item 
+\hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a6311fa930e1ebacee5795a7561f7d154}{Waypoint} ()
+\item 
+float \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a0e9dfbf7825a6bc9494fe0ad5d28cf06}{get\-Longitude} ()
+\item 
+float \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_acd8b73a13740dcc01cfdf0f51afabc98}{get\-Latitude} ()
+\item 
+String \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_aa3e053c2012fd6c83ac266ebae053d41}{get\-Name} ()
+\item 
+String \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a3d3b52f82622f22c603c06d1628fba4d}{get\-Description} ()
+\item 
+void \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_acde4707588dffddc9b270ac010ac3c49}{setw\-Name} (String w\-Name)
+\item 
+void \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a3c4ea883b15c1f255d7debcefad30a3f}{setw\-Description} (String w\-Description)
+\item 
+void \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a0a8ac77e3bbdcc661d84f221a890fa63}{setw\-Longitude} (float w\-Longitude)
+\item 
+void \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_aa5ff7b18588db74d9535a228106a2590}{setw\-Latitude} (float w\-Latitude)
+\item 
+double \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_ab533fb412000d0e8dd40ec688fcf5af1}{distance} (\hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint}{Waypoint} other)
+\item 
+boolean \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a6108a1c61439902f3c31aa4b4509069d}{equals} (\hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint}{Waypoint} other)
+\item 
+String \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a874ca189dbecb33168c5068afbf82aa7}{to\-String} ()
+\item 
+String \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a55b51e30c9195587908b5b3115e7c482}{print\-Database} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A class that acts as the template for K\-M\-L objects correlating to locations.
+
+\begin{DoxyAuthor}{Author}
+Stephen Moore \& Justin Tavares with distance function by Mariama Barr-\/\-Dallas, Michael Tang 
+\end{DoxyAuthor}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_ac044cb6236cc8f91e403d5e397b0138c}{\index{com\-::twix\-::tailoredtravels\-::\-Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}!Waypoint@{Waypoint}}
+\index{Waypoint@{Waypoint}!com::twix::tailoredtravels::Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}}
+\subsubsection[{Waypoint}]{\setlength{\rightskip}{0pt plus 5cm}com.\-twix.\-tailoredtravels.\-Waypoint.\-Waypoint (
+\begin{DoxyParamCaption}
+\item[{String}]{\-\_\-name, }
+\item[{float}]{\-\_\-lat, }
+\item[{float}]{\-\_\-long, }
+\item[{String}]{\-\_\-desc}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_ac044cb6236cc8f91e403d5e397b0138c}
+Float constructor, creates waypoint with name, latitude, longitude, description given in input
+
+
+\begin{DoxyParams}{Parameters}
+{\em \-\_\-name} & name of waypoint \\
+\hline
+{\em \-\_\-lat} & latitude of waypoint \\
+\hline
+{\em \-\_\-long} & longitude of waypoint \\
+\hline
+{\em \-\_\-desc} & description of waypoint \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a3cb2334fde8914ad02eca0daee98b052}{\index{com\-::twix\-::tailoredtravels\-::\-Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}!Waypoint@{Waypoint}}
+\index{Waypoint@{Waypoint}!com::twix::tailoredtravels::Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}}
+\subsubsection[{Waypoint}]{\setlength{\rightskip}{0pt plus 5cm}com.\-twix.\-tailoredtravels.\-Waypoint.\-Waypoint (
+\begin{DoxyParamCaption}
+\item[{float}]{\-\_\-lat, }
+\item[{float}]{\-\_\-long}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a3cb2334fde8914ad02eca0daee98b052}
+No name/desc constructor for \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint}{Waypoint}, creates a nameless waypoint with given latitude/longitude
+
+
+\begin{DoxyParams}{Parameters}
+{\em \-\_\-lat} & latitude of waypoint \\
+\hline
+{\em \-\_\-long} & longitude of waypoint \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a6311fa930e1ebacee5795a7561f7d154}{\index{com\-::twix\-::tailoredtravels\-::\-Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}!Waypoint@{Waypoint}}
+\index{Waypoint@{Waypoint}!com::twix::tailoredtravels::Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}}
+\subsubsection[{Waypoint}]{\setlength{\rightskip}{0pt plus 5cm}com.\-twix.\-tailoredtravels.\-Waypoint.\-Waypoint (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a6311fa930e1ebacee5795a7561f7d154}
+Noarg constructor 
+
+\subsection{Member Function Documentation}
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_ab533fb412000d0e8dd40ec688fcf5af1}{\index{com\-::twix\-::tailoredtravels\-::\-Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}!distance@{distance}}
+\index{distance@{distance}!com::twix::tailoredtravels::Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}}
+\subsubsection[{distance}]{\setlength{\rightskip}{0pt plus 5cm}double com.\-twix.\-tailoredtravels.\-Waypoint.\-distance (
+\begin{DoxyParamCaption}
+\item[{{\bf Waypoint}}]{other}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_ab533fb412000d0e8dd40ec688fcf5af1}
+Calculates the distance between 2 coordinates in miles Equation for calculation\-: dlon = lon2 -\/ lon1 dlat = lat2 -\/ lat1 a = (sin(dlat/2))$^\wedge$2 + cos(lat1) $\ast$ cos(lat2) $\ast$ (sin(dlon/2))$^\wedge$2 c = 2 $\ast$ atan2( sqrt(a), sqrt(1-\/a) ) d = R $\ast$ c (where R is the radius of the Earth)
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & other waypoint for distance calculation\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+double containing distance between 2 coordinates 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a6108a1c61439902f3c31aa4b4509069d}{\index{com\-::twix\-::tailoredtravels\-::\-Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}!equals@{equals}}
+\index{equals@{equals}!com::twix::tailoredtravels::Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}}
+\subsubsection[{equals}]{\setlength{\rightskip}{0pt plus 5cm}boolean com.\-twix.\-tailoredtravels.\-Waypoint.\-equals (
+\begin{DoxyParamCaption}
+\item[{{\bf Waypoint}}]{other}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a6108a1c61439902f3c31aa4b4509069d}
+Determines if this waypoint is the same as a given waypoint
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & other waypoint for distance calculation \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if waypoints are the same, false otherwise 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a3d3b52f82622f22c603c06d1628fba4d}{\index{com\-::twix\-::tailoredtravels\-::\-Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}!get\-Description@{get\-Description}}
+\index{get\-Description@{get\-Description}!com::twix::tailoredtravels::Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}}
+\subsubsection[{get\-Description}]{\setlength{\rightskip}{0pt plus 5cm}String com.\-twix.\-tailoredtravels.\-Waypoint.\-get\-Description (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a3d3b52f82622f22c603c06d1628fba4d}
+get\-Description \begin{DoxyReturn}{Returns}
+w\-Description 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_acd8b73a13740dcc01cfdf0f51afabc98}{\index{com\-::twix\-::tailoredtravels\-::\-Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}!get\-Latitude@{get\-Latitude}}
+\index{get\-Latitude@{get\-Latitude}!com::twix::tailoredtravels::Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}}
+\subsubsection[{get\-Latitude}]{\setlength{\rightskip}{0pt plus 5cm}float com.\-twix.\-tailoredtravels.\-Waypoint.\-get\-Latitude (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_acd8b73a13740dcc01cfdf0f51afabc98}
+get\-Latitude \begin{DoxyReturn}{Returns}
+w\-Latitude 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a0e9dfbf7825a6bc9494fe0ad5d28cf06}{\index{com\-::twix\-::tailoredtravels\-::\-Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}!get\-Longitude@{get\-Longitude}}
+\index{get\-Longitude@{get\-Longitude}!com::twix::tailoredtravels::Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}}
+\subsubsection[{get\-Longitude}]{\setlength{\rightskip}{0pt plus 5cm}float com.\-twix.\-tailoredtravels.\-Waypoint.\-get\-Longitude (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a0e9dfbf7825a6bc9494fe0ad5d28cf06}
+get\-Longitude \begin{DoxyReturn}{Returns}
+w\-Longitude 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_aa3e053c2012fd6c83ac266ebae053d41}{\index{com\-::twix\-::tailoredtravels\-::\-Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}!get\-Name@{get\-Name}}
+\index{get\-Name@{get\-Name}!com::twix::tailoredtravels::Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}}
+\subsubsection[{get\-Name}]{\setlength{\rightskip}{0pt plus 5cm}String com.\-twix.\-tailoredtravels.\-Waypoint.\-get\-Name (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_aa3e053c2012fd6c83ac266ebae053d41}
+get\-Name \begin{DoxyReturn}{Returns}
+w\-Name 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a55b51e30c9195587908b5b3115e7c482}{\index{com\-::twix\-::tailoredtravels\-::\-Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}!print\-Database@{print\-Database}}
+\index{print\-Database@{print\-Database}!com::twix::tailoredtravels::Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}}
+\subsubsection[{print\-Database}]{\setlength{\rightskip}{0pt plus 5cm}String com.\-twix.\-tailoredtravels.\-Waypoint.\-print\-Database (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a55b51e30c9195587908b5b3115e7c482}
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a3c4ea883b15c1f255d7debcefad30a3f}{\index{com\-::twix\-::tailoredtravels\-::\-Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}!setw\-Description@{setw\-Description}}
+\index{setw\-Description@{setw\-Description}!com::twix::tailoredtravels::Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}}
+\subsubsection[{setw\-Description}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-twix.\-tailoredtravels.\-Waypoint.\-setw\-Description (
+\begin{DoxyParamCaption}
+\item[{String}]{w\-Description}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a3c4ea883b15c1f255d7debcefad30a3f}
+setw\-Description 
+\begin{DoxyParams}{Parameters}
+{\em w\-Description} & new description \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_aa5ff7b18588db74d9535a228106a2590}{\index{com\-::twix\-::tailoredtravels\-::\-Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}!setw\-Latitude@{setw\-Latitude}}
+\index{setw\-Latitude@{setw\-Latitude}!com::twix::tailoredtravels::Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}}
+\subsubsection[{setw\-Latitude}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-twix.\-tailoredtravels.\-Waypoint.\-setw\-Latitude (
+\begin{DoxyParamCaption}
+\item[{float}]{w\-Latitude}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_aa5ff7b18588db74d9535a228106a2590}
+setw\-Latitude 
+\begin{DoxyParams}{Parameters}
+{\em w\-Latitude} & new latitude \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a0a8ac77e3bbdcc661d84f221a890fa63}{\index{com\-::twix\-::tailoredtravels\-::\-Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}!setw\-Longitude@{setw\-Longitude}}
+\index{setw\-Longitude@{setw\-Longitude}!com::twix::tailoredtravels::Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}}
+\subsubsection[{setw\-Longitude}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-twix.\-tailoredtravels.\-Waypoint.\-setw\-Longitude (
+\begin{DoxyParamCaption}
+\item[{float}]{w\-Longitude}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a0a8ac77e3bbdcc661d84f221a890fa63}
+setw\-Longitude 
+\begin{DoxyParams}{Parameters}
+{\em w\-Longitude} & new longitude \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_acde4707588dffddc9b270ac010ac3c49}{\index{com\-::twix\-::tailoredtravels\-::\-Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}!setw\-Name@{setw\-Name}}
+\index{setw\-Name@{setw\-Name}!com::twix::tailoredtravels::Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}}
+\subsubsection[{setw\-Name}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-twix.\-tailoredtravels.\-Waypoint.\-setw\-Name (
+\begin{DoxyParamCaption}
+\item[{String}]{w\-Name}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_acde4707588dffddc9b270ac010ac3c49}
+setw\-Name 
+\begin{DoxyParams}{Parameters}
+{\em w\-Name} & new name \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a874ca189dbecb33168c5068afbf82aa7}{\index{com\-::twix\-::tailoredtravels\-::\-Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}!to\-String@{to\-String}}
+\index{to\-String@{to\-String}!com::twix::tailoredtravels::Waypoint@{com\-::twix\-::tailoredtravels\-::\-Waypoint}}
+\subsubsection[{to\-String}]{\setlength{\rightskip}{0pt plus 5cm}String com.\-twix.\-tailoredtravels.\-Waypoint.\-to\-String (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint_a874ca189dbecb33168c5068afbf82aa7}
+to\-String -\/ returns w\-Name, w\-Latitude\-:w\-Longitude, w\-Description 
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+C\-:/\-Users/\-Justin/workspace/\-Tailored Travels/src/com/twix/tailoredtravels/\hyperlink{_waypoint_8java}{Waypoint.\-java}\end{DoxyCompactItemize}

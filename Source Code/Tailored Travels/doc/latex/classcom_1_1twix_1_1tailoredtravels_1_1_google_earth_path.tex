@@ -1,0 +1,86 @@
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_google_earth_path}{\section{com.\-twix.\-tailoredtravels.\-Google\-Earth\-Path Class Reference}
+\label{classcom_1_1twix_1_1tailoredtravels_1_1_google_earth_path}\index{com.\-twix.\-tailoredtravels.\-Google\-Earth\-Path@{com.\-twix.\-tailoredtravels.\-Google\-Earth\-Path}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_google_earth_path_aa15740bee3373d47996df6c15a35f221}{Google\-Earth\-Path} (\hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint}{Waypoint} \-\_\-start, \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint}{Waypoint} \-\_\-end)
+\item 
+\hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_google_earth_path_a1da903f382a47ac383873b558fe093e4}{Google\-Earth\-Path} (Array\-List$<$ \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint}{Waypoint} $>$ sorted\-List)
+\item 
+void \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_google_earth_path_a8a45aedd969a5ecdfdaccee3cc83a449}{add\-Waypoint} (\hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint}{Waypoint} \-\_\-new)
+\item 
+Linked\-List$<$ \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint}{Waypoint} $>$ \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_google_earth_path_add0dbbb86bc1b39af5a41baec63c2577}{get\-Path} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_google_earth_path_aa15740bee3373d47996df6c15a35f221}{\index{com\-::twix\-::tailoredtravels\-::\-Google\-Earth\-Path@{com\-::twix\-::tailoredtravels\-::\-Google\-Earth\-Path}!Google\-Earth\-Path@{Google\-Earth\-Path}}
+\index{Google\-Earth\-Path@{Google\-Earth\-Path}!com::twix::tailoredtravels::GoogleEarthPath@{com\-::twix\-::tailoredtravels\-::\-Google\-Earth\-Path}}
+\subsubsection[{Google\-Earth\-Path}]{\setlength{\rightskip}{0pt plus 5cm}com.\-twix.\-tailoredtravels.\-Google\-Earth\-Path.\-Google\-Earth\-Path (
+\begin{DoxyParamCaption}
+\item[{{\bf Waypoint}}]{\-\_\-start, }
+\item[{{\bf Waypoint}}]{\-\_\-end}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_google_earth_path_aa15740bee3373d47996df6c15a35f221}
+Initiates a new Google Earth path to be translated into K\-M\-L.
+
+
+\begin{DoxyParams}{Parameters}
+{\em \-\_\-start} & The beginning \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint}{Waypoint} \\
+\hline
+{\em \-\_\-end} & The final \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint}{Waypoint} \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_google_earth_path_a1da903f382a47ac383873b558fe093e4}{\index{com\-::twix\-::tailoredtravels\-::\-Google\-Earth\-Path@{com\-::twix\-::tailoredtravels\-::\-Google\-Earth\-Path}!Google\-Earth\-Path@{Google\-Earth\-Path}}
+\index{Google\-Earth\-Path@{Google\-Earth\-Path}!com::twix::tailoredtravels::GoogleEarthPath@{com\-::twix\-::tailoredtravels\-::\-Google\-Earth\-Path}}
+\subsubsection[{Google\-Earth\-Path}]{\setlength{\rightskip}{0pt plus 5cm}com.\-twix.\-tailoredtravels.\-Google\-Earth\-Path.\-Google\-Earth\-Path (
+\begin{DoxyParamCaption}
+\item[{Array\-List$<$ {\bf Waypoint} $>$}]{sorted\-List}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_google_earth_path_a1da903f382a47ac383873b558fe093e4}
+Initiates a new Google Earth path to be translated into K\-M\-L given a sorted Array\-List$<$\-Waypoint$>$ as returned by \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_dist_calc_driver}{Dist\-Calc\-Driver}
+
+preconditions\-: sorted\-List is actually sorted to be a shortest path list of all waypoints
+
+
+\begin{DoxyParams}{Parameters}
+{\em \-\_\-start} & The beginning \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint}{Waypoint} \\
+\hline
+{\em \-\_\-end} & The final \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint}{Waypoint} \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_google_earth_path_a8a45aedd969a5ecdfdaccee3cc83a449}{\index{com\-::twix\-::tailoredtravels\-::\-Google\-Earth\-Path@{com\-::twix\-::tailoredtravels\-::\-Google\-Earth\-Path}!add\-Waypoint@{add\-Waypoint}}
+\index{add\-Waypoint@{add\-Waypoint}!com::twix::tailoredtravels::GoogleEarthPath@{com\-::twix\-::tailoredtravels\-::\-Google\-Earth\-Path}}
+\subsubsection[{add\-Waypoint}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-twix.\-tailoredtravels.\-Google\-Earth\-Path.\-add\-Waypoint (
+\begin{DoxyParamCaption}
+\item[{{\bf Waypoint}}]{\-\_\-new}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_google_earth_path_a8a45aedd969a5ecdfdaccee3cc83a449}
+Adds a new \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint}{Waypoint} to the path, immediately before the end.
+
+
+\begin{DoxyParams}{Parameters}
+{\em \-\_\-new} & The \hyperlink{classcom_1_1twix_1_1tailoredtravels_1_1_waypoint}{Waypoint} to add \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1twix_1_1tailoredtravels_1_1_google_earth_path_add0dbbb86bc1b39af5a41baec63c2577}{\index{com\-::twix\-::tailoredtravels\-::\-Google\-Earth\-Path@{com\-::twix\-::tailoredtravels\-::\-Google\-Earth\-Path}!get\-Path@{get\-Path}}
+\index{get\-Path@{get\-Path}!com::twix::tailoredtravels::GoogleEarthPath@{com\-::twix\-::tailoredtravels\-::\-Google\-Earth\-Path}}
+\subsubsection[{get\-Path}]{\setlength{\rightskip}{0pt plus 5cm}Linked\-List$<${\bf Waypoint}$>$ com.\-twix.\-tailoredtravels.\-Google\-Earth\-Path.\-get\-Path (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1twix_1_1tailoredtravels_1_1_google_earth_path_add0dbbb86bc1b39af5a41baec63c2577}
+get\-Path returns the linked\-List of waypoints for use in creating K\-M\-L file
+
+\begin{DoxyReturn}{Returns}
+w\-Path 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+C\-:/\-Users/\-Justin/workspace/\-Tailored Travels/src/com/twix/tailoredtravels/\hyperlink{_google_earth_path_8java}{Google\-Earth\-Path.\-java}\end{DoxyCompactItemize}
