@@ -1,5 +1,7 @@
 /**
- * Panel for main menu
+ * Panel containing the main menu and most administrator and user functions. 
+ * Only logged in users will be able to access this window. 
+ * 
  * @author Christopher Pagan
  * @version 1.0
  */
@@ -44,65 +46,80 @@ import javax.swing.event.ListSelectionListener;
 
 public class MenuPanel extends JPanel {
 
+	private static final long serialVersionUID = 3359477065217156534L;
+	final int REQUIRED_NUM = 12; //Number of waypoints required
+
 	/**
 	 * Components to add to the panel
 	 */
-	private static final long serialVersionUID = 3359477065217156534L;
+	
 	private JButton calcRoute, calcDist, addLocation, removeLocation, addUser,
 					removeUser, logout, edit, help;
 	private JLabel welcomeMsg,availMsg;
 	private JList<String> list;
 	private JScrollPane scroller;
 	private JPanel welcome, addRmLoc, addRmUser, waypointsList, calculations, edits, exit, 
-					adminPanel, helpp;
-	final int REQUIRED_NUM = 12;
+					adminPanel, helpPanel;
+	
+	/**
+	 * Filenames
+	 */
+	private static File helpFile;
+	private static ImageIcon helpimg;
 	
 	/**
 	 * The current user's username
 	 */
 	private String currentUser;
+	
 	/**
-	 * To test if the current user is an administrator
+	 * Is the current user an admin
 	 */
 	private boolean isAdmin;
+	
 	/**
-	 * Instance for all database manipulations
+	 * Database instance
 	 */
 	private DatabaseManager dbm;
 	
 	/**
 	 * Constructor for main menu
+	 * 
 	 * @param dbm the database manager
 	 * @param user the user's username
 	 * @param admin whether or not the user is an administrator
 	 */
-	public MenuPanel(DatabaseManager dbm,String user, boolean admin)
+	public MenuPanel(DatabaseManager dbm, String user, boolean admin)
 	{
-		
+		//Assign variables
 		this.dbm = dbm;
 		isAdmin = admin;
 		currentUser = user;
-		Color bgColor = new Color(48,235,71);
+		Color bgColor = new Color(48,235,71); //Color for menuPanel background
 		TitledBorder adminBorder = BorderFactory.createTitledBorder("Administrative Controls");
 		Border b = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
-		helpp = new JPanel();
+		
+		//Create main menu panels
+		helpPanel = new JPanel();
 		welcome = new JPanel();
 		addRmLoc = new JPanel();
 		addRmUser = new JPanel();
 		edits = new JPanel();
 		adminPanel = new JPanel();
 		
-
-		ImageIcon helpimg = new ImageIcon("help.png");
+		//Create help button
+		helpimg = new ImageIcon("help.png");
 		help = new JButton(helpimg);
-		help.setToolTipText("Click here for help.");
+		help.setToolTipText("Help");
 		help.setBorder(BorderFactory.createEmptyBorder());
+		
+		//When user interacts with help button, load and open the help pdf file
 		help.addActionListener(new ActionListener(){public void actionPerformed (ActionEvent e)
 		{
 			if (Desktop.isDesktopSupported()) {
 			    try {
-			        File myFile = new File("Tailored Travels Help.pdf");
-			        Desktop.getDesktop().open(myFile);
+			        helpFile = new File("Tailored Travels Help.pdf");
+			        Desktop.getDesktop().open(helpFile);
 			    } catch (IOException ex) {
 			        // no application registered for PDFs
 			    	JOptionPane.showMessageDialog(null, "A PDF viewer is needed to view the help"
@@ -110,8 +127,8 @@ public class MenuPanel extends JPanel {
 			    }
 			}
 		}});
-		helpp.add(help);
-		helpp.setBackground(bgColor);
+		helpPanel.add(help);
+		helpPanel.setBackground(bgColor);
 		help.setBackground(bgColor);
 		
 		
@@ -119,26 +136,29 @@ public class MenuPanel extends JPanel {
 		//Create these components if the user is an administrator
 		if (isAdmin)
 		{
+			//Admin section
 			adminPanel.setLayout(new BoxLayout(adminPanel, BoxLayout.Y_AXIS));
 			adminBorder.setBorder(b);
 			adminPanel.setBorder(adminBorder);
 			
+			//Add/Remove/Edit User/Location buttons
 			addLocation = new JButton("Add Location");
 			removeLocation = new JButton("Remove Location");			
 			addUser = new JButton("Add User");
 			removeUser = new JButton("Remove User");
 			edit = new JButton("Edit Location");
 			
+			//Add all buttons to panel
 			addRmLoc.add(addLocation);
 			addRmLoc.add(removeLocation);
 			addRmUser.add(addUser);
 			addRmUser.add(removeUser);
 			edits.add(edit);
-			
 			adminPanel.add(addRmLoc);
 			adminPanel.add(addRmUser);
 			adminPanel.add(edits);
 			
+			//Add ActionListeners to buttons
 			addLocation.addActionListener(new AddLocListener());
 			removeLocation.addActionListener(new RemLocListener());
 			addUser.addActionListener(new AddUserListener());
@@ -149,9 +169,7 @@ public class MenuPanel extends JPanel {
 		//Instantiate GUI components
 		welcomeMsg = new JLabel("Welcome back, " + user + "!");
 		welcome.add(welcomeMsg);
-		availMsg = new JLabel("Available Locations");
-		String locToolTip = "Select a location for more info.";
-		availMsg.setToolTipText(locToolTip);
+		availMsg = new JLabel("<html>Available Location<br>Select for info</html>");
 		list = new JList<String>();
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scroller = new JScrollPane(list);
@@ -161,11 +179,13 @@ public class MenuPanel extends JPanel {
 		calcDist = new JButton("Calculate Distance");
 		logout = new JButton("Log Out");
 		
+		//Add ActionListeners for normal user buttons
 		list.addListSelectionListener(new ListSelListener());
 		calcRoute.addActionListener(new RouteListener());
 		calcDist.addActionListener(new DistListener());
 		logout.addActionListener(new LogoutListener());
 		
+		//Add list of waypoints
 		waypointsList = new JPanel();
 		waypointsList.add(availMsg);
 		waypointsList.add(scroller);
@@ -176,6 +196,7 @@ public class MenuPanel extends JPanel {
 		exit = new JPanel();
 		exit.add(logout);
 	
+		//Set uniform background color for all components
 		setBackground(bgColor);
 		adminPanel.setBackground(bgColor);
 		welcome.setBackground(bgColor);
@@ -197,7 +218,7 @@ public class MenuPanel extends JPanel {
 	public void addComponents()
 	{
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		add(helpp);
+		
 		add(welcome);
 		
 		if(isAdmin)
@@ -208,6 +229,7 @@ public class MenuPanel extends JPanel {
 		add(waypointsList);
 		add(calculations);
 		add(exit);
+		add(helpPanel);
 	}
 	
 	/**
@@ -235,8 +257,6 @@ public class MenuPanel extends JPanel {
 		}
 	}
 	
-	
-	
 	/**
 	 * Action listener for "Add Location" button
 	 */
@@ -246,6 +266,7 @@ public class MenuPanel extends JPanel {
 			/**
 			 * Overwritten method for ActionListener class. 
 			 * Prompts for waypoint data and adds it to the system.
+			 * 
 			 * @param ae An ActionEvent is created when the user clicks the "Add Location" button
 			 */
 			public void actionPerformed(ActionEvent ae) 
@@ -261,6 +282,7 @@ public class MenuPanel extends JPanel {
 						"Enter the location's longitude position:", longitude,
 						"Enter some detail about the location:", details};
 
+				//Assign input to variables
 				int sel = JOptionPane.showConfirmDialog(null, message,
 						"Add Location", JOptionPane.OK_CANCEL_OPTION);
 				String wName = name.getText();
@@ -268,6 +290,7 @@ public class MenuPanel extends JPanel {
 				String lon = longitude.getText();
 				String det = details.getText();
 				
+				//If cancel is selected, confirm cancellation and exit add new location
 				if (sel == JOptionPane.CANCEL_OPTION)
 				{
 					JOptionPane.showMessageDialog(null,
@@ -276,6 +299,7 @@ public class MenuPanel extends JPanel {
 					return;
 				}
 				
+				//Check for blank entry
 				if (wName.equals("") || lat.equals("") || lon.equals("") || det.equals(""))
 				{
 					JOptionPane.showMessageDialog(null, "Cannot leave any fields blank.",
@@ -283,8 +307,8 @@ public class MenuPanel extends JPanel {
 					return;
 				}
 				
+				//float variables for latitude and longitude
 				float wLat, wLong;
-				
 				try
 				{
 					wLat = Float.parseFloat(lat);
@@ -297,6 +321,7 @@ public class MenuPanel extends JPanel {
 					return;
 				}
 				
+				//Latitude and Logitude validation
 				if (wLat < -90 || wLat > 90 || wLong < -180 || wLong > 180)
 				{
 					String msg = "Latitude can only range from -90 degrees to +90 degrees.\n" +
@@ -306,6 +331,7 @@ public class MenuPanel extends JPanel {
 					return;
 				}
 				
+				//Add new waypoint to database manager
 				try
 				{
 					boolean added;
@@ -344,6 +370,7 @@ public class MenuPanel extends JPanel {
 		/**
 		 * Overwritten method for ActionListener class. 
 		 * Prompts for waypoint data and removes it from the system.
+		 * 
 		 * @param ae An ActionEvent is created when the user clicks the "Remove Location" button
 		 */
 		public void actionPerformed(ActionEvent ae) 
@@ -435,6 +462,7 @@ public class MenuPanel extends JPanel {
 		/**
 		 * Overwritten method for ActionListener class. 
 		 * Prompts for user data and adds it to the system.
+		 * 
 		 * @param ae An ActionEvent is created when the user clicks the "Add User" button
 		 */
 		public void actionPerformed(ActionEvent ae) 
@@ -539,6 +567,7 @@ public class MenuPanel extends JPanel {
 		/**
 		 * Overwritten method for ActionListener class. 
 		 * Prompts for user data and removes it from the system.
+		 * 
 		 * @param ae An ActionEvent is created when the user clicks the "Remove User" button
 		 */
 		public void actionPerformed(ActionEvent ae) 
@@ -616,6 +645,7 @@ public class MenuPanel extends JPanel {
 		/**
 		 * Overwritten method for ActionListener class. 
 		 * Prompts for which type of data is edited for the waypoint
+		 * 
 		 * @param ae An ActionEvent is created when the user clicks the "Edit Location" button
 		 */
 		public void actionPerformed(ActionEvent e)
@@ -1164,17 +1194,6 @@ public class MenuPanel extends JPanel {
 					}
 					selectedPoints.add(ptB);
 				}
-				else if (REQUIRED_NUM == 2)
-				{
-					selectedPoints.add(ptA);
-					selectedPoints.add(ptB);
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Unable to calculate route.",
-							"Error Calculating Route",JOptionPane.ERROR_MESSAGE);
-					return;
-				}
 				
 				//Do calculations
 				ArrayList<Waypoint> routeWaypoints = DistCalcDriver.
@@ -1399,18 +1418,10 @@ public class MenuPanel extends JPanel {
 					}
 					selectedPoints.add(ptB);
 				}
-				else if(REQUIRED_NUM == 2)
-				{
-					selectedPoints.add(ptA);
-					selectedPoints.add(ptB);
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null,"Unable to calculate the distance.",
-							"Error Calculating Distance", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
+
 			}
+			
+			
 			catch (SQLException e1)
 			{
 				JOptionPane.showMessageDialog(null, "Database Error. Exiting Program.", "Error", 
@@ -1437,11 +1448,17 @@ public class MenuPanel extends JPanel {
 		}
 		
 	}
+	
+	/**
+	 * Runnable for progress bar display. Work in progress.
+	 * 
+	 * @author Keith Chang
+	 */
 	private class runProgress implements Runnable
 	{
 		JDialog dialog = new JDialog();
 		
-		@Override
+		
 		public void run() {
 			JProgressBar pb = new JProgressBar();
 			pb.setPreferredSize(new Dimension(175,20));
@@ -1464,6 +1481,7 @@ public class MenuPanel extends JPanel {
 		}
 		
 	}
+	
 	/**
 	 * Action listener for "Log Out" button
 	 */
