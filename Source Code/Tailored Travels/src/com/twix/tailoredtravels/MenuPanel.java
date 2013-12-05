@@ -1170,7 +1170,7 @@ public class MenuPanel extends JPanel {
 							.showMessageDialog(
 									null,
 									"There must be between "+(REQUIRED_NUM -2)+" and "+(REQUIRED_MAX-2)+
-									"waypoints choosen , besides the start and end, must be selected.",
+									" more waypoints choosen besides the start and end.",
 									"More Selections Required",
 									JOptionPane.ERROR_MESSAGE);
 							return;
@@ -1392,7 +1392,7 @@ public class MenuPanel extends JPanel {
 							.showMessageDialog(
 									null,
 									"There must be between "+(REQUIRED_NUM -2)+" and "+(REQUIRED_MAX-2)+
-									"waypoints choosen , besides the start and end, must be selected.",
+									" more waypoints choosen besides the start and end.",
 									"More Selections Required",
 									JOptionPane.ERROR_MESSAGE);
 							return;
