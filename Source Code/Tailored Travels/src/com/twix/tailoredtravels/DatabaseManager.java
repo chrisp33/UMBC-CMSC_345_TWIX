@@ -17,9 +17,9 @@ import com.twix.init.InitDatabase;
 public class DatabaseManager {
 	private LinkedList<Waypoint> db_waypoints;
 	private boolean admin;
-	private final String newDatabase = "org.apache.derby.jdbc.EmbeddedDriver";
-	private final String url = "jdbc:derby:Database;create = true";
-	private final String userTable = "db_users";
+	private final String newDatabase = Messages.getString("DatabaseManager.0"); //$NON-NLS-1$
+	private final String url = Messages.getString("DatabaseManager.1"); //$NON-NLS-1$
+	private final String userTable = Messages.getString("DatabaseManager.2"); //$NON-NLS-1$
 	Connection _connect = null;
 
 	// private Connection connect = null;
@@ -34,13 +34,14 @@ public class DatabaseManager {
 		Class.forName(newDatabase);
 		db_waypoints = new LinkedList<Waypoint>();
 		admin = false;
-		ResultSet _r = executeQueryForResult("SELECT * FROM " + userTable);
+		ResultSet _r = executeQueryForResult(Messages
+				.getString("DatabaseManager.3") + userTable); //$NON-NLS-1$
 		if (_r == null) {
 			_connect.close();
 			InitDatabase.CreateUserTable();
 		} else
 			_connect.close();
-		_r = executeQueryForResult("SELECT * FROM db_waypoints");
+		_r = executeQueryForResult(Messages.getString("DatabaseManager.4")); //$NON-NLS-1$
 		if (_r == null) {
 			_connect.close();
 			InitDatabase.CreateWaypointTable();
@@ -61,8 +62,9 @@ public class DatabaseManager {
 			return false;
 
 		boolean login = false;
-		ResultSet result = executeQueryForResult("SELECT * FROM " + userTable
-				+ " WHERE upper(name) LIKE upper('%" + name + "%')");
+		ResultSet result = executeQueryForResult(Messages
+				.getString("DatabaseManager.5") + userTable //$NON-NLS-1$
+				+ Messages.getString("DatabaseManager.6") + name + Messages.getString("DatabaseManager.7")); //$NON-NLS-1$ //$NON-NLS-2$
 		// while there is another item
 		while (result.next()) {
 			// check if the user name and password exist with name being
@@ -98,8 +100,9 @@ public class DatabaseManager {
 			return false;
 
 		// check if the user already exist
-		ResultSet _r = executeQueryForResult("SELECT * FROM " + userTable
-				+ " WHERE upper(name) LIKE upper('%" + name + "%')");
+		ResultSet _r = executeQueryForResult(Messages
+				.getString("DatabaseManager.8") + userTable //$NON-NLS-1$
+				+ Messages.getString("DatabaseManager.9") + name + Messages.getString("DatabaseManager.10")); //$NON-NLS-1$ //$NON-NLS-2$
 		if (_r.isBeforeFirst() || searchUserQuery(_r, name)) {
 			_connect.close();
 			return false;
@@ -107,11 +110,11 @@ public class DatabaseManager {
 		_connect.close();
 
 		// if user is unique then add the user
-		String query = "";
+		String query = Messages.getString("DatabaseManager.11"); //$NON-NLS-1$
 		// if the new person added is admin then give them admin privileges
-		query = "INSERT into " + userTable + " (name, password, admin) "
-				+ "values ('" + name + "', '" + password + "', " + isAdmin
-				+ ")";
+		query = Messages.getString("DatabaseManager.12") + userTable + Messages.getString("DatabaseManager.13") //$NON-NLS-1$ //$NON-NLS-2$
+				+ Messages.getString("DatabaseManager.14") + name + Messages.getString("DatabaseManager.15") + password + Messages.getString("DatabaseManager.16") + isAdmin //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ Messages.getString("DatabaseManager.17"); //$NON-NLS-1$
 		executeQuery(query);
 		return true;
 	}
@@ -136,17 +139,19 @@ public class DatabaseManager {
 			return false;
 
 		// calls the driver to call the database and query the location table
-		ResultSet _r = executeQueryForResult("SELECT * FROM db_waypoints "
-				+ " WHERE upper(name) LIKE upper('%" + name + "%')");
+		ResultSet _r = executeQueryForResult(Messages
+				.getString("DatabaseManager.18") //$NON-NLS-1$
+				+ Messages.getString("DatabaseManager.19") + name + Messages.getString("DatabaseManager.20")); //$NON-NLS-1$ //$NON-NLS-2$
 		if (_r.isBeforeFirst() || searchLocationQuery(_r, name)) {
 			_connect.close();
 			return false;
 		}
 		_connect.close();
-		executeQuery("INSERT into db_waypoints "
-				+ "(name, latitude, longitude, description)  values " + "('"
-				+ name + "', " + latitude + ", " + longitude + ", '"
-				+ description + "')");
+		executeQuery(Messages.getString("DatabaseManager.21") //$NON-NLS-1$
+				+ Messages.getString("DatabaseManager.22") + Messages.getString("DatabaseManager.23") //$NON-NLS-1$ //$NON-NLS-2$
+				+ name
+				+ Messages.getString("DatabaseManager.24") + latitude + Messages.getString("DatabaseManager.25") + longitude + Messages.getString("DatabaseManager.26") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ description + Messages.getString("DatabaseManager.27")); //$NON-NLS-1$
 
 		return true;
 	}
@@ -161,8 +166,9 @@ public class DatabaseManager {
 			return false;
 
 		// check if the user already exist
-		ResultSet _r = executeQueryForResult("SELECT * FROM " + userTable
-				+ " WHERE upper(name) LIKE upper('%" + name + "%')");
+		ResultSet _r = executeQueryForResult(Messages
+				.getString("DatabaseManager.28") + userTable //$NON-NLS-1$
+				+ Messages.getString("DatabaseManager.29") + name + Messages.getString("DatabaseManager.30")); //$NON-NLS-1$ //$NON-NLS-2$
 		if (!_r.isBeforeFirst() || !searchUserQuery(_r, name)) {
 			_connect.close();
 			return false;
@@ -171,8 +177,8 @@ public class DatabaseManager {
 		// if user is unique then add the user
 
 		// if the new person added is admin then give them admin privileges
-		String query = "DELETE FROM " + userTable
-				+ " WHERE upper(name) LIKE upper('%" + name + "%')";
+		String query = Messages.getString("DatabaseManager.31") + userTable //$NON-NLS-1$
+				+ Messages.getString("DatabaseManager.32") + name + Messages.getString("DatabaseManager.33"); //$NON-NLS-1$ //$NON-NLS-2$
 		executeQuery(query);
 		return true;
 	}
@@ -188,8 +194,9 @@ public class DatabaseManager {
 			return false;
 
 		// calls the driver to call the database and query the location table
-		ResultSet _r = executeQueryForResult("SELECT * FROM db_waypoints "
-				+ " WHERE upper(name) LIKE upper('%" + name + "%')");
+		ResultSet _r = executeQueryForResult(Messages
+				.getString("DatabaseManager.34") //$NON-NLS-1$
+				+ Messages.getString("DatabaseManager.35") + name + Messages.getString("DatabaseManager.36")); //$NON-NLS-1$ //$NON-NLS-2$
 		if (!_r.isBeforeFirst() || !searchLocationQuery(_r, name)) {
 			_connect.close();
 			return false;
@@ -198,7 +205,7 @@ public class DatabaseManager {
 		// I do not know why but this cannot be changed to follow the other
 		// syntax
 		// or at least not without the code breaking
-		executeQuery("delete from db_waypoints where name = '" + name + "'");
+		executeQuery(Messages.getString("DatabaseManager.37") + name + Messages.getString("DatabaseManager.38")); //$NON-NLS-1$ //$NON-NLS-2$
 		return true;
 	}
 
@@ -279,16 +286,17 @@ public class DatabaseManager {
 			throws SQLException {
 		if (oldName == null || newName == null)
 			return false;
-		ResultSet _r = executeQueryForResult("SELECT * FROM db_waypoints "
-				+ " WHERE upper(name) LIKE upper('%" + oldName + "%')");
+		ResultSet _r = executeQueryForResult(Messages
+				.getString("DatabaseManager.39") //$NON-NLS-1$
+				+ Messages.getString("DatabaseManager.40") + oldName + Messages.getString("DatabaseManager.41")); //$NON-NLS-1$ //$NON-NLS-2$
 		if (!_r.isBeforeFirst() || !searchLocationQuery(_r, oldName)) {
 			_connect.close();
 			return false;
 		}
 		_connect.close();
 
-		String query = "UPDATE db_waypoints SET " + "name='" + newName
-				+ "' WHERE upper(name) LIKE upper('%" + oldName + "%')";
+		String query = Messages.getString("DatabaseManager.42") + Messages.getString("DatabaseManager.43") + newName //$NON-NLS-1$ //$NON-NLS-2$
+				+ Messages.getString("DatabaseManager.44") + oldName + Messages.getString("DatabaseManager.45"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		executeQuery(query);
 		// return executeQuery(query);
@@ -305,16 +313,18 @@ public class DatabaseManager {
 			throws SQLException {
 		if (name == null || newDescription == null)
 			return false;
-		ResultSet _r = executeQueryForResult("SELECT * FROM db_waypoints "
-				+ " WHERE upper(name) LIKE upper('%" + name + "%')");
+		ResultSet _r = executeQueryForResult(Messages
+				.getString("DatabaseManager.46") //$NON-NLS-1$
+				+ Messages.getString("DatabaseManager.47") + name + Messages.getString("DatabaseManager.48")); //$NON-NLS-1$ //$NON-NLS-2$
 		if (!_r.isBeforeFirst() || !searchLocationQuery(_r, name)) {
 			_connect.close();
 			return false;
 		}
 		_connect.close();
-		String query = "UPDATE db_waypoints SET " + "description='"
-				+ newDescription + "' WHERE upper(name) LIKE upper('%" + name
-				+ "%')";
+		String query = Messages.getString("DatabaseManager.49") + Messages.getString("DatabaseManager.50") //$NON-NLS-1$ //$NON-NLS-2$
+				+ newDescription
+				+ Messages.getString("DatabaseManager.51") + name //$NON-NLS-1$
+				+ Messages.getString("DatabaseManager.52"); //$NON-NLS-1$
 		executeQuery(query);
 		return true;
 	}
@@ -329,16 +339,17 @@ public class DatabaseManager {
 			throws SQLException {
 		if (name == null)
 			return false;
-		ResultSet _r = executeQueryForResult("SELECT * FROM db_waypoints "
-				+ " WHERE upper(name) LIKE upper('%" + name + "%')");
+		ResultSet _r = executeQueryForResult(Messages
+				.getString("DatabaseManager.53") //$NON-NLS-1$
+				+ Messages.getString("DatabaseManager.54") + name + Messages.getString("DatabaseManager.55")); //$NON-NLS-1$ //$NON-NLS-2$
 		if (!_r.isBeforeFirst() || !searchLocationQuery(_r, name)) {
 			_connect.close();
 			return false;
 		}
 		_connect.close();
-		String query = "UPDATE db_waypoints SET " + "latitude=" + newLat
-				+ ", longitude=" + newLong + " WHERE upper(name) LIKE upper('%"
-				+ name + "%')";
+		String query = Messages.getString("DatabaseManager.56") + Messages.getString("DatabaseManager.57") + newLat //$NON-NLS-1$ //$NON-NLS-2$
+				+ Messages.getString("DatabaseManager.58") + newLong + Messages.getString("DatabaseManager.59") //$NON-NLS-1$ //$NON-NLS-2$
+				+ name + Messages.getString("DatabaseManager.60"); //$NON-NLS-1$
 
 		executeQuery(query);
 		return true;
@@ -361,8 +372,8 @@ public class DatabaseManager {
 			// table
 			connect = DriverManager.getConnection(url);
 			statement = connect.createStatement();
-			ResultSet locationResult = statement
-					.executeQuery("SELECT * FROM db_waypoints");
+			ResultSet locationResult = statement.executeQuery(Messages
+					.getString("DatabaseManager.61")); //$NON-NLS-1$
 			// add the waypoints to the waypoint linked list for all possible
 			// locations
 			db_waypoints = new LinkedList<Waypoint>();
@@ -395,15 +406,16 @@ public class DatabaseManager {
 	public static void main(String[] args) throws ClassNotFoundException,
 			SQLException {
 		DatabaseManager data = new DatabaseManager();
-		data.login("Keith", "password1");
+		data.login(
+				Messages.getString("DatabaseManager.62"), Messages.getString("DatabaseManager.63")); //$NON-NLS-1$ //$NON-NLS-2$
 		// data.addLocation((float)10, (float)41.12, "Maryland", "Description");
 		// data.removeLocation("YellowStone");
 		// data.removeUser("Stephen");
 		// data.addLocation((float)13.13246, (float)12, "Heaven",
 		// "description1");
-		if (data.removeUser("Stephen"))
-			System.out.println("person removed");
+		if (data.removeUser(Messages.getString("DatabaseManager.64"))) //$NON-NLS-1$
+			System.out.println(Messages.getString("DatabaseManager.65")); //$NON-NLS-1$
 		else
-			System.out.println("person not removed");
+			System.out.println(Messages.getString("DatabaseManager.66")); //$NON-NLS-1$
 	}
 }

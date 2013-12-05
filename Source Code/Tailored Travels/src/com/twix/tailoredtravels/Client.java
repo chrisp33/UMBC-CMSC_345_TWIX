@@ -62,7 +62,7 @@ public class Client {
 	 */
 	public static void main(String[] args) {
 
-		frame = new JFrame("Tailored Travels");
+		frame = new JFrame(Messages.getString("Client.0")); //$NON-NLS-1$
 		Color bgcolor = new Color(74, 138, 255); // Background color for login
 													// screen
 
@@ -75,7 +75,7 @@ public class Client {
 		lPassword = new JPanel();
 		enter = new JPanel();
 		imgPanel = new JPanel();
-		login = new JButton("Login");
+		login = new JButton(Messages.getString("Client.1")); //$NON-NLS-1$
 
 		// Set background of all panels in login screen to the same color
 		mainPanel.setBackground(bgcolor);
@@ -87,10 +87,10 @@ public class Client {
 		enter.setBackground(bgcolor);
 
 		// Add label to top of login screen
-		welcome.add(new JLabel("Welcome to Tailored Travels!"));
+		welcome.add(new JLabel(Messages.getString("Client.2"))); //$NON-NLS-1$
 
 		// Add logo, then resize and realign
-		logoFileName = "Final Draft of Logo.jpg";
+		logoFileName = Messages.getString("Client.3"); //$NON-NLS-1$
 		ImageIcon teamLogo = new ImageIcon(logoFileName);
 		Image img = teamLogo.getImage();
 		int width = img.getWidth(null);
@@ -105,23 +105,23 @@ public class Client {
 		imgPanel.add(logo);
 
 		// Add username field and label
-		lmsg.add(new JLabel("Enter your username and password"));
-		lName.add(new JLabel("Username"));
+		lmsg.add(new JLabel(Messages.getString("Client.4"))); //$NON-NLS-1$
+		lName.add(new JLabel(Messages.getString("Client.5"))); //$NON-NLS-1$
 		nameField = new JTextField(25);
 		lName.add(nameField);
 
 		// Add password field and label
-		lPassword.add(new JLabel("Password"));
+		lPassword.add(new JLabel(Messages.getString("Client.6"))); //$NON-NLS-1$
 		passField = new JPasswordField(25);
-		String bullet = "\u2022";
+		String bullet = Messages.getString("Client.7"); //$NON-NLS-1$
 		passField.setEchoChar(bullet.charAt(0)); // Blank out password field
 		lPassword.add(passField);
 		enter.add(login);
 
 		// Create the help button
-		helpimg = new ImageIcon("help.png");
+		helpimg = new ImageIcon(Messages.getString("Client.8")); //$NON-NLS-1$
 		JButton help = new JButton(helpimg);
-		help.setToolTipText("Click here for help.");
+		help.setToolTipText(Messages.getString("Client.9")); //$NON-NLS-1$
 		help.setBorder(BorderFactory.createEmptyBorder());
 
 		// When user interacts with help button, load and open the help pdf file
@@ -130,13 +130,14 @@ public class Client {
 			public void actionPerformed(ActionEvent e) {
 				if (Desktop.isDesktopSupported()) {
 					try {
-						helpFile = new File("Tailored Travels Help.pdf");
+						helpFile = new File(Messages.getString("Client.10")); //$NON-NLS-1$
 						Desktop.getDesktop().open(helpFile);
 					} catch (IOException ex) {
 						// no application registered for PDFs
-						JOptionPane.showMessageDialog(null,
-								"A PDF viewer is needed to view the help"
-										+ " file.", "Cannot Show Help",
+						JOptionPane.showMessageDialog(
+								null,
+								Messages.getString("Client.11") //$NON-NLS-1$
+										+ Messages.getString("Client.12"), Messages.getString("Client.13"), //$NON-NLS-1$ //$NON-NLS-2$
 								JOptionPane.ERROR_MESSAGE);
 					}
 				}
@@ -193,15 +194,16 @@ public class Client {
 				} catch (ClassNotFoundException e1) {
 					e1.printStackTrace();
 				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(null,
-							"Database Error. Exiting Program", "Error",
+					JOptionPane.showMessageDialog(
+							null,
+							Messages.getString("Client.14"), Messages.getString("Client.15"), //$NON-NLS-1$ //$NON-NLS-2$
 							JOptionPane.ERROR_MESSAGE);
 					e1.printStackTrace();
 					System.exit(0);
 				}
 
 				// convert password to string
-				String passwd = "";
+				String passwd = Messages.getString("Client.16"); //$NON-NLS-1$
 				for (int i = 0; i < password.length; i++)
 					passwd += password[i];
 
@@ -217,19 +219,18 @@ public class Client {
 					// Is the user an admin
 					boolean admin = dbm.isUserAdmin();
 					if (!validUser) {
-						JOptionPane
-								.showMessageDialog(
-										null,
-										"Username and password are incorrect, please try again.",
-										"Invalid User",
-										JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null,
+								Messages.getString("Client.17"), //$NON-NLS-1$
+								Messages.getString("Client.18"), //$NON-NLS-1$
+								JOptionPane.ERROR_MESSAGE);
 						return;
 					} else {
 						showMainMenu(dbm, userName, admin);
 					}
 				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(null,
-							"Database Error. Exiting Program", "Error",
+					JOptionPane.showMessageDialog(
+							null,
+							Messages.getString("Client.19"), Messages.getString("Client.20"), //$NON-NLS-1$ //$NON-NLS-2$
 							JOptionPane.ERROR_MESSAGE);
 					e1.printStackTrace();
 					System.exit(0);
@@ -257,7 +258,7 @@ public class Client {
 		mainMenu = new MenuPanel(dbm, userName, admin);
 
 		// Create new frame for menuPanel and add components
-		JFrame frame2 = new JFrame("Tailored Travels");
+		JFrame frame2 = new JFrame(Messages.getString("Client.21")); //$NON-NLS-1$
 		frame2.setIconImage(new ImageIcon(logoFileName).getImage());
 		mainMenu.addComponents();
 		frame2.setContentPane(mainMenu);

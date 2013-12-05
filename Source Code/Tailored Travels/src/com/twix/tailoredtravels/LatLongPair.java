@@ -20,7 +20,8 @@ public class LatLongPair {
 	/**
 	 * Default value for the Coordinate Label
 	 */
-	private static final String DEFAULT_LABEL = "";
+	private static final String DEFAULT_LABEL = Messages
+			.getString("LatLongPair.0"); //$NON-NLS-1$
 
 	/**
 	 * Label data member of Coordinate
@@ -125,9 +126,11 @@ public class LatLongPair {
 	 */
 	public static void main(String[] args) {
 
-		LatLongPair destA = new LatLongPair("Destination A", -77.037852,
+		LatLongPair destA = new LatLongPair(
+				Messages.getString("LatLongPair.1"), -77.037852, //$NON-NLS-1$
 				38.898556);
-		LatLongPair destB = new LatLongPair("Destination B", -77.043934,
+		LatLongPair destB = new LatLongPair(
+				Messages.getString("LatLongPair.2"), -77.043934, //$NON-NLS-1$
 				38.897147);
 
 		/*

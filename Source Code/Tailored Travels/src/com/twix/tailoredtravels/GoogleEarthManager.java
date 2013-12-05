@@ -35,21 +35,23 @@ public class GoogleEarthManager {
 	 */
 	public String Path2KML(GoogleEarthPath _path) {
 		LinkedList<Waypoint> wPath = _path.getPath();
-		String filename = wPath.getFirst().getName() + "-"
-				+ wPath.getLast().getName() + ".kml";
+		String filename = wPath.getFirst().getName()
+				+ Messages.getString("GoogleEarthManager.0") //$NON-NLS-1$
+				+ wPath.getLast().getName()
+				+ Messages.getString("GoogleEarthManager.1"); //$NON-NLS-1$
 		final Kml kml = KmlFactory.createKml();
 		final Document document = kml
 				.createAndSetDocument()
 				.withName(
-						"TailoredTravel: " + wPath.getFirst().getName()
-								+ " to " + wPath.getLast().getName())
+						Messages.getString("GoogleEarthManager.2") + wPath.getFirst().getName() //$NON-NLS-1$
+								+ Messages.getString("GoogleEarthManager.3") + wPath.getLast().getName()) //$NON-NLS-1$
 				.withOpen(true);
 
 		document.createAndAddDocument();
 
 		final Placemark placemark = document.createAndAddPlacemark()
-				.withName("Your Tailored Travel!")
-				.withDescription("The shortest path between all known points.");
+				.withName(Messages.getString("GoogleEarthManager.4")) //$NON-NLS-1$
+				.withDescription(Messages.getString("GoogleEarthManager.5")); //$NON-NLS-1$
 		final LineString path = placemark.createAndSetLineString()
 				.withAltitudeMode(AltitudeMode.CLAMP_TO_GROUND)
 				.withTessellate(true);
@@ -66,9 +68,9 @@ public class GoogleEarthManager {
 
 		try {
 			kml.marshal(new File(filename));
-			return "File Created: " + filename;
+			return Messages.getString("GoogleEarthManager.6") + filename; //$NON-NLS-1$
 		} catch (FileNotFoundException e) {
-			return "Error: could not create kml file.";
+			return Messages.getString("GoogleEarthManager.7"); //$NON-NLS-1$
 		}
 	}
 }

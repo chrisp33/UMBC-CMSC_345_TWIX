@@ -180,8 +180,11 @@ public class Waypoint {
 	 */
 	@Override
 	public String toString() {
-		return new String(this.wLongitude + " " + this.wLongitude + " "
-				+ this.wName + "\n" + this.wDescription + "\n");
+		return new String(
+				this.wLongitude
+						+ Messages.getString("Waypoint.0") + this.wLongitude + Messages.getString("Waypoint.1") //$NON-NLS-1$ //$NON-NLS-2$
+						+ this.wName
+						+ Messages.getString("Waypoint.2") + this.wDescription + Messages.getString("Waypoint.3")); //$NON-NLS-1$ //$NON-NLS-2$
 
 	}
 
